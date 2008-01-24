@@ -1,0 +1,335 @@
+<!-- AGENT 'atlas/gmapPipes' -->
+
+var $gmap,
+	$mark = [],
+	$openedMarker,
+
+	$fiche = [],
+	$ficheLength = 0,
+
+	$minLat,
+	$maxLat,
+	$minLng,
+	$maxLng,
+
+	$GEvent,
+	$GMarker,
+	$GLatLng,
+	$GPoint,
+	$GSize,
+	$GIcon,
+
+	$iconR10,
+	$iconR25,
+	$iconR50,
+	$iconR100,
+	$liveMarks = new liveAgent('atlas/marks', 0, 1, 0, 1),
+	$livePopup = new liveAgent('atlas/popup', 0, 1, 0, 1);
+
+function gmapInit($win)
+{
+	if (!$win.GBrowserIsCompatible())
+	{
+		return document.write(
+			'Cette page utilise le service <a href="http://maps.google.com/" rel="nofollow">Google Maps</a>, qui n\'est pas compatible avec votre navigateur Internet.<br />\n'
+			+ 'Nous vous recommandons d\'utiliser <a href="http://www.mozilla.com/firefox/" rel="nofollow">Firefox</a>, ou au pire Internet Explorer 5.5 ou plus.'
+		);
+	}
+
+	$win.onunload = $win.GUnload;
+
+	$win.zoom = $gmapZoom;
+	$win.loadPage = $loadPage;
+
+	$gmap = $win.document.getElementById('map');
+	$gmap.style.display = '';
+
+	$GEvent = $win.GEvent;
+	$GMarker = $win.GMarker;
+	$GLatLng = $win.GLatLng;
+	$GPoint = $win.GPoint;
+	$GSize = $win.GSize;
+	$GIcon = $win.GIcon;
+
+	$minLat = gmapWindow.min_lat/1;
+	$maxLat = gmapWindow.max_lat/1;
+	$minLng = gmapWindow.min_lng/1;
+	$maxLng = gmapWindow.max_lng/1;
+
+	var $divWidth = $gmap.offsetWidth,
+		$divHeight = $gmap.offsetHeight,
+		$center = new $GLatLng(($maxLat + $minLat)/2, ($maxLng + $minLng)/2),
+		$zoom = 8, $p;
+
+	$iconR10  = $giconFactory('r10' , 12, 20, 22, 20,  6, 19);
+	$iconR25  = $giconFactory('r25' , 16, 27, 30, 27,  8, 26);
+	$iconR50  = $giconFactory('r50' , 20, 34, 37, 34, 10, 33);
+	$iconR100 = $giconFactory('r100', 24, 41, 44, 41, 12, 40);
+
+	$gmap = new $win.GMap2($gmap, {mapTypes:[$win.G_PHYSICAL_MAP, $win.G_SATELLITE_MAP, $win.G_NORMAL_MAP]});
+	if ($gmap.enableContinuousZoom) $gmap.enableDoubleClickZoom(), $gmap.enableContinuousZoom();
+	$gmap.addControl(new $win.GLargeMapControl());
+	$gmap.addControl(new $win.GMapTypeControl());
+	$gmap.addControl(new $win.GScaleControl());
+	$gmap.addControl(new $win.GOverviewMapControl());
+
+	if ($maxLat)
+	{
+		$p = new $win.GMercatorProjection($zoom + 1);
+
+		$maxLat = new $GLatLng($maxLat, $maxLng);
+		$minLat = new $GLatLng($minLat, $minLng);
+
+		do $maxLng = $p.fromLatLngToPixel($maxLat, $zoom), $minLng = $p.fromLatLngToPixel($minLat, $zoom);
+		while (--$zoom && ($maxLng.x - $minLng.x > $divWidth || $minLng.y - $maxLng.y > $divHeight));
+
+		if ($zoom < 2) ++$zoom;
+	}
+	else
+	{
+		$zoom = 2;
+		$center = new $GLatLng(25, 0);
+	}
+
+	$gmap.setCenter($center, $zoom);
+
+	$GEvent.addListener($gmap, 'zoomend', $gmapOnzoomend);
+	$GEvent.addListener($gmap, 'moveend', $gmapOnmoveend);
+	$gmapOnzoomend(-1, $zoom);
+	$gmapOnmoveend();
+}
+
+function $max($a, $b) {return $a > $b ? $a : $b}
+function $min($a, $b) {return $a < $b ? $a : $b}
+
+function $gmapOnmoveend()
+{
+	var $z = [1,1,1,1,2,2,3,3,4,4],
+		$ne = $gmap.getBounds(),
+		$sw = $ne.getSouthWest();
+		$ne = $ne.getNorthEast();
+
+	$z = $z[$gmap.getZoom()] || 5;
+
+	$liveMarks.replace({
+		zoom:$z,
+		mnLt:$sw.lat(),
+		mxLt:$ne.lat(),
+		mnLg:$sw.lng(),
+		mxLg:$ne.lng()
+	}, $gmapDisplayMarks);
+}
+
+
+function $gmapDisplayMarks($marks)
+{
+	if ($marks && $marks.marks)
+	{
+		var $i, $m = [], $h = [], $hMin = 10000000000, $hMax = 0, $hC = [], $dynamic;
+
+		$marks = $marks.marks;
+
+		while ($i = $marks())
+		{
+			++$h[$i.nb] || ($h[$i.nb] = 1);
+
+			$hMin = $min($hMin, $i.nb);
+			$hMax = $max($hMax, $i.nb);
+
+			$i.lat = $i.lat/1000 -  90;
+			$i.lng = $i.lng/1000 - 180;
+
+			$m.push($i);
+		}
+
+		$hC[$hMin - 1] = 0;
+		$dynamic = $hMax - $hMin;
+
+		if ($dynamic > 0)
+		{
+			$h[$hMin] = 0;
+
+			do $hC[$hMin] = $hC[$hMin - 1] + ($h[$hMin] || 0);
+			while (++$hMin <= $hMax);
+
+			$dynamic = 1 / ($hC[$hMax - 1] + $hC[$hMax] + 1);
+		}
+		else $dynamic = 0;
+
+		$marks = $m.length;
+
+		for ($i = 0; $i < $marks; ++$i)
+		{
+			$mark[$m[$i].label] || $gmap.addOverlay($gmarkerFactory($m[$i], [$dynamic, $hC]));
+		}
+	}
+}
+
+function $gmapOnzoomend($lastzoom, $zoom)
+{
+	if ($lastzoom >= 0 && (
+		$max($lastzoom, $zoom) <= 3
+		|| (4 <= $min($lastzoom, $zoom) && $max($lastzoom, $zoom) <= 5)
+		|| (6 <= $min($lastzoom, $zoom) && $max($lastzoom, $zoom) <= 7)
+		|| 8 <= $min($lastzoom, $zoom)
+	)) return;
+
+	if ($zoom < $lastzoom) $gmap.closeInfoWindow();
+
+	$gmapClearMark();
+}
+
+function $gmapClearMark()
+{
+	for (var $i in $mark)
+	{
+		$GEvent.clearListeners($mark[$i], 'click');
+		$gmap.removeOverlay($mark[$i]);
+	}
+
+	$mark = [];
+}
+
+function $gmarkerFactory($data, $histo)
+{
+	var $icon, $marker,
+		$nb = $data.nb,
+		$id = $data.id;
+
+	$marker = $histo[0];
+	$histo = $histo[1];
+
+	$marker = $marker ? parseInt(4 * $marker * ($histo[$nb - 1] + $histo[$nb])) : 0;
+
+	switch ($marker)
+	{
+		case 0: $icon = $iconR10 ; break;
+		case 1: $icon = $iconR25 ; break;
+		case 2: $icon = $iconR50 ; break;
+		case 3: $icon = $iconR100;
+	}
+
+	$marker = new $GMarker(new $GLatLng($data.lat, $data.lng), $icon);
+	$marker.$data = $data;
+
+	$GEvent.addListener($marker, 'click', $gmapOnclick);
+
+	$mark[$data.label] = $marker;
+
+	return $marker;
+}
+
+function $gmapOnclick()
+{
+	var $marker = this,
+		$data = $marker.$data,
+		$nb   = $data.nb,
+		$html = $marker.$html,
+		$root = {~|js};
+
+	if (!$html)
+	{
+		$html = ['<b class="region">' + $data.label + '</b><br />'];
+
+		if ($nb > 1) $html.push('<b>' + $nb + ' personnes</b> - ');
+
+		$html.push(
+			'<a href=javascript:zoom() title="Zoom +"><img src="' + $root + 'img/zplus.gif" border="0" height="10" width="10" /></a> '
+			+ '<a href=javascript:zoom(1) title="Zoom -"><img src="' + $root + 'img/zminus.gif" border="0" height="10" width="10" /></a><br />'
+			+ '<div id="infoPage" style="width:300px;height:' + ($nb < 6 ? 180 - 34*(5-$nb) : 210)
+			+ 'px;overflow:auto"></div>'
+		);
+
+		$html = $html.join('');
+
+		$marker.$html = $html;
+	}
+
+	$marker.openInfoWindowHtml($html);
+	$openedMarker = $data;
+	$loadPage(1);
+}
+
+function $loadPage($page)
+{
+	$openedMarker.page = $page;
+	$livePopup.push({zoom:$openedMarker.zoom,id:$openedMarker.id,p:$page}, $drawInfoPage);
+}
+
+function $drawInfoPage($fiches)
+{
+	$fiches = $fiches && $fiches.fiches;
+	if (!$fiches) return;
+
+	var $infoPage = frames['map'].document.getElementById('infoPage'),
+		$perPage = 5,
+		$page = $openedMarker.page,
+		$f,
+		$i = ($page - 1)*$perPage,
+		limit,
+		$html = ['<table cellspacing="0" cellpadding="3" border="0">'],
+		$snip = '<a href="javascript:loadPage(',
+		$root = {~|js};
+
+	while ($f = $fiches())
+	{
+		$html.push(
+			'<tr><td align="center" width="32"><a href="' + P$annuaire_ficheUrl($f.fiche_ref)
+			+ '" target="' + (P$annuaire_ficheUrl.target || '_parent') + '"><img src="' + P$annuaire_photoUrl($f.photo_ref, 32) + '" title="'
+			+ $f.nom + '" border="0" height="32" /></a></td><td><div style="width:210px;overflow:hidden;white-space:nowrap"><a href="'
+			+ P$annuaire_ficheUrl($f.fiche_ref)
+			+ '" target="' + (P$annuaire_ficheUrl.target || '_parent') + '">' + $f.nom + '</a> <a href="' + $root + 'atlas/?q=promo:' + $f.groupe + '" target="_parent" class="group">' + $f.groupe
+			+ '</a><p>' + $f.position + '</p></div></td></tr>'
+		);
+	}
+
+	if ($openedMarker.nb > $perPage)
+	{
+		$html.push('<tr><td colspan="2" class="pagination" style="padding-top: 10px"><table cellspacing="0" cellpadding="0" border="0"><tr><td>‹ ');
+		$html.push($page != 1 ? $snip + ($page-1) + ')">' + {"Précédent"|js} + '</a>' : {"Précédent"|js});
+		$html.push(' |</td><td align="center"><div style="width:130px;white-space:nowrap;overflow:hidden;">');
+
+		$nb_pages = Math.ceil($openedMarker.nb / $perPage);
+		$limit = $min(20, $nb_pages);
+
+		for ($i = 1; $i <= $limit; ++$i)
+			$html.push(
+				$i == $page
+				? '<b>' + $i + '</b>'
+				: (
+					$i <= 3 || $i > $nb_pages - 3 || $i - $page == 1 || $page - $i == 1
+					? ' ' + $snip + $i + ')">' + $i + '</a> '
+					: ($snip + $i + ')">.</a>')
+				)
+			);
+
+		$html.push('</div></td><td align="right">| ');
+		$html.push($page != $nb_pages ? $snip + ($page+1) + ')">' + {"Suite"|js} + '</a>' : {"Suite"|js});
+		$html.push(' ›</td></tr></table></td></tr>');
+	}
+
+	$html.push('</table>');
+
+	$infoPage.innerHTML = $html.join('');
+	$infoPage.scrollTop = 0;
+}
+
+function $gmapZoom($zoomOut)
+{
+	$zoomOut ? $gmap.zoomOut() : $gmap.zoomIn();
+}
+
+function $giconFactory($name, $iW, $iH, $sW, $H, $aX, $aY)
+{
+	var $img = {base:'img/':1|js},
+		$icon = new $GIcon();
+
+	$icon.image = $img + $name + '.png';
+	$icon.shadow = $img + $name.replace(/^./, 's') + '.png';
+	$icon.iconSize = new $GSize($iW, $iH);
+	$icon.shadowSize = new $GSize($sW, $H);
+	$icon.iconAnchor = new $GPoint($aX, $aY);
+	$icon.infoWindowAnchor = new $GPoint($aX, 1);
+
+	return $icon;
+}

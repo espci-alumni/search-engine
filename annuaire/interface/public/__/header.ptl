@@ -1,0 +1,45 @@
+<!--
+
+SET a$css -->css/style<!-- END:SET
+
+INLINE header
+
+
+--><a name="top"></a><table width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td id="head"><!--
+
+IF !a$minimal
+
+	IF a$form --><!-- AGENT a$form --><!-- ELSE --><!-- AGENT $form --><!-- END:IF -->
+
+	<a href="{~}"><img src="{~}img/logo.gif" id="logo" /></a>
+
+	<div id="engine">
+	<ul><!--
+	LOOP $tabs
+		--><li><!--
+			SET $a -->{~}{$url}?(\?|$)<!-- END:SET
+			SET $a -->{g$__URI__|replace:$a:'-'}<!-- END:SET
+			IF g$__URI__ != $a --><b>{$caption}</b><!--
+			ELSE --><a href="{~}{$url}">{$caption}</a><!--
+			END:IF
+		--></li><!--
+	END:LOOP -->
+	</ul>
+
+	<!--
+
+	IF a$q --><!-- AGENT a$q autofocus=a$focus --><!-- ELSE --><!-- AGENT $q autofocus=a$focus --><!-- END:IF
+
+	--><input type="image" src="{~}img/go.gif" alt="{"Rechercher"}" title="{"Rechercher"}" onclick="this.form.submit();return false;" style="position:relative;vertical-align:text-bottom;top:3px;_top:0px" /></div><!--
+
+	IF g$tag --><input type="hidden" name="tag" value="{g$tag}" /><!-- END:IF
+	IF a$form --><!-- AGENT a$form _mode_='close' --><!-- ELSE --><!-- AGENT $form _mode_='close' --><!-- END:IF
+
+END:IF
+
+	--><div id="title">
+		{$title_hook}
+		<!-- IF a$info --><p>{a$info}</p><!-- END:IF -->
+		<h1 style="background-color:#e5ecf9; border-top-color:#3366cc">{a$title}</h1>
+	</div>
+</td></tr></table>

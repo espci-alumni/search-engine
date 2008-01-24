@@ -1,0 +1,41 @@
+<!--
+
+AGENT 'widget/engine/header'
+
+	title = "Trombinoscope"
+
+	form = $form
+	q = $q
+
+	nb_resultats = $nb_resultats
+	results_per_page = $results_per_page
+	ficheList = $ficheList
+	fiches = $fiches
+
+-->
+
+<div id="tag">
+<!-- IF $GROUPE --><!-- AGENT 'widget/engine/tag' TAG=$GROUPE title="Promotions" monotag=1 --><!-- END:IF -->
+</div><!--
+
+IF !$nb_resultats && g$q
+	--><div class="noresult">{"Aucun résultat pour"} « <b>{g$q}</b> »</div><!--
+END:IF
+
+--><table><tr><td>
+<!-- LOOP $fiches -->
+<!-- SET a$a --><span class="trombiPhoto"><img src="{$photo_ref|annuaire_photoUrl}" title="{$nom}" border="0" /></span>{$nom}<!-- END:SET -->
+<div class="trombiNom">{a$a|annuaire_ficheLink:$fiche_ref}</a></div>
+<!-- END:LOOP -->
+</td></td></table>
+
+<!--
+
+AGENT 'widget/engine/pagination'
+	page=g$p
+	nb_resultats=$nb_resultats
+	results_per_page=$results_per_page
+
+AGENT 'footer'
+
+-->

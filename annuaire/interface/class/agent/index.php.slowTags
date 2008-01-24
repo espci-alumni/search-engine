@@ -1,0 +1,287 @@
+<?php
+
+class extends agent
+{
+	public $get = array(
+		'q', // requete pour le moteur de recherche
+		'tag', // tag pour filtrage des résultats
+		'p:i:2' => 1 // numéro de page à afficher
+	);
+
+	protected
+	
+	$loopFiche = 'loop_search_index',
+
+	$maxage = 3600,
+
+	$subset = false,
+	$tags = array(),
+
+	$niveauMin,
+	$dynamic,
+	$histoCumule;
+
+
+	function compose($o)
+	{
+		if ('' !== (string) $this->get->q || $this->get->p) p::setGroup('private');
+		else $this->watch[] = 'fiche/0';
+
+		// Calcule le nombre total de fiches accessibles
+		$sql = 'SELECT COUNT(*) FROM ' . annuaire::$fiche_table;
+		$o->nb_fiches = DB()->queryOne($sql);
+
+		// Crée le formulaire
+		$form = new pForm($o, '', false);
+		$form->setPrefix('');
+		$form->add('text', 'q');
+
+		// Etapes de composition des résultats
+E('A1');
+		$o = $this->prepareSubset($o);
+E('A2');
+		$o = $this->prepareResults($o);
+E('A3');
+		$o = $this->filterResults($o);
+E('A4');
+		$o = $this->prepareFilter($o);
+E('A5');
+
+		return $o;
+	}
+
+	function prepareSubset($o)
+	{
+		if ($this->get->tag)
+		{
+			// Prépare une table temporaire pour filtrer en fonction des tags sélectionnés
+
+			$sql = explode('_', $this->get->tag);
+			array_shift($sql);
+			$this->tags = $sql;
+			$sql = array_map(array($this, 'prepareTag'), $sql);
+
+			$sql = 'CREATE TEMPORARY TABLE IF NOT EXISTS subsettmp TYPE=HEAP
+					SELECT i.fiche_id
+					FROM ' . annuaire::$mot_fiche_table . ', ' . annuaire::$mot_table . '
+					WHERE i.mot_id = m.mot_id
+						AND i.tag
+						AND m.mot IN("' . implode('","', $sql) . '")
+					GROUP BY i.fiche_id HAVING COUNT(DISTINCT i.mot_id)=' . count($sql);
+			DB()->query($sql);
+
+			$this->subset = true;
+		}
+
+		return $o;
+	}
+
+	function prepareTag($tag)
+	{
+		$tag = addslashes($tag);
+
+		if ('s' !== substr($tag, -1)) $tag .= '","' . $tag . 's';
+
+		return $tag;
+	}
+
+	function prepareResults($o)
+	{
+		$loop = $this->loopFiche;
+
+		$loop = new $loop(
+			$this->get->q,
+			$this->subset,
+			$this->get->p
+		);
+
+		$loop->addHighlight(annuaire::$tagFields, $this->tags);
+
+		$o->fiches = $loop;
+		$o->results_per_page = $loop->resultsPerPage;
+
+		return $o;
+	}
+
+	function filterResults($o)
+	{
+		$db = DB();
+
+		$o->nb_resultats = $db->queryOne('SELECT COUNT(*) FROM searchtmp');
+
+		$sql = "SELECT GROUP_CONCAT(f.fiche_ref ORDER BY s.order_key SEPARATOR ',')
+			FROM " . annuaire::$fiche_table . ", searchtmp s
+			WHERE f.fiche_id=s.fiche_id
+			GROUP BY ''";
+
+		if ($ficheList = $db->queryOne($sql)) $o->ficheList = ',' . $ficheList . ',';
+
+		return $o;
+	}
+
+	function prepareFilter($o)
+	{
+		if (!isset($o->fiches)) return $o;
+
+		$db = DB();
+
+		$where = '1';
+		if ($o->fiches->hasQuery) $where .= ' AND i.fiche_id IN (SELECT fiche_id FROM searchtmp)';
+		else if ($this->subset  ) $where .= ' AND i.fiche_id IN (SELECT fiche_id FROM subsettmp)';
+
+		// Table de liens mot_id => fiche_id
+		$sql = "CREATE TEMPORARY TABLE IF NOT EXISTS tagtmp_mot_fiche (
+			  mot_id INT UNSIGNED NOT NULL,
+			  fiche_id INT UNSIGNED NOT NULL,
+			  PRIMARY KEY (mot_id, fiche_id)
+			) TYPE=HEAP";
+		$db->exec($sql);
+
+		$sql = "REPLACE INTO tagtmp_mot_fiche
+			SELECT i.mot_id, i.fiche_id FROM " . annuaire::$mot_fiche_table . "
+			WHERE i.tag AND {$where}";
+		$db->exec($sql);
+
+		// Table des tags
+		$sql = "CREATE TEMPORARY TABLE IF NOT EXISTS tagtmp_mot (
+			  mot_id INT UNSIGNED NOT NULL,
+			  mot VARCHAR(255) NOT NULL,
+			  PRIMARY KEY (mot_id)
+			) TYPE=HEAP DEFAULT CHARSET=utf8";
+		$db->exec($sql);
+
+		$sql = "REPLACE INTO tagtmp_mot
+			SELECT m.mot_id, COALESCE(m.tag, m.mot)
+			FROM " . annuaire::$mot_table . ", tagtmp_mot_fiche t
+			WHERE m.mot_id = t.mot_id";
+		$db->exec($sql);
+
+		// Table des compteurs d'utilisation des fiches
+		$sql = "CREATE TEMPORARY TABLE IF NOT EXISTS tagtmp_fiche (
+			  fiche_id INT UNSIGNED NOT NULL,
+			  fiche_used FLOAT NOT NULL,
+			  PRIMARY KEY (fiche_id),
+			  KEY fiche_used (fiche_used)
+			) TYPE=HEAP";
+		$db->exec($sql);
+
+		$sql = "REPLACE INTO tagtmp_fiche SELECT fiche_id, 0 FROM tagtmp_mot_fiche";
+		$db->exec($sql);
+
+		// Nombre de fiches à lier aux tags
+		$sql = "SELECT COUNT(*) FROM tagtmp_fiche";
+		$nb = $db->queryOne($sql);
+
+		$sql = "SELECT mot_id FROM tagtmp_mot_fiche GROUP BY mot_id HAVING COUNT(*)>={$nb}";
+		$result = $db->query($sql);
+		while ($mot_id = $result->fetchOne())
+		{
+			$sql = "DELETE FROM tagtmp_mot WHERE mot_id=" . $mot_id;
+			$db->exec($sql);
+		}
+
+		// Initialise les tags avec les mots filtrants sélectionnés
+		$tags = array();
+		foreach ($this->tags as $sql) $tags[$sql] = $nb;
+
+		$nb_tags = count($tags);
+
+		$histo = array();
+		if ($nb_tags) $histo[$nb] = $nb_tags;
+
+		$niveauMin = $nb;
+		$niveauMax = $nb_tags ? $nb : 0;
+
+		$select = 'SELECT m.mot, m.mot_id, f.fiche_used, COUNT(*) AS nb
+			FROM tagtmp_mot m, tagtmp_mot_fiche mf, tagtmp_fiche f
+			WHERE mf.mot_id=m.mot_id AND f.fiche_id=mf.fiche_id
+			GROUP BY mf.mot_id
+			ORDER BY f.fiche_used, nb DESC, RAND()';
+
+		$update = 'UPDATE tagtmp_fiche SET fiche_used=fiche_used+1/? WHERE fiche_id IN (SELECT fiche_id FROM tagtmp_mot_fiche WHERE mot_id=?)';
+
+		$delete = 'DELETE FROM tagtmp_mot_fiche WHERE mot_id=?';
+
+		if ('mysqli' == $db->phptype) // Use directly MySQLi for speed
+		{
+			$db = $db->connection;
+
+			$select = $db->prepare($select . ' LIMIT 1');
+			$update = $db->prepare($update);
+			$delete = $db->prepare($delete);
+
+			$select->bind_result($r_mot, $r_mot_id, $r_fiche_used, $r_nb);
+			$update->bind_param('is', $r_nb, $r_mot_id);
+			$delete->bind_param('i', $r_mot_id);
+
+			while (1)
+			{
+				$select->execute();
+				$fetched = $select->fetch();
+				$select->free_result();
+
+				if ($fetched && (++$nb_tags <= annuaire::$tagMinNb || $nb_tags <= annuaire::$tagMaxNb && !$r_fiche_used))
+				{
+					$update->execute();
+					$delete->execute();
+
+					$nb = $delete->affected_rows;
+					$tags[ $r_mot ] = $nb;
+
+					@++$histo[$nb];
+					$niveauMin = min($niveauMin, $nb);
+					$niveauMax = max($niveauMax, $nb);
+				}
+				else break;
+			}
+		}
+		else
+		{
+			$db->setLimit(1);
+			$select = $db->prepare($select);
+			$update = $db->prepare($update, array('integer', 'integer'), MDB2_PREPARE_MANIP);
+			$delete = $db->prepare($delete, 'integer', MDB2_PREPARE_MANIP);
+
+			while (1)
+			{
+				$result = $select->execute();
+				$row = $result->fetchRow();
+				$result->free();
+
+				if ($row && (++$nb_tags <= annuaire::$tagMinNb || $nb_tags <= annuaire::$tagMaxNb && !$row->fiche_used))
+				{
+					$update->execute(array($row->nb, $row->mot_id));
+					$nb = $delete->execute($row->mot_id);
+
+					$tags[ $row->mot ] = $nb;
+
+					@++$histo[$nb];
+					$niveauMin = min($niveauMin, $nb);
+					$niveauMax = max($niveauMax, $nb);
+				}
+				else break;
+			}
+		}
+
+		if ($tags)
+		{
+			uksort($tags, 'strnatcasecmp');
+
+			$tags = new loop_array($tags, array($this, 'filterMotclef'));
+			$tags = new loop_tag($tags, 'nb', 'niveau', annuaire::$tagSizeNb);
+			$tags->setHisto($histo, $niveauMin, $niveauMax);
+
+			$o->tags = $tags;
+		}
+
+		return $o;
+	}
+
+	function filterMotClef($data)
+	{
+		return (object) array(
+			'text' => $data->KEY,
+			'nb' => $data->VALUE,
+		);
+	}
+}

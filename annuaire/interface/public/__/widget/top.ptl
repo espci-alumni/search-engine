@@ -1,0 +1,11 @@
+<div class="bloc">
+	<h2>{$TOP} {a$title}</h2>
+
+<!-- LOOP $TOP -->
+	<div class="item">
+	{$nom|annuaire_ficheLink:$fiche_ref}
+	<a href="{~}?q=promo:{$groupe}" class="group">{$groupe}</a>
+	<p>{$position}</p>
+	</div>
+<!-- END:LOOP -->
+</div>

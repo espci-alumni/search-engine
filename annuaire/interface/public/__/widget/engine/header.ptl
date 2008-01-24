@@ -1,0 +1,52 @@
+<!--
+
+SET a$query -->{g$q}{g$tag}<!-- END:SET
+
+SET a$head
+	IF a$ficheList --><script type="text/javascript">/*<![CDATA[*/
+		<!-- SET a$head --><!-- AGENT 'js/board' --><!-- END:SET -->
+		{a$head|allowhtml}
+
+		setboard({
+			'lastSearch'    : {g$__URI__|replace:'&amp;p=[^&]+':''|js},
+			'ficheList'     : {a$ficheList|js},
+			'resultsPerPage': {a$results_per_page|js}
+		});
+		//]]></script ><!--
+	END:IF
+END:SET
+
+SET a$focus --><!-- IF !a$query && !a$nofocus -->1<!-- END:IF --><!-- END:SET
+
+SET a$info
+	IF a$query
+
+		IF a$nb_resultats
+			SET a$start --><!-- IF g$p > 0 -->{g$p-1}<!-- ELSE -->0<!-- END:IF --><!-- END:SET
+			SET a$start -->{a$start*a$results_per_page+1}<!-- END:SET
+
+			-->{a$fiches-1|test:"Résultat":"Résultats"} <b>{a$start} - {a$start+a$fiches-1}</b> {"sur"} {a$nb_resultats}<!--
+		ELSE
+
+			-->{"Aucun résultat"}<!--
+		END:IF
+
+		IF g$q --> {"pour"} «&nbsp;<b>{g$q}</b>&nbsp;»<!-- END:IF
+
+	END:IF
+END:SET
+
+
+AGENT 'header'
+
+	title = a$title
+	head = a$head
+
+	form = a$form
+	q = a$q
+	ficheList = a$ficheList
+
+	focus = a$focus
+	info = a$info
+
+-->

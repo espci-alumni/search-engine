@@ -1,0 +1,68 @@
+<!--
+
+AGENT 'widget/engine/header'
+
+	title='Annuaire'
+
+	form=$form
+	q=$q
+
+	nb_resultats=$nb_resultats
+	results_per_page=$results_per_page
+	ficheList=$ficheList
+	fiches=$fiches
+
+IF $tags
+	SET a$a -->{$nb_resultats|test:$nb_resultats:$nb_fiches} parcours en {$tags} mots<!-- END:SET
+	--><div id="tag"><!-- AGENT 'widget/engine/tag' tags=$tags title=a$a --></div><!--
+END:IF
+
+IF !g$q && !g$tag
+	-->
+	<div id="top">
+	<!-- AGENT 'widget/top' type='random' title="fiches au hasard" -->
+	<!-- AGENT 'widget/top' type='mtime' title="dernières modifications" -->
+	</div>
+	<!--
+END:IF
+
+IF !$nb_resultats && g$q
+	--><div class="noresult">{"Aucun résultat pour"} «&nbsp;<b>{g$q}</b>&nbsp;»</div><!--
+END:IF
+
+IF $fiches
+
+--><table><!--
+LOOP $fiches -->
+<tr>
+	<td style="text-align: center"><img src="{$photo_ref|annuaire_photoUrl:64}" height="64" /></td>
+	<td>
+	{$nom|annuaire_ficheLink:$fiche_ref}
+	<!-- IF $groupe --><a href="{~}?q=promo:{$groupe}" class="group">{$groupe}</a><!-- END:IF --><br />
+	<span style="color:#777">
+	{$extrait|allowhtml}
+	<!-- IF $doc -->
+		<!-- SET $ext -->{$doc_ref|replace:'.+\.(doc|pdf)\b.*':'$1'}<!-- END:SET -->
+		<!-- IF $ext == $doc_ref --><!-- SET $ext -->bin<!-- END:SET --><!-- END:IF -->
+		<br /><a href="{$doc_ref|annuaire_docUrl}" style="white-space:nowrap"><img src="{~}img/{$ext}.gif" /></a>
+		{$doc|allowhtml}
+	<!-- END:IF -->
+	</span>
+	</td>
+</tr>
+<tr><td colspan="2"><hr /></td></tr><!--
+END:LOOP
+--></table><!--
+
+END:IF
+
+IF $nb_resultats > $results_per_page
+	AGENT 'widget/engine/pagination'
+		page=g$p
+		nb_resultats=$nb_resultats
+		results_per_page=$results_per_page
+END:IF
+
+AGENT 'footer'
+
+-->
