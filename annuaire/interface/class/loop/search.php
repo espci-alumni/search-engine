@@ -66,7 +66,7 @@ class extends loop_sql_fiche
 				FROM " . annuaire::$mot_fiche_table . ', ' . annuaire::$mot_table . ', ' . annuaire::$fiche_table . ($subset ? ', subsettmp s' : '') . "
 				WHERE f.fiche_id=i.fiche_id AND {$this->addWhere}
 				GROUP BY i.fiche_id";
-			if ($this->addCount) $sql .= " HAVING {$this->selectMatched}>" . ($this->addCount > 2 ? '.65' : '.49') . "*{$this->addCount}";
+			if ($this->addCount) $sql .= " HAVING {$this->selectMatched}>.65*{$this->addCount}";
 			$sql .= " ORDER BY {$this->selectRank}";
 
 			$db->exec($sql);
@@ -97,6 +97,8 @@ class extends loop_sql_fiche
 
 			foreach (array_keys($q['']) as $k)
 			{
+				if (strlen($k) <= 1) continue;
+
 				$highlight .= '|' . lingua::getRxQuoteInsensitive($k, '/');
 
 				if (strlen($k) <= 2) $highlight .= '$';
