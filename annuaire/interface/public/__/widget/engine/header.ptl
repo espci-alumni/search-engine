@@ -4,11 +4,14 @@ SET a$query -->{g$q}{g$tag}<!-- END:SET
 
 SET a$head
 	IF a$ficheList --><script type="text/javascript">/*<![CDATA[*/
-		<!-- SET a$head --><!-- AGENT 'js/board' --><!-- END:SET -->
-		{a$head|allowhtml}
+
+		<!--
+			AGENT 'js/board'
+			SET a$a -->{g$__BASE__|length}<!-- END:SET
+		-->
 
 		setboard({
-			'lastSearch'    : {g$__URI__|replace:'&amp;p=[^&]+':''|js},
+			'lastSearch'    : {g$__URI__|substr:a$a|replace:'&amp;p=[^&]+':''|js},
 			'ficheList'     : {a$ficheList|js},
 			'resultsPerPage': {a$results_per_page|js}
 		});

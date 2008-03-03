@@ -95,6 +95,7 @@ class
 		'entite',
 		'position',
 		'ville',
+		'motclef',
 	),
 	
 	$tagSizeNb = 5,
