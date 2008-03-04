@@ -17,6 +17,7 @@ class
 		'nom'       => .75,
 		'groupe'    => .75,
 		'entite'    => .625,
+		'motclef'   => .625,
 		'ville'     => .5,
 		'doc'       => .5,
 		'adresse'   => .5,

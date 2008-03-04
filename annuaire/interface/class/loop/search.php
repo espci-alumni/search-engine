@@ -67,7 +67,7 @@ class extends loop_sql_fiche
 				WHERE f.fiche_id=i.fiche_id AND {$this->addWhere}
 				GROUP BY i.fiche_id";
 			if ($this->addCount) $sql .= " HAVING {$this->selectMatched}>.65*{$this->addCount}";
-			$sql .= " ORDER BY {$this->selectRank}";
+			$sql .= " ORDER BY " .($this->addCount ? $this->selectMatched . ' DESC,' : '') . $this->selectRank;
 
 			$db->exec($sql);
 		}
