@@ -157,9 +157,7 @@ class
 	protected static function getKeywords($mots)
 	{
 		$mots = lingua::getKeywords($mots);
-		$mots = preg_replace("'(?: (?:the|and|for|from|with|des?|du|les?|la|un|une|sur|aux?|par|avec|dans|pour|https?|autre|en|qu[ei]?))* 'su", ' ', $mots);
-		$mots = preg_replace("'(?: ..?)* 'su", ' ', $mots);
-		return $mots !== '' ? array_unique(explode(' ', $mots)) : array();
+		return '' !== $mots ? array_unique(explode(' ', $mots)) : array();
 	}
 
 	protected static function registerMot($fiche_id, $mot, $field, $poids, $tag)
