@@ -2,8 +2,12 @@
 
 class
 {
+	protected static $hasBeenUpdated = false;
+
 	static function updateFiche($fiche_ref, $fiche, $extrait, $city, $extra)
 	{
+		self::$hasBeenUpdated = true;
+
 		$db = DB();
 
 		// Récupère l'identifiant interne de la fiche si elle existe
@@ -91,14 +95,22 @@ class
 
 		unset($poids);
 
+		$sql = array();
+
 		foreach ($fields as $field => $fields)
 		{
 			list($poids, $extrait, $tag) = $fields;
 
 			foreach (self::getKeywords($extrait) as $extrait)
 			{
-				self::registerMot($fiche_id, $extrait, $field, $poids, $tag && strlen($extrait) > 1);
+				self::registerMot($sql, $fiche_id, $extrait, $field, $poids, $tag && strlen($extrait) > 1);
 			}
+		}
+
+		if ($sql)
+		{
+			$sql = 'INSERT INTO mot_fiche VALUES ' . implode(',', $sql);
+			$db->exec($sql);
 		}
 
 		// Purge le cache
@@ -108,6 +120,8 @@ class
 
 	static function deleteFiche($fiche_ref)
 	{
+		self::$hasBeenUpdated = true;
+
 		$db = DB();
 
 		$sql = 'SELECT fiche_id FROM fiche WHERE fiche_ref=' . $db->quote($fiche_ref);
@@ -143,15 +157,24 @@ class
 		return array_values($extrait);
 	}
 
+	static function __destructStatic()
+	{
+		if (self::$hasBeenUpdated)
+		{
+			$db = DB();
+
+			$sql = 'DELETE FROM mot WHERE mot_id NOT IN (SELECT mot_id FROM mot_fiche)';
+			$db->exec($sql);
+
+			$sql = 'OPTIMIZE TABLE city, fiche, mot, mot_fiche, translation';
+			$db->exec($sql);
+		}
+	}
+
 	protected static function purgeIndex($fiche_id)
 	{
-		$db = DB();
-
 		$sql = "DELETE FROM mot_fiche WHERE fiche_id={$fiche_id}";
-		$db->exec($sql);
-
-		$sql = 'DELETE FROM mot WHERE mot_id NOT IN (SELECT mot_id FROM mot_fiche)';
-		$db->exec($sql);
+		DB()->exec($sql);
 	}
 
 	protected static function getKeywords($mots)
@@ -160,9 +183,9 @@ class
 		return '' !== $mots ? array_unique(explode(' ', $mots)) : array();
 	}
 
-	protected static function registerMot($fiche_id, $mot, $field, $poids, $tag)
+	protected static function registerMot(&$registry, $fiche_id, $mot, $field, $poids, $tag)
 	{
-		if (!$len = strlen($mot)) continue;
+		if (!$len = strlen($mot)) return;
 
 		$mot_id = 0;
 		$db = DB();
@@ -201,15 +224,15 @@ class
 			}
 		}
 
-		$db->autoExecute(
-			'mot_fiche',
-			array(
-				'fiche_id' => $fiche_id,
-				'mot_id' => $mot_id,
-				'poids' => $poids / $len,
-				'champ' => $field,
-				'tag' => $tag,
-			)
+		$sql = array(
+			$fiche_id,
+			$mot_id,
+			$poids / $len,
+			$field,
+			$tag,
 		);
+
+		$sql = array_map(array($db, 'quote'), $sql);
+		$registry[] = '(' . implode(',', $sql) . ')';
 	}
 }
