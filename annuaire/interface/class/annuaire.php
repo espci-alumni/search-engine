@@ -114,9 +114,6 @@ class
 	),
 
 	$suggestFields = array(
-		'entite',
-		'fonction',
-		'secteur',
 	),
 
 	$tagSizeNb = 5,

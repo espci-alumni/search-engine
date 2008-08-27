@@ -185,8 +185,11 @@ class
 		{
 			$db = DB();
 
-			$sql = 'DELETE FROM suggest WHERE counter<=0';
-			$db->exec($sql);
+			if (!empty(annuaire::$suggestFields))
+			{
+				$sql = 'DELETE FROM suggest WHERE counter<=0';
+				$db->exec($sql);
+			}
 
 			$sql = 'DELETE FROM mot WHERE mot_id NOT IN (SELECT mot_id FROM mot_fiche)';
 			$db->exec($sql);
@@ -208,7 +211,7 @@ class
 		$db = DB();
 
 		$sql = "SELECT extrait FROM fiche WHERE fiche_id={$fiche_id}";
-		if ($extrait = $db->queryOne($sql))
+		if (!empty(annuaire::$suggestFields) && $extrait = $db->queryOne($sql))
 		{
 			$extrait = unserialize($extrait);
 
