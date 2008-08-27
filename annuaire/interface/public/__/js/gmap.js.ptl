@@ -1,5 +1,7 @@
 <!-- AGENT 'atlas/gmapPipes' -->
 
+(function (){
+
 var $gmap,
 	$mark = [],
 	$openedMarker,
@@ -26,7 +28,7 @@ var $gmap,
 	$liveMarks = new liveAgent('atlas/marks', 0, 1, 0, 1),
 	$livePopup = new liveAgent('atlas/popup', 0, 1, 0, 1);
 
-function gmapInit($win)
+window.gmapInit = function($win)
 {
 	if (!$win.GBrowserIsCompatible())
 	{
@@ -51,10 +53,10 @@ function gmapInit($win)
 	$GSize = $win.GSize;
 	$GIcon = $win.GIcon;
 
-	$minLat = gmapWindow.min_lat/1;
-	$maxLat = gmapWindow.max_lat/1;
-	$minLng = gmapWindow.min_lng/1;
-	$maxLng = gmapWindow.max_lng/1;
+	$minLat = window.gmapWindow.min_lat/1;
+	$maxLat = window.gmapWindow.max_lat/1;
+	$minLng = window.gmapWindow.min_lng/1;
+	$maxLng = window.gmapWindow.max_lng/1;
 
 	var $divWidth = $gmap.offsetWidth,
 		$divHeight = $gmap.offsetHeight,
@@ -95,6 +97,7 @@ function gmapInit($win)
 
 	$GEvent.addListener($gmap, 'zoomend', $gmapOnzoomend);
 	$GEvent.addListener($gmap, 'moveend', $gmapOnmoveend);
+	$GEvent.addListener($gmap, 'infowindowopen', $loadPage);
 	$gmapOnzoomend(-1, $zoom);
 	$gmapOnmoveend();
 }
@@ -245,13 +248,13 @@ function $gmapOnclick()
 		$marker.$html = $html;
 	}
 
-	$marker.openInfoWindowHtml($html);
 	$openedMarker = $data;
-	$loadPage(1);
+	$marker.openInfoWindowHtml($html);
 }
 
 function $loadPage($page)
 {
+	$page = $page || 1;
 	$openedMarker.page = $page;
 	$livePopup.push({zoom:$openedMarker.zoom,id:$openedMarker.id,p:$page}, $drawInfoPage);
 }
@@ -333,3 +336,5 @@ function $giconFactory($name, $iW, $iH, $sW, $H, $aX, $aY)
 
 	return $icon;
 }
+
+})();

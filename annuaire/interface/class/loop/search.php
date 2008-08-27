@@ -7,7 +7,8 @@ class extends loop_sql_fiche
 	$select,
 	$order_key = 'f.mtime DESC',
 
-	$selectRank = 'SUM(0',
+	$selectRank = '0',
+	$selectRankNorm = '0',
 	$selectMatched = 'COUNT(DISTINCT IF(0,0,',
 	$selectMatchedEnd = '))',
 
@@ -26,6 +27,7 @@ class extends loop_sql_fiche
 		$sql = "CREATE TEMPORARY TABLE IF NOT EXISTS searchtmp (
 			  fiche_id INT UNSIGNED NOT NULL,
 			  order_key INT UNSIGNED NOT NULL auto_increment,
+			  rank DOUBLE,
 			  PRIMARY KEY (order_key)
 			) TYPE=HEAP";
 		$db->exec($sql);
@@ -41,7 +43,6 @@ class extends loop_sql_fiche
 
 		array_walk($q, array($this, 'buildQueryComponents'));
 
-		$this->selectRank .= ')';
 		$this->selectMatched .= 'NULL' . $this->selectMatchedEnd;
 
 		$sql = "i.mot_id=m.mot_id";
@@ -53,8 +54,9 @@ class extends loop_sql_fiche
 		{
 			$this->hasQuery = true;
 
-			if (!$this->addCount) $this->selectRank = $this->order_key;
-			else $this->selectRank .= ' DESC' . ($this->order_key ? ',' . $this->order_key : '');
+			$order_key = $this->addCount
+				? 'rank DESC' . ($this->order_key ? ',' . $this->order_key : '')
+				: $this->order_key;
 
 			$this->addWhere .= ($this->delCount ? " AND i.fiche_id NOT IN (SELECT fiche_id FROM " . annuaire::$mot_fiche_table . ', ' . annuaire::$mot_table . " WHERE {$this->delWhere})" : '')
 				. ($subset ? ' AND i.fiche_id=s.fiche_id' : '');
@@ -62,12 +64,20 @@ class extends loop_sql_fiche
 			$db = DB();
 
 			$sql = "INSERT INTO searchtmp
-				SELECT i.fiche_id, 0
-				FROM " . annuaire::$mot_fiche_table . ', ' . annuaire::$mot_table . ', ' . annuaire::$fiche_table . ($subset ? ', subsettmp s' : '') . "
+				SELECT i.fiche_id, 0, "
+					. ($this->addCount
+						? "{$this->selectMatched}/{$this->addCount}
+							* SUM(({$this->selectRank})/({$this->selectRankNorm}))"
+						: '1'
+					) . " AS rank
+				FROM " . annuaire::$mot_fiche_table . ', '
+					. annuaire::$mot_table . ', '
+					. annuaire::$fiche_table
+					. ($subset ? ', subsettmp s' : '') . "
 				WHERE f.fiche_id=i.fiche_id AND {$this->addWhere}
 				GROUP BY i.fiche_id";
-			if ($this->addCount) $sql .= " HAVING {$this->selectMatched}>.65*{$this->addCount}";
-			$sql .= " ORDER BY " .($this->addCount ? $this->selectMatched . ' DESC,' : '') . $this->selectRank;
+			if ($this->addCount) $sql .= " HAVING rank>.65";
+			$sql .= " ORDER BY {$order_key}";
 
 			$db->exec($sql);
 		}
@@ -89,6 +99,7 @@ class extends loop_sql_fiche
 		if ($q[''])
 		{
 			$selectRank = '';
+			$selectRankNorm = '';
 			$selectMatched = '';
 			$selectMatchedEnd = '';
 
@@ -108,7 +119,8 @@ class extends loop_sql_fiche
 				$if = "m.mot LIKE '{$k}" . (strlen($k) <= 2 ? '' : '%') . "'" . ($field ? " AND i.champ='{$field}'" : '');
 
 				$selectRank .= "+IF({$if}," . strlen($k) . '*i.poids,0)';
-				$selectMatched .= "IF({$if},'{$k}',";
+				$selectRankNorm .= '+LENGTH(m.mot)*i.poids';
+				$selectMatched .= "IF({$if},'{$field}:{$k}',";
 				$selectMatchedEnd .= ')';
 
 				$this->addWhere .= " OR ({$if})";
@@ -117,6 +129,7 @@ class extends loop_sql_fiche
 			if (!$highlight) unset($this->highlight[$field]);
 
 			$this->selectRank .= $selectRank;
+			$this->selectRankNorm .= $selectRankNorm;
 			$this->selectMatched .= $selectMatched;
 			$this->selectMatchedEnd .= $selectMatchedEnd;
 		}

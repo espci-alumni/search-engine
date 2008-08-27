@@ -17,8 +17,10 @@ class
 		'nom'       => .75,
 		'groupe'    => .75,
 		'entite'    => .625,
-		'motclef'   => .625,
-		'ville'     => .5,
+		'fonction'  => .625,
+		'secteur'   => .625,
+		'tag'       => .625,
+		'ville'     => .625,
 		'doc'       => .5,
 		'adresse'   => .5,
 		'telephone' => .5,
@@ -63,6 +65,8 @@ class
 		'departement'	=> 'ville',
 		'department'	=> 'ville',
 		'region'	=> 'ville',
+		'lieu'		=> 'ville',
+		'geo'		=> 'ville',
 
 		'entite'	=> 'entite',
 		'position'	=> 'entite',
@@ -75,15 +79,24 @@ class
 		'service'	=> 'entite',
 		'laboratoire'	=> 'entite',
 		'labo'		=> 'entite',
-		'fonction'	=> 'entite',
-		'prof'		=> 'entite',
-		'profession'	=> 'entite',
-		'activite'	=> 'entite',
+		'company'       => 'entite',
+		'enterprise'    => 'entite',
+		'firm'          => 'entite',
 
-		'motclef'	=> 'motclef',
-		'motcle'	=> 'motclef',
-		'mot'		=> 'motclef',
-		'tag'		=> 'motclef',
+		'fonction'	=> 'fonction',
+		'position'	=> 'fonction',
+		'prof'		=> 'fonction',
+		'profession'	=> 'fonction',
+
+		'secteur'	=> 'secteur',
+		'activite'	=> 'secteur',
+		'sector'        => 'secteur',
+		'activity'	=> 'secteur',
+
+		'motclef'	=> 'tag',
+		'motcle'	=> 'tag',
+		'mot'		=> 'tag',
+		'tag'		=> 'tag',
 
 		'perso'	=> 'perso',
 		'autre'	=> 'perso',
@@ -94,11 +107,18 @@ class
 
 	$tagFields = array(
 		'entite',
-		'position',
+		'fonction',
+		'secteur',
 		'ville',
-		'motclef',
+		'tag',
 	),
-	
+
+	$suggestFields = array(
+		'entite',
+		'fonction',
+		'secteur',
+	),
+
 	$tagSizeNb = 5,
 	$tagMinNb = 60,
 	$tagMaxNb = 80;

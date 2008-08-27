@@ -2,11 +2,11 @@
 
 class
 {
-	protected static $hasBeenUpdated = false;
+	protected static $needsOptimization = false;
 
 	static function updateFiche($fiche_ref, $fiche, $extrait, $city, $extra)
 	{
-		self::$hasBeenUpdated = true;
+		self::$needsOptimization = true;
 
 		$db = DB();
 
@@ -75,10 +75,11 @@ class
 			array('groupe'  , $fiche->groupe),
 			array('position', $fiche->position),
 			array('doc'     , $fiche->doc),
-			array('city'    , "{$city->city} {$city->div1} {$city->div2} {$city->country}"),
+			array('ville'   , "{$city->city} {$city->div1} {$city->div2} {$city->country}"),
 		));
 
 		$fields = array();
+		$suggest = array();
 
 		foreach ($extrait as $data) if (is_array($data))
 		{
@@ -87,13 +88,34 @@ class
 			if ($poids =& annuaire::$fieldWeight[$field])
 			{
 				$tag = (int) in_array($field, annuaire::$tagFields);
-				$field = annuaire::$fieldAlias[$field];
 				isset($fields[$field]) || $fields[$field] = array($poids, '', $tag);
 				$fields[$field][1] .= ' ' . $extrait;
+
+				in_array($field, annuaire::$suggestFields) && $suggest[] = array($field, $extrait);
 			}
 		}
 
 		unset($poids);
+
+
+		if ($suggest)
+		{
+			$sql = array();
+
+			foreach ($suggest as $data)
+			{
+				list($field, $suggest) = $data;
+				$field   = $db->quote($field);
+				$suggest = $db->quote($suggest);
+				$sql[] = "({$field},{$suggest},1)";
+			}
+
+			$sql = "INSERT INTO suggest
+				VALUES " . implode(',', $sql) . "
+				ON DUPLICATE KEY UPDATE counter=counter+1";
+			$db->exec($sql);
+		}
+
 
 		$sql = array();
 
@@ -120,7 +142,7 @@ class
 
 	static function deleteFiche($fiche_ref)
 	{
-		self::$hasBeenUpdated = true;
+		self::$needsOptimization = true;
 
 		$db = DB();
 
@@ -157,24 +179,57 @@ class
 		return array_values($extrait);
 	}
 
-	static function __destructStatic()
+	static function optimizeDb()
 	{
-		if (self::$hasBeenUpdated)
+		if (self::$needsOptimization)
 		{
 			$db = DB();
+
+			$sql = 'DELETE FROM suggest WHERE counter<=0';
+			$db->exec($sql);
 
 			$sql = 'DELETE FROM mot WHERE mot_id NOT IN (SELECT mot_id FROM mot_fiche)';
 			$db->exec($sql);
 
 			$sql = 'OPTIMIZE TABLE city, fiche, mot, mot_fiche, translation';
 			$db->exec($sql);
+
+			self::$needsOptimization = false;
 		}
+	}
+
+	static function __destructStatic()
+	{
+		self::optimizeDb();
 	}
 
 	protected static function purgeIndex($fiche_id)
 	{
+		$db = DB();
+
+		$sql = "SELECT extrait FROM fiche WHERE fiche_id={$fiche_id}";
+		if ($extrait = $db->queryOne($sql))
+		{
+			$extrait = unserialize($extrait);
+
+			foreach ($extrait as $extrait) if (is_array($extrait))
+			{
+				list($field, $data) = $extrait;
+
+				if (!empty(annuaire::$fieldWeight[$field]) && in_array($field, annuaire::$suggestFields))
+				{
+					$field = $db->quote($field);
+					$data  = $db->quote($data);
+
+					$sql = "UPDATE suggest SET counter=counter-1
+						WHERE champ={$field} AND suggest=SUBSTRING({$data},1,255)";
+					$db->exec($sql);
+				}
+			}
+		}
+
 		$sql = "DELETE FROM mot_fiche WHERE fiche_id={$fiche_id}";
-		DB()->exec($sql);
+		$db->exec($sql);
 	}
 
 	protected static function getKeywords($mots)

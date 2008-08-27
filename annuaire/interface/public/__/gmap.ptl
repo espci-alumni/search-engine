@@ -18,7 +18,7 @@ html,body,div#map
 
 onload = function() {parent.gmapInit(window)};
 
-document.write('<script type="text/javascript" src="http://maps.google.com/maps?file=api&v=2&key=' + {
+document.write('<script type="text/javascript" src="http://maps.google.com/maps?file=api&v=2&hl={g$__LANG__}&key=' + {
 <!-- LOOP $keys -->
 	{$iteratorPosition|test:','}{$KEY|js}:{$VALUE|js}
 <!-- END:LOOP -->
