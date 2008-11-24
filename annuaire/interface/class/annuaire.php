@@ -34,6 +34,8 @@ class
 		'promotion'	=> 'groupe',
 		'class'		=> 'groupe',
 		'year'		=> 'groupe',
+		'master'        => 'groupe',
+		'mastere'       => 'groupe',
 
 		'nom'		=> 'nom',
 		'prenom'	=> 'nom',
