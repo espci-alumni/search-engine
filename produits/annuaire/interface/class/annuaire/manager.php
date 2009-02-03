@@ -1,6 +1,6 @@
 <?php
 
-abstract class
+class
 {
 	protected static
 
@@ -44,8 +44,15 @@ abstract class
 		}
 	}
 
-	abstract protected static function removeDeleted();
-	abstract protected static function updateModified($geolocalize);
+	protected static function removeDeleted()
+	{
+		W('Abstract method, implement me!');
+	}
+
+	protected static function updateModified($geolocalize)
+	{
+		W('Abstract method, implement me!');
+	}
 
 	protected static function updateFiche($fiche_ref, $fiche, $extrait, $city, $extra)
 	{
