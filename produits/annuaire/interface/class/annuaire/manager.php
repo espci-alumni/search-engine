@@ -1,10 +1,53 @@
 <?php
 
-class
+abstract class
 {
-	protected static $needsOptimization = false;
+	protected static
 
-	static function updateFiche($fiche_ref, $fiche, $extrait, $city, $extra)
+	$fullUpdate = false,
+
+	$needsOptimization = false,
+	$lastUpdate,
+	$lastRef = false;
+
+
+	static function __constructStatic()
+	{
+		$db = DB();
+
+		$sql = 'SELECT mtime, fiche_ref FROM fiche ORDER BY mtime DESC LIMIT 1';
+		if ($sql = $db->queryRow($sql))
+		{
+			self::$lastUpdate = $sql->mtime;
+			self::$lastRef = $sql->fiche_ref;
+		}
+		else
+		{
+			self::$lastUpdate = '0000-00-00 00:00:00';
+			self::$lastRef = false;
+		}
+	}
+
+	static function synchronize($fullUpdate = false, $geolocalize = true)
+	{
+		if ($h = p::fopenX(PATCHWORK_PROJECT_PATH . 'manager.lock'))
+		{
+			fclose($h);
+			register_shutdown_function('unlink', PATCHWORK_PROJECT_PATH . 'manager.lock');
+
+			set_time_limit(0);
+			sleep(1);
+			self::$fullUpdate = $fullUpdate;
+			self::removeDeleted();
+			self::updateModified($geolocalize);
+			self::optimizeDb();
+		}
+	}
+
+	abstract protected static function removeDeleted();
+	abstract protected static function updateModified($geolocalize);
+
+	protected static function updateFiche($fiche_ref, $fiche, $extrait, $city, $extra)
 	{
 		self::$needsOptimization = true;
 
@@ -140,7 +183,7 @@ class
 		p::touch('annuaire/fiche/0');
 	}
 
-	static function deleteFiche($fiche_ref)
+	protected static function deleteFiche($fiche_ref)
 	{
 		self::$needsOptimization = true;
 
@@ -163,7 +206,7 @@ class
 		}
 	}
 
-	static function normalizeExtrait($extrait)
+	protected static function normalizeExtrait($extrait)
 	{
 		foreach ($extrait as $k => &$v) if (is_array($v))
 		{
@@ -176,10 +219,15 @@ class
 			else $v = array($field, $v);
 		}
 
-		return array_values($extrait);
+		$extrait = array_values($extrait);
+
+		while ($extrait && !is_array($extrait[0])) array_shift($extrait);
+		while ($extrait && !is_array(end($extrait))) array_pop($extrait);
+
+		return $extrait;
 	}
 
-	static function optimizeDb()
+	protected static function optimizeDb()
 	{
 		if (self::$needsOptimization)
 		{
