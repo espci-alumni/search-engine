@@ -14,7 +14,7 @@
 
 class extends agent
 {
-	public $get = array('deleted_ref:i:0' => 0);
+	public $get = array('deleted_ref:c:[-_a-zA-Z0-9]+');
 
 	function control()
 	{
