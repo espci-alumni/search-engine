@@ -28,7 +28,7 @@ class
 		}
 	}
 
-	static function synchronize($fullUpdate = false, $geolocalize = true)
+	static function synchronize()
 	{
 		if ($h = p::fopenX(PATCHWORK_PROJECT_PATH . 'manager.lock'))
 		{
@@ -37,9 +37,9 @@ class
 
 			set_time_limit(0);
 			sleep(1);
-			self::$fullUpdate = $fullUpdate;
+
 			self::removeDeleted();
-			self::updateModified($geolocalize);
+			self::updateModified();
 			self::optimizeDb();
 		}
 	}
@@ -49,7 +49,7 @@ class
 		W('Abstract method, implement me!');
 	}
 
-	protected static function updateModified($geolocalize)
+	protected static function updateModified()
 	{
 		W('Abstract method, implement me!');
 	}
@@ -66,7 +66,7 @@ class
 
 		$fiche   = (object) $fiche;
 		$extrait = self::normalizeExtrait((array) $extrait);
-		$city    = (object) $city;
+		$city = (object) ($city ? $city : array('city_id' => 0));
 
 		// Prépare les données à enregistrer sur la fiche
 		$data = array(
@@ -125,7 +125,7 @@ class
 			array('groupe'  , $fiche->groupe),
 			array('position', $fiche->position),
 			array('doc'     , $fiche->doc),
-			array('ville'   , "{$city->city} {$city->div1} {$city->div2} {$city->country}"),
+			array('ville'   , isset($data['city_id']) ? "{$city->city} {$city->div1} {$city->div2} {$city->country} {$city->extra}" : ''),
 		));
 
 		$fields = array();
