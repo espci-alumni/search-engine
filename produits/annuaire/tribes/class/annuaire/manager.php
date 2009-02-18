@@ -127,6 +127,7 @@ EOSQL;
 				FROM contact_adresse
 				WHERE contact_id={$row->contact_id}
 					AND is_active
+					AND is_shared
 					AND NOT is_obsolete
 				ORDER BY sort_key DESC";
 
