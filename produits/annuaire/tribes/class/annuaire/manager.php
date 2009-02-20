@@ -58,29 +58,26 @@ class extends self
 		)';
 
 		$sql->promo = "''";
-		$sql->position = "''";
 
 		$sql->whereUpdated = self::$whereUpdated;
 
-		$sql = <<<EOSQL
-	SELECT
-		contact_id,
+		$sql = "SELECT
+					contact_id,
 
-		photo_token,
-		nom_usuel,
-		nom_civil,
-		nom_etudiant,
-		prenom_usuel,
-		prenom_civil,
-		login,
+					photo_token,
+					nom_usuel,
+					nom_civil,
+					nom_etudiant,
+					prenom_usuel,
+					prenom_civil,
+					login,
 
-		{$sql->nom} AS nom,
-		{$sql->promo} AS promo,
-		{$sql->position} AS position
+					{$sql->nom} AS nom,
+					{$sql->promo} AS promo
 
-	FROM contact_contact
-	WHERE {$sql->whereUpdated} AND is_active AND statut_inscription='accepted'
-EOSQL;
+				FROM contact_contact
+				WHERE {$sql->whereUpdated} AND is_active AND statut_inscription='accepted'";
+
 		$result = self::$db->query($sql);
 
 		while ($row = $result->fetchRow())
@@ -90,14 +87,14 @@ EOSQL;
 			$fiche = (object) array(
 				'nom'       => $row->nom,
 				'groupe'    => $row->promo,
-				'position'  => $row->position,
+				'position'  => '',
 				'doc'       => '',
 				'photo_ref' => $row->photo_token,
 				'doc_ref'   => '',
 				'mtime'     => '',
 			);
 
-			$extrait = self::buildExtrait($row, $city);
+			$extrait = self::buildExtrait($row, $fiche, $city);
 
 			$extra = array(
 				array('nom', "{$row->nom_usuel} {$row->nom_civil} {$row->nom_etudiant} {$row->prenom_usuel} {$row->prenom_civil}"),
@@ -107,13 +104,16 @@ EOSQL;
 
 			self::updateFiche($fiche_ref, $fiche, $extrait, $city, $extra);
 		}
-}
+	}
 
-	protected static function buildExtrait($row, &$city)
+	protected static function buildExtrait($row, &$fiche, &$city)
 	{
 		$extrait = array(
 			array('email', $row->login . $CONFIG['tribes.emailDomain']),
 		);
+
+
+		// Adresses
 
 		$sql = "SELECT
 					tel_portable,
@@ -129,7 +129,7 @@ EOSQL;
 					AND is_active
 					AND is_shared
 					AND NOT is_obsolete
-				ORDER BY sort_key DESC";
+				ORDER BY sort_key";
 
 		$sql = self::$db->query($sql);
 
@@ -138,10 +138,10 @@ EOSQL;
 			$city = self::geolocalize($a);
 
 			do {
+				$extrait[] = ' - ';
 				$extrait[] = array('telephone', $a->tel_portable, $a->tel_fixe);
 				$extrait[] = array('adresse', $a->adresse);
 				$extrait[] = array('ville', "{$a->ville_avant} {$a->ville} {$a->ville_apres}", $a->pays);
-				$extrait[] = ' - ';
 			}
 			while ($a = $sql->fetchRow());
 		}
@@ -149,6 +149,57 @@ EOSQL;
 		{
 			$city = false;
 		}
+
+
+		// Activités
+
+		$sql = "SELECT GROUP_CONCAT(organisation ORDER BY af.sort_key SEPARATOR ' / ')
+				FROM contact_organisation o
+					JOIN contact_affiliation af ON af.organisation_id=o.organisation_id AND is_admin_confirmed
+				WHERE af.activite_id=ac.activite_id
+				GROUP BY ''";
+
+		$sql = "SELECT
+					({$sql}) AS organisation,
+					service,
+					fonction,
+					secteur,
+					date_debut,
+					date_fin,
+					site_web
+				FROM contact_activite ac
+				WHERE contact_id={$row->contact_id}
+					AND is_shared
+					AND NOT is_obsolete
+				ORDER BY sort_key";
+
+		$sql = self::$db->query($sql);
+
+		if ($a = $sql->fetchRow())
+		{
+			$fiche->position = explode(' / ', $a->organisation, 2);
+			$fiche->position = $a->fonction . ' - ' . array_shift($fiche->position);
+
+			do {
+				$extrait[] = ' - ';
+
+				if ($a->fonction)
+				{
+					$extrait[] = array('fonction', $a->fonction);
+					$extrait[] = ', ';
+				}
+
+				$extrait[] = array('entite', $a->service, $a->organisation);
+
+				if ($a->secteur)
+				{
+					$extrait[] = ', ';
+					$extrait[] = array('secteur', $a->secteur);
+				}
+			}
+			while ($a = $sql->fetchRow());
+		}
+
 
 		return $extrait;
 	}
