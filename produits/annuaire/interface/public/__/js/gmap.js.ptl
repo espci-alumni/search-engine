@@ -26,13 +26,14 @@ var $gmap,
 	$iconR50,
 	$iconR100,
 	$liveMarks = new liveAgent('atlas/marks', 0, 1, 0, 1),
-	$livePopup = new liveAgent('atlas/popup', 0, 1, 0, 1);
+	$livePopup = new liveAgent('atlas/popup', 0, 1, 0, 1),
+	$root = {~|js};
 
 window.gmapInit = function($win)
 {
 	if (!$win.GBrowserIsCompatible())
 	{
-		return document.write(
+		return $win.document.write(
 			'Cette page utilise le service <a href="http://maps.google.com/" rel="nofollow">Google Maps</a>, qui n\'est pas compatible avec votre navigateur Internet.<br />\n'
 			+ 'Nous vous recommandons d\'utiliser <a href="http://www.mozilla.com/firefox/" rel="nofollow">Firefox</a>, ou au pire Internet Explorer 5.5 ou plus.'
 		);
@@ -85,7 +86,7 @@ window.gmapInit = function($win)
 		do $maxLng = $p.fromLatLngToPixel($maxLat, $zoom), $minLng = $p.fromLatLngToPixel($minLat, $zoom);
 		while (--$zoom && ($maxLng.x - $minLng.x > $divWidth || $minLng.y - $maxLng.y > $divHeight));
 
-		if ($zoom < 2) ++$zoom;
+		if ($zoom < 2 || ($maxLng.x - $minLng.x < $divWidth * .75 && $minLng.y - $maxLng.y < $divHeight * .75)) ++$zoom;
 	}
 	else
 	{
@@ -227,25 +228,11 @@ function $gmapOnclick()
 	var $marker = this,
 		$data = $marker.$data,
 		$nb   = $data.nb,
-		$html = $marker.$html,
-		$root = {~|js};
+		$html = $marker.$html;
 
 	if (!$html)
 	{
-		$html = ['<b class="region">' + $data.label + '</b><br />'];
-
-		if ($nb > 1) $html.push('<b>' + $nb + ' personnes</b> - ');
-
-		$html.push(
-			'<a href=javascript:zoom() title="Zoom +"><img src="' + $root + 'img/zplus.gif" border="0" height="10" width="10" /></a> '
-			+ '<a href=javascript:zoom(1) title="Zoom -"><img src="' + $root + 'img/zminus.gif" border="0" height="10" width="10" /></a><br />'
-			+ '<div id="infoPage" style="width:300px;height:' + ($nb < 6 ? 180 - 34*(5-$nb) : 210)
-			+ 'px;overflow:auto"></div>'
-		);
-
-		$html = $html.join('');
-
-		$marker.$html = $html;
+		$marker.$html = $html = $getInfoWindowHtml($data.label, $nb);
 	}
 
 	$openedMarker = $data;
@@ -262,59 +249,27 @@ function $loadPage($page)
 function $drawInfoPage($fiches)
 {
 	$fiches = $fiches && $fiches.fiches;
+
 	if (!$fiches) return;
 
-	var $infoPage = frames['map'].document.getElementById('infoPage'),
-		$perPage = 5,
-		$page = $openedMarker.page,
-		$f,
-		$i = ($page - 1)*$perPage,
-		limit,
-		$html = ['<table cellspacing="0" cellpadding="3" border="0">'],
-		$snip = '<a href="javascript:loadPage(',
-		$root = {~|js};
-
-	while ($f = $fiches())
+	try
 	{
-		$html.push(
-			'<tr><td align="center" width="32"><a href="' + P$annuaire_ficheUrl($f.fiche_ref)
-			+ '" target="' + (P$annuaire_ficheUrl.target || '_parent') + '"><img src="' + P$annuaire_photoUrl($f.photo_ref, 32) + '" title="'
-			+ $f.nom + '" border="0" height="32" /></a></td><td><div style="width:210px;overflow:hidden;white-space:nowrap"><a href="'
-			+ P$annuaire_ficheUrl($f.fiche_ref)
-			+ '" target="' + (P$annuaire_ficheUrl.target || '_parent') + '">' + $f.nom + '</a> <a href="' + $root + 'atlas/?q=promo:' + $f.groupe + '" target="_parent" class="group">' + $f.groupe
-			+ '</a><p>' + $f.position + '</p></div></td></tr>'
-		);
-	}
+		var $infoPage = frames['map'].document.getElementById('infoPage');
 
-	if ($openedMarker.nb > $perPage)
+		$fiches = [
+			$getFichesHtml($fiches),
+			$getPaginationHtml(5, $openedMarker.nb, $openedMarker.page)
+		];
+
+		$infoPage.innerHTML = $fiches.join('');
+		$infoPage.scrollTop = 0;
+	}
+	catch ($fiches)
 	{
-		$html.push('<tr><td colspan="2" class="pagination" style="padding-top: 10px"><table cellspacing="0" cellpadding="0" border="0"><tr><td>‹ ');
-		$html.push($page != 1 ? $snip + ($page-1) + ')">' + {"Précédent"|js} + '</a>' : {"Précédent"|js});
-		$html.push(' |</td><td align="center"><div style="width:130px;white-space:nowrap;overflow:hidden;">');
-
-		$nb_pages = Math.ceil($openedMarker.nb / $perPage);
-		$limit = $min(20, $nb_pages);
-
-		for ($i = 1; $i <= $limit; ++$i)
-			$html.push(
-				$i == $page
-				? '<b>' + $i + '</b>'
-				: (
-					$i <= 3 || $i > $nb_pages - 3 || $i - $page == 1 || $page - $i == 1
-					? ' ' + $snip + $i + ')">' + $i + '</a> '
-					: ($snip + $i + ')">.</a>')
-				)
-			);
-
-		$html.push('</div></td><td align="right">| ');
-		$html.push($page != $nb_pages ? $snip + ($page+1) + ')">' + {"Suite"|js} + '</a>' : {"Suite"|js});
-		$html.push(' ›</td></tr></table></td></tr>');
+		<!-- IF g$__DEBUG__ -->
+		E($fiches);
+		<!-- END:IF -->
 	}
-
-	$html.push('</table>');
-
-	$infoPage.innerHTML = $html.join('');
-	$infoPage.scrollTop = 0;
 }
 
 function $gmapZoom($zoomOut)
@@ -336,5 +291,7 @@ function $giconFactory($name, $iW, $iH, $sW, $H, $aX, $aY)
 
 	return $icon;
 }
+
+<!-- AGENT 'js/gmapClosureHook' -->
 
 })();

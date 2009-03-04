@@ -1,0 +1,103 @@
+function $getInfoWindowHtml($label, $nb)
+{
+		var $html = ['<b class="region">' + $label + '</b><br />'];
+
+		if ($nb > 1) $html.push('<b>' + $nb + ' personnes</b> - ');
+
+		$html.push(
+			'<a href=javascript:zoom() title="Zoom +"><img src="' + $root + 'img/zplus.gif" border="0" height="10" width="10" /></a> '
+			+ '<a href=javascript:zoom(1) title="Zoom -"><img src="' + $root + 'img/zminus.gif" border="0" height="10" width="10" /></a><br />'
+			+ '<div id="infoPage" style="width:300px;height:' + ($nb < 6 ? 180 - 34*(5-$nb) : 210)
+			+ 'px;overflow:auto"></div>'
+		);
+
+		return $html.join('');
+}
+
+function $getFichesHtml($fiches)
+{
+	var $f, $html = ['<table cellspacing="0" cellpadding="3" border="0">'];
+
+	while ($f = $fiches())
+	{
+		$html.push(
+			'<tr>'
+				+ '<td align="center" width="32">'
+					+ $getFicheLinkHtml($f, '<img src="' + P$annuaire_photoUrl($f.photo_ref, 32) + '" title="' + $f.nom + '" border="0" height="32" />')
+				+ '</td>'
+				+ '<td>'
+					+ '<div style="width:210px;overflow:hidden;white-space:nowrap">'
+						+ $getFicheLinkHtml($f, $f.nom)
+						+ ($f.groupe ? ' ' + $getGroupLinkHtml($f.groupe) : '')
+						+ '<p>' + $f.position + '</p>'
+					+ '</div>'
+				+ '</td>'
+			+ '</tr>'
+		);
+	}
+
+	$html.push('</table>');
+
+	return $html.join('');
+}
+
+function $getPaginationHtml($perPage, $nb, $page)
+{
+	var $html = [];
+
+	if ($nb > $perPage)
+	{
+		$html.push(
+			  '<table cellspacing="0" cellpadding="0" border="0" style="padding-top: 10px" class="pagination">'
+			+ '<tr>'
+				+ '<td>‹ ' + ($page != 1 ? $getLoadPageLinkHtml($page-1, {"Précédent"|js}) : {"Précédent"|js}) + ' |</td>'
+				+ '<td align="center"><div style="width:130px;white-space:nowrap;overflow:hidden;">'
+		);
+
+		var $nb_pages = Math.ceil($nb / $perPage),
+			$i = 1,
+			$limit = $min(20, $nb_pages);
+
+		for ($i = 1; $i <= $limit; ++$i)
+		{
+			$html.push(
+				$i == $page
+				? '<b>' + $i + '</b>'
+				: (
+					$i <= 3 || $i > $nb_pages - 3 || $i - $page == 1 || $page - $i == 1
+					? ' ' + $getLoadPageLinkHtml($i, $i) + ' '
+					: $getLoadPageLinkHtml($i, '.')
+				)
+			);
+		}
+
+		$html.push(
+				  '</div></td>'
+				+ '<td align="right">| ' + ($page != $nb_pages ? $getLoadPageLinkHtml($page+1, {"Suite"|js}) : {"Suite"|js}) + ' ›</td>'
+			+ '</tr>'
+			+ '</table>'
+		);
+	}
+
+	return $html.join('');
+}
+
+function $getLinkHtml($href, $caption, $extern, $attributes)
+{
+	return '<a href="' + $href + '"' + ($extern ? ' target="' + (P$annuaire_ficheUrl.target || '_parent') + '"' : '') + ($attributes ? ' ' + $attributes : '') + '>' + $caption + '</a>';
+}
+
+function $getLoadPageLinkHtml($page, $caption)
+{
+	return $getLinkHtml('javascript:loadPage(' + $page + ')', $caption);
+}
+
+function $getFicheLinkHtml($f, $caption)
+{
+	return $getLinkHtml(P$annuaire_ficheUrl($f.fiche_ref), $caption, 1);
+}
+
+function $getGroupLinkHtml($group)
+{
+	return $getLinkHtml($root + 'atlas/?q=promo:' + $group, $group, 1, 'class="group"');
+}

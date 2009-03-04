@@ -67,6 +67,7 @@ class
 		$fiche   = (object) $fiche;
 		$extrait = self::normalizeExtrait((array) $extrait);
 		$city = (object) ($city ? $city : array('city_id' => 0));
+		$type = isset($fiche->type) ? (string) $fiche->type : '';
 
 		// Prépare les données à enregistrer sur la fiche
 		$data = array(
@@ -80,6 +81,8 @@ class
 			'photo_ref' => (string) $fiche->photo_ref,
 			'doc_ref'   => (string) $fiche->doc_ref,
 		);
+
+		$type && $data['type'] = $type;
 
 		isset($fiche->mtime) && $data['mtime'] = $fiche->mtime;
 
@@ -135,6 +138,8 @@ class
 		{
 			list($field, $extrait) = $data;
 
+			isset(annuaire::$fieldAlias[$field]) && $field = annuaire::$fieldAlias[$field];
+
 			if ($poids =& annuaire::$fieldWeight[$field])
 			{
 				$tag = (int) in_array($field, annuaire::$tagFields);
@@ -175,13 +180,14 @@ class
 
 			foreach (self::getKeywords($extrait) as $extrait)
 			{
-				self::registerMot($sql, $fiche_id, $extrait, $field, $poids, $tag && strlen($extrait) > 1);
+				self::registerMot($sql, $fiche_id, $extrait, $field, $poids, $tag && strlen($extrait) > 1, $type);
 			}
 		}
 
 		if ($sql)
 		{
-			$sql = 'INSERT INTO mot_fiche VALUES ' . implode(',', $sql);
+			$sql = 'INSERT INTO mot_fiche (fiche_id,mot_id,poids,champ,tag' . ($type ? ',type' : '') . ')
+					VALUES ' . implode(',', $sql);
 			$db->exec($sql);
 		}
 
@@ -296,7 +302,7 @@ class
 		return '' !== $mots ? array_unique(explode(' ', $mots)) : array();
 	}
 
-	protected static function registerMot(&$registry, $fiche_id, $mot, $field, $poids, $tag)
+	protected static function registerMot(&$registry, $fiche_id, $mot, $field, $poids, $tag, $type)
 	{
 		if (!$len = strlen($mot)) return;
 
@@ -344,6 +350,8 @@ class
 			$field,
 			$tag,
 		);
+
+		$type && $sql[] = $type;
 
 		$sql = array_map(array($db, 'quote'), $sql);
 		$registry[] = '(' . implode(',', $sql) . ')';
