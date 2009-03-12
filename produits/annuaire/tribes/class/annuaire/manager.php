@@ -65,6 +65,9 @@ class extends self
 					contact_id,
 
 					photo_token,
+					cv_token,
+					cv_text,
+
 					nom_usuel,
 					nom_civil,
 					nom_etudiant,
@@ -73,7 +76,9 @@ class extends self
 					login,
 
 					{$sql->nom} AS nom,
-					{$sql->promo} AS promo
+					{$sql->promo} AS promo,
+
+					contact_modified
 
 				FROM contact_contact
 				WHERE {$sql->whereUpdated} AND is_active AND statut_inscription='accepted'";
@@ -88,10 +93,10 @@ class extends self
 				'nom'       => $row->nom,
 				'groupe'    => $row->promo,
 				'position'  => '',
-				'doc'       => '',
+				'doc'       => $row->cv_text,
 				'photo_ref' => $row->photo_token,
-				'doc_ref'   => '',
-				'mtime'     => '',
+				'doc_ref'   => $row->cv_token . '/' . $row->login . '.pdf',
+				'mtime'     => $row->contact_modified,
 			);
 
 			$extrait = self::buildExtrait($row, $fiche, $city);
