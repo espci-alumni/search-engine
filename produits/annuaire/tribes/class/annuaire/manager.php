@@ -13,7 +13,12 @@ class extends self
 
 
 		self::$whereUpdated = 'admin_confirmed' . (self::$fullUpdate ? '<=' : '>=') . self::$db->quote(self::$lastUpdate);
-		!self::$fullUpdate && self::$lastRef && self::$whereUpdated .= ' AND contact_id!=' . self::$db->quote(self::$lastRef);
+
+		if (!self::$fullUpdate && self::$lastRef)
+		{
+			self::$whereUpdated .= ' AND (contact_id!=' . self::$db->quote(self::$lastRef)
+				. ' OR admin_confirmed>' . self::$db->quote(self::$lastUpdate) . ')';
+		}
 
 		self::$whereUpdated = '(' . self::$whereUpdated . ')';
 	}
@@ -94,8 +99,8 @@ class extends self
 				'groupe'    => $row->promo,
 				'position'  => '',
 				'doc'       => $row->cv_text,
-				'photo_ref' => $row->photo_token,
-				'doc_ref'   => $row->cv_token . '/' . $row->login . '.pdf',
+				'photo_ref' => $row->photo_token . '/' . $row->login . '.jpg',
+				'doc_ref'   => $row->cv_token    . '/' . $row->login . '.pdf',
 				'mtime'     => $row->contact_modified,
 			);
 
