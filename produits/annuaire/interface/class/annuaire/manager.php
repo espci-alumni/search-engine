@@ -128,7 +128,7 @@ class
 			array('groupe'  , $fiche->groupe),
 			array('position', $fiche->position),
 			array('doc'     , $fiche->doc),
-			array('ville'   , isset($data['city_id']) ? "{$city->city} {$city->div1} {$city->div2} {$city->country} {$city->extra}" : ''),
+			array('ville'   , isset($data['city_id']) ? "{$city->city} {$city->div1} {$city->div2} {$city->country}" : ''),
 		));
 
 		$fields = array();
@@ -136,7 +136,8 @@ class
 
 		foreach ($extrait as $data) if (is_array($data))
 		{
-			list($field, $extrait) = $data;
+			$field = array_shift($data);
+			$extrait = implode(' ', $data);
 
 			isset(annuaire::$fieldAlias[$field]) && $field = annuaire::$fieldAlias[$field];
 
@@ -174,6 +175,23 @@ class
 
 		$sql = array();
 
+		if (!empty($city->extra))
+		{
+			$field = 'ville';
+
+			isset(annuaire::$fieldAlias[$field]) && $field = annuaire::$fieldAlias[$field];
+
+			if (isset($fields[$field]))
+			{
+				$poids = $fields[$field][0];
+
+				foreach (self::getKeywords($city->extra) as $extrait)
+				{
+					self::registerMot($sql, $fiche_id, $extrait, $field, $poids, 0, $type);
+				}
+			}
+		}
+
 		foreach ($fields as $field => $fields)
 		{
 			list($poids, $extrait, $tag) = $fields;
@@ -196,7 +214,7 @@ class
 		p::touch('annuaire/fiche/0');
 	}
 
-	protected static function deleteFiche($fiche_ref)
+	static function deleteFiche($fiche_ref)
 	{
 		self::$needsOptimization = true;
 
@@ -245,6 +263,14 @@ class
 		if (self::$needsOptimization)
 		{
 			$db = DB();
+
+			$a = 'au aux autour avec chez comme dan de du en entre est et la le mise ne non on ou par pa pour qu quand qui que quel quelle quoi sur un une ainsi alor aussi autre bien ce cet cette comment elle ete etre faire fait il je leur lui mai meme mon no notre nou ont permet peut plu propose sa san se si son sont souvent tout toute tre vou apre celle celui certain donc dont facon lor parfoi prise quelque sera sou ici peuvent avant ci';
+
+			$a = "'" . str_replace(' ', "','", $a) . "','" . str_replace(' ', "s','", $a) . "s'";
+
+			$sql = "SELECT mot_id FROM mot WHERE mot IN ({$a})";
+			$sql = "UPDATE mot_fiche SET tag=0 WHERE mot_id IN ({$sql})";
+			$db->exec($sql);
 
 			if (!empty(annuaire::$suggestFields))
 			{

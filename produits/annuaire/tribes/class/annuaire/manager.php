@@ -23,7 +23,7 @@ class extends self
 		self::$whereUpdated = '(' . self::$whereUpdated . ')';
 	}
 
-	protected static function deleteFiche($fiche_ref)
+	static function deleteFiche($fiche_ref)
 	{
 		$fiche_ref = (int) $fiche_ref;
 

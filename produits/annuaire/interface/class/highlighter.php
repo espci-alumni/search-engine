@@ -4,6 +4,8 @@ class
 {
 	static function highlight($extrait, $highlight, $maxlen)
 	{
+		$maxlen > 0 || $maxlen = PHP_INT_MAX;
+
 		ob_start();
 
 		$len = 0;
@@ -36,7 +38,7 @@ class
 				{
 					$b = '' !== (string) $rx ? preg_replace("/^({$rx})/ui", '<b class="highlight">$1</b>', $a[$i]) : $a[$i];
 
-					if ($len)
+					if ($len || PHP_INT_MAX === $maxlen)
 					{
 						$len += strlen($a[$i-1]) + strlen($a[$i]);
 
