@@ -19,11 +19,12 @@ class
 		'entite'    => .625,
 		'fonction'  => .625,
 		'secteur'   => .625,
+		'old-entite'    => .25,
+		'old-fonction'  => .25,
+		'old-secteur'   => .25,
 		'tag'       => .625,
 		'ville'     => .625,
 		'doc'       => .5,
-		'adresse'   => .5,
-		'telephone' => .5,
 	),
 
 	$fieldAlias = array(
