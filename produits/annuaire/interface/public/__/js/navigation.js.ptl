@@ -1,0 +1,86 @@
+<!-- IF $document_domain -->document.domain = {$document_domain|js};<!-- END:IF -->
+
+function t($v, $type)
+{
+	return $type ? (typeof $v == $type) : (typeof $v != 'undefined');
+}
+
+function esc($str)
+{
+	return t($str, 'string')
+		? $str.replace(
+			/&/g, '&amp;').replace(
+			/</g, '&lt;').replace(
+			/>/g, '&gt;').replace(
+			/"/g, '&quot;'
+		) : $str;
+}
+
+function num($str, $weak)
+{
+	return $weak
+		? (
+			  t($str)
+			? (
+				  t($str, 'string') && ''+$str/1==$str
+				? $str/1
+				: $str
+			) : ''
+		) : (parseFloat($str) || 0);
+}
+
+function parseurl($param, $delim, $rx, $array)
+{
+	var $i;
+	$array = $array || {};
+
+	$param = $param.split($delim);
+	while ($param.length)
+	{
+		$i = $param.shift();
+		if ($rx) $i = $i.replace($rx, '');
+		$delim = $i.indexOf('=');
+		if ( $delim>0 ) $array[ decodeURIComponent( $i.substring(0, $delim) ) ] = num(esc(decodeURIComponent( $i.substring($delim+1) )), 1);
+	}
+
+	return $array;
+}
+
+<!-- AGENT 'js/board' -->
+
+ficheList = '' + BOARD.ficheList;
+
+navigationOutput = window.navigationOutput || function($lastSearch, $fichePrev, $ficheNext, $fichePos, $ficheCount)
+{
+		<!-- SET a$a -->
+		'<div id="navigation_resultats"><div style="float:right"><b>‹ '
+		+ ($fichePrev ? '<a href="' + {annuaire_ficheUrl:'1-2-3'|js}.replace('1-2-3', $fichePrev) + '">' + {"Précédent"|js} + '</a>' : {"Précédent"|js})
+		+ ' ' + fichePos + ' sur ' + ficheCount + ' '
+		+ ($ficheNext ? '<a href="' + {annuaire_ficheUrl:'1-2-3'|js}.replace('1-2-3', $ficheNext) + '">' + {"Suivant"|js} + '</a>' : {"Suivant"|js})
+		+ ' ›</b></div> <b>« <a href="' + $lastSearch + '">' + {"Retour aux résultats de la recherche"|js} + '</a></b></div>'
+		<!-- END:SET -->
+		return navigationOutputFilter({a$a|annuaire_utf82html}, $lastSearch, $fichePrev, $ficheNext, $fichePos, $ficheCount);
+}
+
+navigationOutputFilter = window.navigationOutputFilter || function ($a) {return $a;}
+
+if (/^,([0-9]+,)+$/.test(ficheList) && -1 != ficheList.indexOf(',' + fiche + ','))
+{
+	lastSearch = BOARD.lastSearch;
+	perPage = BOARD.resultsPerPage-0;
+
+	ficheList = ficheList.split(',' + fiche + ',');
+
+	fichePrev = ficheList[0].split(',');
+	ficheNext = ficheList[1].split(',');
+
+	fichePos   = fichePrev.length;
+	ficheCount = fichePos + ficheNext.length - 1;
+
+	fichePrev = fichePrev[ fichePos - 1 ];
+	ficheNext = ficheNext[0];
+
+	if (perPage && fichePos > perPage) lastSearch += '&amp;p=' + parseInt((fichePos-1) / perPage + 1);
+
+	document.write(navigationOutput(lastSearch, fichePrev, ficheNext, fichePos, ficheCount));
+}

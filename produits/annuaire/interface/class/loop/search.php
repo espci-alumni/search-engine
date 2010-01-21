@@ -9,8 +9,11 @@ class extends loop_sql_fiche
 
 	$selectRank = '0',
 	$selectRankNorm = '0',
-	$selectMatched = 'COUNT(DISTINCT IF(0,0,',
-	$selectMatchedEnd = '))',
+	$selectWMatched = 'COUNT(DISTINCT IF(0,0,',
+	$selectWMatchedEnd = '))',
+	$selectFMatched = 'COUNT(DISTINCT IF(0,0,',
+	$selectFMatchedEnd = '))',
+	$selectFCount = 0,
 
 	$addWhere = '',
 	$addCount = 0,
@@ -43,7 +46,8 @@ class extends loop_sql_fiche
 
 		array_walk($q, array($this, 'buildQueryComponents'));
 
-		$this->selectMatched .= 'NULL' . $this->selectMatchedEnd;
+		$this->selectWMatched .= 'NULL' . $this->selectWMatchedEnd;
+		$this->selectFMatched .= "''"   . $this->selectFMatchedEnd;
 
 		$sql = "i.mot_id=m.mot_id";
 
@@ -66,7 +70,7 @@ class extends loop_sql_fiche
 			$sql = "INSERT INTO searchtmp
 				SELECT i.fiche_id, 0, "
 					. ($this->addCount
-						? "{$this->selectMatched}/{$this->addCount}
+						? "{$this->selectWMatched}/{$this->addCount}
 							* SUM(({$this->selectRank})/({$this->selectRankNorm}))"
 						: '1'
 					) . " AS rank
@@ -76,7 +80,7 @@ class extends loop_sql_fiche
 					. ($subset ? ', subsettmp s' : '') . "
 				WHERE f.fiche_id=i.fiche_id AND {$this->addWhere}
 				GROUP BY i.fiche_id";
-			if ($this->addCount) $sql .= " HAVING rank>.65";
+			if ($this->addCount) $sql .= " HAVING rank>.65 AND {$this->selectFMatched}={$this->selectFCount}";
 			$sql .= " ORDER BY {$order_key}";
 
 			$db->exec($sql);
@@ -100,11 +104,15 @@ class extends loop_sql_fiche
 		{
 			$selectRank = '';
 			$selectRankNorm = '';
-			$selectMatched = '';
-			$selectMatchedEnd = '';
+			$selectWMatched = '';
+			$selectWMatchedEnd = '';
 
 			$this->highlight[$field] = '';
 			$highlight =& $this->highlight[$field];
+
+			$this->selectFCount += 1;
+			$this->selectFMatched    .= "IF(i.champ='{$field}','{$field}',";
+			$this->selectFMatchedEnd .= ')';
 
 			foreach (array_keys($q['']) as $k)
 			{
@@ -120,8 +128,8 @@ class extends loop_sql_fiche
 
 				$selectRank .= "+IF({$if}," . strlen($k) . '*i.poids,0)';
 				$selectRankNorm .= '+LENGTH(m.mot)*i.poids';
-				$selectMatched .= "IF({$if},'{$field}:{$k}',";
-				$selectMatchedEnd .= ')';
+				$selectWMatched .= "IF({$if},'{$field}:{$k}',";
+				$selectWMatchedEnd .= ')';
 
 				$this->addWhere .= " OR ({$if})";
 			}
@@ -130,8 +138,8 @@ class extends loop_sql_fiche
 
 			$this->selectRank .= $selectRank;
 			$this->selectRankNorm .= $selectRankNorm;
-			$this->selectMatched .= $selectMatched;
-			$this->selectMatchedEnd .= $selectMatchedEnd;
+			$this->selectWMatched .= $selectWMatched;
+			$this->selectWMatchedEnd .= $selectWMatchedEnd;
 		}
 
 		if ($q[' -'])

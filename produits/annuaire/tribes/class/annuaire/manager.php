@@ -62,7 +62,7 @@ class extends self
 			IF(nom_etudiant!="" AND nom_etudiant!=IF(nom_usuel!="",nom_usuel,nom_civil), CONCAT("(",nom_etudiant,")"), NULL)
 		)';
 
-		$sql->promo = "''";
+		$sql->promo = empty($CONFIG['promoSql']) ? "''" : $CONFIG['promoSql'];
 
 		$sql->whereUpdated = self::$whereUpdated;
 

@@ -29,7 +29,7 @@ var $gmap,
 	$livePopup = new liveAgent('atlas/popup', 0, 1, 0, 1),
 	$root = {~|js};
 
-window.gmapInit = function($win)
+window.gmapInit = function($win, $showControls)
 {
 	if (!$win.GBrowserIsCompatible())
 	{
@@ -71,10 +71,14 @@ window.gmapInit = function($win)
 
 	$gmap = new $win.GMap2($gmap, {mapTypes:[$win.G_PHYSICAL_MAP, $win.G_SATELLITE_MAP, $win.G_NORMAL_MAP]});
 	if ($gmap.enableContinuousZoom) $gmap.enableDoubleClickZoom(), $gmap.enableContinuousZoom();
-	$gmap.addControl(new $win.GLargeMapControl());
-	$gmap.addControl(new $win.GMapTypeControl());
-	$gmap.addControl(new $win.GScaleControl());
-	$gmap.addControl(new $win.GOverviewMapControl());
+
+	if ($showControls > 1 || (!$showControls && $divWidth > 400 && $divHeight > 400))
+	{
+		$gmap.addControl(new $win.GLargeMapControl());
+		$gmap.addControl(new $win.GMapTypeControl());
+		$gmap.addControl(new $win.GScaleControl());
+		$gmap.addControl(new $win.GOverviewMapControl());
+	}
 
 	if ($maxLat)
 	{

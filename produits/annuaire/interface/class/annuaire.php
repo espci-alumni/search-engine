@@ -40,6 +40,9 @@ class
 
 		'nom'		=> 'nom',
 		'prenom'	=> 'nom',
+		'name'		=> 'nom',
+		'lastname'	=> 'nom',
+		'firstname'	=> 'nom',
 
 		'naissance'	=> 'naissance',
 		'anniversaire'	=> 'naissance',

@@ -1,6 +1,7 @@
 <div class="bloc">
 	<h2>{$TOP} {a$title}</h2>
 
+	<div class="items">
 <!-- LOOP $TOP -->
 	<div class="item">
 	{$nom|annuaire_ficheLink:$fiche_ref}
@@ -8,4 +9,5 @@
 	<p>{$position}</p>
 	</div>
 <!-- END:LOOP -->
+	</div>
 </div>
