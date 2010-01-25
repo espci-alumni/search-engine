@@ -38,6 +38,6 @@ END:IF
 	--><div id="title">
 		{$title_hook}
 		<!-- IF a$info --><p>{a$info}</p><!-- END:IF -->
-		<h1 style="background-color:#e5ecf9; border-top-color:#3366cc">{a$title}</h1>
+		<h1>{a$title}</h1>
 	</div>
 </td></tr></table>
