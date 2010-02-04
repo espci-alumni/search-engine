@@ -27,7 +27,7 @@ class extends self
 	{
 		$fiche_ref = (int) $fiche_ref;
 
-		$sql = "SELECT is_active, statut_inscription
+		$sql = "SELECT is_active
 				FROM contact_contact
 				WHERE contact_id={$fiche_ref}";
 		$sql = self::$db->queryOne($sql);
@@ -36,7 +36,6 @@ class extends self
 		{
 		case !$sql:
 		case !$sql->is_active:
-		case 'accepted' !== $sql->statut_inscription:
 			parent::deleteFiche($fiche_ref);
 		}
 	}
@@ -45,8 +44,7 @@ class extends self
 	{
 		$sql = 'SELECT contact_id
 				FROM contact_contact
-				WHERE (NOT is_active OR statut_inscription != "accepted")
-					AND ' . self::$whereUpdated;
+				WHERE NOT is_active AND ' . self::$whereUpdated;
 
 		$result = self::$db->query($sql);
 		while ($row = $result->fetchRow()) parent::deleteFiche($row->contact_id);
@@ -63,6 +61,7 @@ class extends self
 		)';
 
 		$sql->promo = empty($CONFIG['promoSql']) ? "''" : $CONFIG['promoSql'];
+		$sql->email = empty($CONFIG['emailSql']) ? "''" : $CONFIG['emailSql'];
 
 		$sql->whereUpdated = self::$whereUpdated;
 
@@ -82,11 +81,12 @@ class extends self
 
 					{$sql->nom} AS nom,
 					{$sql->promo} AS promo,
+					{$sql->email} AS email,
 
 					contact_modified
 
 				FROM contact_contact
-				WHERE {$sql->whereUpdated} AND is_active AND statut_inscription='accepted'";
+				WHERE {$sql->whereUpdated} AND is_active AND is_obsolete<=0 AND admin_confirmed";
 
 		$result = self::$db->query($sql);
 
@@ -99,8 +99,8 @@ class extends self
 				'groupe'    => $row->promo,
 				'position'  => '',
 				'doc'       => $row->cv_text,
-				'photo_ref' => $row->photo_token . '/' . $row->login . '.jpg',
-				'doc_ref'   => $row->cv_token    . '/' . $row->login . '.pdf',
+				'photo_ref' => $row->login ? ($row->photo_token . '/' . $row->login . '.jpg') : '',
+				'doc_ref'   => $row->login ? ($row->cv_token    . '/' . $row->login . '.pdf') : '',
 				'mtime'     => $row->contact_modified,
 			);
 
@@ -118,10 +118,9 @@ class extends self
 
 	protected static function buildExtrait($row, &$fiche, &$city)
 	{
-		$extrait = array(
-			array('email', $row->login . $CONFIG['tribes.emailDomain']),
-		);
+		$extrait = array();
 
+		$extrait[] = array('email', $row->email);
 
 		// Adresses
 
@@ -136,9 +135,8 @@ class extends self
 					pays
 				FROM contact_adresse
 				WHERE contact_id={$row->contact_id}
-					AND is_active
 					AND is_shared
-					AND NOT is_obsolete
+					AND is_obsolete<=0
 				ORDER BY sort_key";
 
 		$sql = self::$db->query($sql);
@@ -151,7 +149,10 @@ class extends self
 				$extrait[] = ' - ';
 				$extrait[] = array('telephone', $a->tel_portable, $a->tel_fixe);
 				$extrait[] = array('adresse', $a->adresse);
-				$extrait[] = array('ville', "{$a->ville_avant} {$a->ville} {$a->ville_apres}", $a->pays);
+				$extrait[] = ($a->tel_portable || $a->tel_fixe || $a->adresse ? ' - ' : '') . $a->ville_avant . ' ';
+				$extrait[] = array('ville', $a->ville);
+				$extrait[] = $a->ville_apres . ($a->pays ? ', ' : '');
+				$extrait[] = array('ville', $a->pays);
 			}
 			while ($a = $sql->fetchRow());
 		}
@@ -172,7 +173,8 @@ class extends self
 		$sql = "SELECT
 					({$sql}) AS organisation,
 					service,
-					fonction,
+					IF (titre   !='',titre   ,fonction) AS titre,
+					IF (fonction!='',fonction,titre   ) AS fonction,
 					secteur,
 					date_debut,
 					date_fin,
@@ -180,7 +182,7 @@ class extends self
 				FROM contact_activite ac
 				WHERE contact_id={$row->contact_id}
 					AND is_shared
-					AND NOT is_obsolete
+					AND is_obsolete<=0
 				ORDER BY sort_key";
 
 		$sql = self::$db->query($sql);
@@ -188,14 +190,14 @@ class extends self
 		if ($a = $sql->fetchRow())
 		{
 			$fiche->position = explode(' / ', $a->organisation, 2);
-			$fiche->position = $a->fonction . ' - ' . array_shift($fiche->position);
+			$fiche->position = ($a->titre ? $a->titre . ' - ' : '') . array_shift($fiche->position);
 
 			do {
 				$extrait[] = ' - ';
 
-				if ($a->fonction)
+				if ($a->titre)
 				{
-					$extrait[] = array('fonction', $a->fonction);
+					$extrait[] = array('fonction', $a->titre . ($a->fonction != $a->titre ? " ({$a->fonction})" : ''));
 					$extrait[] = ', ';
 				}
 
