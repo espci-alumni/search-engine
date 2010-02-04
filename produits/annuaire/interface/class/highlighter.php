@@ -22,7 +22,10 @@ class
 				$space && $glue = ' ';
 
 				$a = trim($extrait);
-				if (-1 == $len || '' === $a) return '';
+				if (-1 == $len || '' === $a)
+				{
+					return ob_get_clean();
+				}
 
 				$a = preg_split("'([«»“”″‘’′ʿ◊[:punct:][:cntrl:][:space:]]+)'u", $a, -1, PREG_SPLIT_DELIM_CAPTURE);
 				array_unshift($a, $glue);

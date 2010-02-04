@@ -245,7 +245,7 @@ function $gmapOnclick()
 
 function $loadPage($page)
 {
-	$page = $page || 1;
+	$page = $page > 0 ? $page : 1;
 	$openedMarker.page = $page;
 	$livePopup.push({zoom:$openedMarker.zoom,id:$openedMarker.id,p:$page}, $drawInfoPage);
 }

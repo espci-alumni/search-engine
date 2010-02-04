@@ -66,7 +66,7 @@ class
 
 		$fiche   = (object) $fiche;
 		$extrait = self::normalizeExtrait((array) $extrait);
-		$city = (object) ($city ? $city : array('city_id' => 0));
+		$city = (object) ($city ? $city : array('city_id' => -1));
 		$type = isset($fiche->type) ? (string) $fiche->type : '';
 
 		// Prépare les données à enregistrer sur la fiche
@@ -88,8 +88,8 @@ class
 
 
 		// Complète le référentiel des villes
-		if (!$city->city_id || !$city->city) unset($data['city_id']);
-		else
+		if ($city->city_id < 0) unset($data['city_id']);
+		else if ($city->city_id && $city->city)
 		{
 			$sql = array(
 				(int)    $city->city_id,
@@ -128,7 +128,7 @@ class
 			array('groupe'  , $fiche->groupe),
 			array('position', $fiche->position),
 			array('doc'     , $fiche->doc),
-			array('ville'   , isset($data['city_id']) ? "{$city->city} {$city->div1} {$city->div2} {$city->country}" : ''),
+			array('ville'   , !empty($data['city_id']) ? "{$city->city} {$city->div1} {$city->div2} {$city->country}" : ''),
 		));
 
 		$fields = array();
