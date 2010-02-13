@@ -43,10 +43,11 @@ class extends agent
 				{$zoom} AS zoom
 			FROM " . annuaire::$city_table . ' JOIN ' . annuaire::$fiche_table . " ON f.city_id=c.city_id
 			WHERE ({$sql})
-				AND latitude  >= {$this->get->mnLt}
-				AND latitude  <= {$this->get->mxLt}
-				AND longitude >= {$this->get->mnLg}
-				AND longitude <= {$this->get->mxLg}
+				AND latitude  BETWEEN {$this->get->mnLt} AND {$this->get->mxLt}
+				AND " . ($this->get->mnLg < $this->get->mxLg
+					? "longitude BETWEEN {$this->get->mnLg} AND {$this->get->mxLg}"
+					: "NOT (longitude BETWEEN {$this->get->mxLg} AND {$this->get->mnLg})"
+				) . "
 			GROUP BY {$groupBy}";
 
 		return $sql;

@@ -117,15 +117,15 @@ function $gmapOnmoveend()
 		$sw = $ne.getSouthWest();
 		$ne = $ne.getNorthEast();
 
-	$z = $z[$gmap.getZoom()] || 5;
+	$z = {
+		zoom: $z[$gmap.getZoom()] || 5,
+		mnLt: $sw.lat(),
+		mxLt: $ne.lat(),
+		mnLg: $sw.lng(),
+		mxLg: $ne.lng()
+	};
 
-	$liveMarks.replace({
-		zoom:$z,
-		mnLt:$sw.lat(),
-		mxLt:$ne.lat(),
-		mnLg:$sw.lng(),
-		mxLg:$ne.lng()
-	}, $gmapDisplayMarks);
+	$liveMarks.replace($z, $gmapDisplayMarks);
 }
 
 
