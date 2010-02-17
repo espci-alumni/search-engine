@@ -83,7 +83,8 @@ class extends self
 					{$sql->promo} AS promo,
 					{$sql->email} AS email,
 
-					contact_modified
+					contact_modified,
+					statut_inscription
 
 				FROM contact_contact
 				WHERE {$sql->whereUpdated} AND is_active AND is_obsolete<=0 AND admin_confirmed";
@@ -104,6 +105,7 @@ class extends self
 				'mtime'     => $row->contact_modified,
 			);
 
+			unset($city);
 			$extrait = self::buildExtrait($row, $fiche, $city);
 
 			$extra = array(
@@ -135,32 +137,18 @@ class extends self
 					pays
 				FROM contact_adresse
 				WHERE contact_id={$row->contact_id}
+					AND admin_confirmed
 					AND is_shared
 					AND is_obsolete<=0
+					AND description!=''
 				ORDER BY sort_key";
 
 		$sql = self::$db->query($sql);
 
-		if ($a = $sql->fetchRow())
+		while ($a = $sql->fetchRow())
 		{
-			$city = self::geolocalize($a);
-
-			do {
-				$extrait[] = ' - ';
-				$extrait[] = array('telephone', $a->tel_portable, $a->tel_fixe);
-				$extrait[] = array('adresse', $a->adresse);
-				$extrait[] = ($a->tel_portable || $a->tel_fixe || $a->adresse ? ' - ' : '') . $a->ville_avant . ' ';
-				$extrait[] = array('ville', $a->ville);
-				$extrait[] = $a->ville_apres . ($a->pays ? ', ' : '');
-				$extrait[] = array('ville', $a->pays);
-			}
-			while ($a = $sql->fetchRow());
+			self::buildExtraitAdresse($a, $extrait, $city);
 		}
-		else
-		{
-			$city = false;
-		}
-
 
 		// Activités
 
@@ -178,12 +166,24 @@ class extends self
 					secteur,
 					date_debut,
 					date_fin,
-					site_web
+					site_web,
+					ad.adresse_id,
+					tel_portable,
+					tel_fixe,
+					adresse,
+					city_id,
+					ville_avant,
+					ville,
+					ville_apres,
+					pays
 				FROM contact_activite ac
-				WHERE contact_id={$row->contact_id}
-					AND is_shared
-					AND is_obsolete<=0
-				ORDER BY sort_key";
+					LEFT JOIN contact_adresse ad
+						ON ad.adresse_id=ac.adresse_id AND ad.is_shared
+				WHERE ac.contact_id={$row->contact_id}
+					AND ac.admin_confirmed
+					AND ac.is_shared
+					AND ac.is_obsolete<=0
+				ORDER BY ac.sort_key";
 
 		$sql = self::$db->query($sql);
 
@@ -193,27 +193,53 @@ class extends self
 			$fiche->position = ($a->titre ? $a->titre . ' - ' : '') . array_shift($fiche->position);
 
 			do {
-				$extrait[] = ' - ';
+				self::buildExtraitActivite($a, $extrait, $city);
 
-				if ($a->titre)
+				if ($a->adresse_id)
 				{
-					$extrait[] = array('fonction', $a->titre . ($a->fonction != $a->titre ? " ({$a->fonction})" : ''));
-					$extrait[] = ', ';
-				}
-
-				$extrait[] = array('entite', $a->service, $a->organisation);
-
-				if ($a->secteur)
-				{
-					$extrait[] = ', ';
-					$extrait[] = array('secteur', $a->secteur);
+					self::buildExtraitAdresse($a, $extrait, $city);
 				}
 			}
 			while ($a = $sql->fetchRow());
 		}
 
-
 		return $extrait;
+	}
+
+	protected static function buildExtraitAdresse($a, &$extrait, &$city)
+	{
+		if (!$city)
+		{
+			$city = self::geolocalize($a);
+			$city->city_id || $city = false;
+		}
+
+		$extrait[] = ' - ';
+		$extrait[] = array('telephone', $a->tel_portable, $a->tel_fixe);
+		$extrait[] = array('adresse', $a->adresse);
+		$extrait[] = ($a->tel_portable || $a->tel_fixe || $a->adresse ? ' - ' : '') . $a->ville_avant . ' ';
+		$extrait[] = array('ville', $a->ville);
+		$extrait[] = $a->ville_apres . ($a->pays ? ', ' : '');
+		$extrait[] = array('ville', $a->pays);
+	}
+
+	protected static function buildExtraitActivite($a, &$extrait, &$city)
+	{
+		$extrait[] = ' - ';
+
+		if ($a->titre)
+		{
+			$extrait[] = array('fonction', $a->titre . ($a->fonction != $a->titre ? " ({$a->fonction})" : ''));
+			$extrait[] = ', ';
+		}
+
+		$extrait[] = array('entite', $a->service, $a->organisation);
+
+		if ($a->secteur)
+		{
+			$extrait[] = ', ';
+			$extrait[] = array('secteur', $a->secteur);
+		}
 	}
 
 	protected static function geolocalize($row)
