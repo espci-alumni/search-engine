@@ -90,7 +90,7 @@ window.gmapInit = function($win, $showControls)
 		do $maxLng = $p.fromLatLngToPixel($maxLat, $zoom), $minLng = $p.fromLatLngToPixel($minLat, $zoom);
 		while (--$zoom && ($maxLng.x - $minLng.x > $divWidth || $minLng.y - $maxLng.y > $divHeight));
 
-		if ($zoom < 2 || ($maxLng.x - $minLng.x < $divWidth * .75 && $minLng.y - $maxLng.y < $divHeight * .75)) ++$zoom;
+		if ($maxLng.x - $minLng.x < $divWidth * .75 && $minLng.y - $maxLng.y < $divHeight * .75) ++$zoom;
 	}
 	else
 	{
