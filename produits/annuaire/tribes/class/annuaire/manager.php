@@ -84,8 +84,7 @@ class extends self
 					{$sql->email} AS email,
 
 					contact_modified,
-					statut_inscription
-
+					acces
 				FROM contact_contact
 				WHERE {$sql->whereUpdated} AND is_active AND is_obsolete<=0 AND admin_confirmed";
 
