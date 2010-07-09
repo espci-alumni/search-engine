@@ -17,7 +17,9 @@ class extends self
 		if (!self::$fullUpdate && self::$lastRef)
 		{
 			self::$whereUpdated .= ' AND (contact_id!=' . self::$db->quote(self::$lastRef)
-				. ' OR admin_confirmed>' . self::$db->quote(self::$lastUpdate) . ')';
+				. ' OR admin_confirmed >' . self::$db->quote(self::$lastUpdate)
+				. ' OR contact_modified>' . self::$db->quote(self::$lastUpdate)
+				. ')';
 		}
 
 		self::$whereUpdated = '(' . self::$whereUpdated . ')';
@@ -83,7 +85,7 @@ class extends self
 					{$sql->promo} AS promo,
 					{$sql->email} AS email,
 
-					contact_modified,
+					GREATEST(admin_confirmed, contact_modified) AS contact_modified,
 					acces
 				FROM contact_contact
 				WHERE {$sql->whereUpdated} AND is_active AND is_obsolete<=0 AND admin_confirmed";
