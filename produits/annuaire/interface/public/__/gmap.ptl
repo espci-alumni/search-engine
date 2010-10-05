@@ -12,7 +12,6 @@ html,body,div#map
 	height:100%;
 }
 </style>
-<link rel="stylesheet" type="text/css" href="css/style" />
 <script type="text/javascript" src="{~}js/w"></script>
 <script type="text/javascript">/*<![CDATA[*/
 

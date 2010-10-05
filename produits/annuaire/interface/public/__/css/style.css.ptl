@@ -1,5 +1,10 @@
 <!-- INLINE css/style.css -->
 
+body, table
+{
+	margin: 0;
+}
+
 .highlight
 {
 	color: black;
