@@ -41,9 +41,9 @@ class extends agent_index
 			$o = parent::filterResults($o);
 		}
 
-		$sql = 'SELECT MAX(latitude) AS max_lat, MIN(latitude) AS min_lat, MAX(longitude) AS max_lng, MIN(longitude) AS min_lng
-			FROM ' . annuaire::$city_table . ' JOIN ' . annuaire::$fiche_table . ' ON f.city_id=c.city_id
-			WHERE ' . $sql;
+		$sql = 'SELECT MAX(latitude) AS max_lat, MIN(latitude) AS min_lat, MAX(longitude) AS max_lng, MIN(longitude) AS min_lng, VARIANCE(longitude) AS var_lng
+				FROM ' . annuaire::$city_table . ' JOIN ' . annuaire::$fiche_table . ' ON f.city_id=c.city_id
+				WHERE ' . $sql;
 		foreach ($db->queryRow($sql) as $k => $v) $o->$k = $v;
 
 		return $o;

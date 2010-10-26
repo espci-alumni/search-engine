@@ -34,7 +34,8 @@ gmapWindow = {
 	max_lat: {$max_lat|js},
 	min_lat: {$min_lat|js},
 	max_lng: {$max_lng|js},
-	min_lng: {$min_lng|js}
+	min_lng: {$min_lng|js},
+	var_lng: {$var_lng|js}
 };
 
 //]]></script>

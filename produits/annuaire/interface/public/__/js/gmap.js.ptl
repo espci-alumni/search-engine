@@ -9,11 +9,6 @@ var $gmap,
 	$fiche = [],
 	$ficheLength = 0,
 
-	$minLat,
-	$maxLat,
-	$minLng,
-	$maxLng,
-
 	$GEvent,
 	$GMarker,
 	$GLatLng,
@@ -44,35 +39,31 @@ window.gmapInit = function($win, $showControls)
 	$win.zoom = $gmapZoom;
 	$win.loadPage = $loadPage;
 
-	$gmap = $win.document.getElementById('map');
-	$gmap.style.display = '';
+	var $minLat = window.gmapWindow.min_lat/1,
+		$maxLat = window.gmapWindow.max_lat/1,
+		$minLng = window.gmapWindow.min_lng/1,
+		$maxLng = window.gmapWindow.max_lng/1,
+		$varLng = window.gmapWindow.var_lng/1,
+		$bounds = $win.document.getElementById('map');
 
-	$GEvent = $win.GEvent;
+	$bounds.style.display = '';
+
+	$GEvent  = $win.GEvent;
 	$GMarker = $win.GMarker;
 	$GLatLng = $win.GLatLng;
-	$GPoint = $win.GPoint;
-	$GSize = $win.GSize;
-	$GIcon = $win.GIcon;
-
-	$minLat = window.gmapWindow.min_lat/1;
-	$maxLat = window.gmapWindow.max_lat/1;
-	$minLng = window.gmapWindow.min_lng/1;
-	$maxLng = window.gmapWindow.max_lng/1;
-
-	var $divWidth = $gmap.offsetWidth,
-		$divHeight = $gmap.offsetHeight,
-		$center = new $GLatLng(($maxLat + $minLat)/2, ($maxLng + $minLng)/2),
-		$zoom = 8, $p;
+	$GPoint  = $win.GPoint;
+	$GSize   = $win.GSize;
+	$GIcon   = $win.GIcon;
 
 	$iconR10  = $giconFactory('r10' , 12, 20, 22, 20,  6, 19);
 	$iconR25  = $giconFactory('r25' , 16, 27, 30, 27,  8, 26);
 	$iconR50  = $giconFactory('r50' , 20, 34, 37, 34, 10, 33);
 	$iconR100 = $giconFactory('r100', 24, 41, 44, 41, 12, 40);
 
-	$gmap = new $win.GMap2($gmap, {mapTypes:[$win.G_PHYSICAL_MAP, $win.G_SATELLITE_MAP, $win.G_NORMAL_MAP]});
+	$gmap = new $win.GMap2($bounds, {mapTypes:[$win.G_PHYSICAL_MAP, $win.G_SATELLITE_MAP, $win.G_NORMAL_MAP]});
 	if ($gmap.enableContinuousZoom) $gmap.enableDoubleClickZoom(), $gmap.enableContinuousZoom();
 
-	if ($showControls > 1 || (!$showControls && $divWidth > 400 && $divHeight > 400))
+	if ($showControls > 1 || (!$showControls && $bounds.offsetWidth > 400 && $bounds.offsetHeight > 400))
 	{
 		$gmap.addControl(new $win.GLargeMapControl());
 		$gmap.addControl(new $win.GMapTypeControl());
@@ -82,28 +73,34 @@ window.gmapInit = function($win, $showControls)
 
 	if ($maxLat)
 	{
-		$p = new $win.GMercatorProjection($zoom + 1);
+		if ($varLng <= ($maxLng - $minLng) * ($maxLng - $minLng) / 4)
+		{
+			$bounds = new $win.GLatLngBounds(
+				new $GLatLng($minLat, $minLng),
+				new $GLatLng($maxLat, $maxLng)
+			);
+		}
+		else
+		{
+			$bounds = new $win.GLatLngBounds(
+				new $GLatLng($minLat, $maxLng),
+				new $GLatLng($maxLat, $minLng)
+			);
+		}
 
-		$maxLat = new $GLatLng($maxLat, $maxLng);
-		$minLat = new $GLatLng($minLat, $minLng);
-
-		do $maxLng = $p.fromLatLngToPixel($maxLat, $zoom), $minLng = $p.fromLatLngToPixel($minLat, $zoom);
-		while (--$zoom && ($maxLng.x - $minLng.x > $divWidth || $minLng.y - $maxLng.y > $divHeight));
-
-		if ($maxLng.x - $minLng.x < $divWidth * .75 && $minLng.y - $maxLng.y < $divHeight * .75) ++$zoom;
+		$gmap.setCenter($bounds.getCenter(), $gmap.getBoundsZoomLevel($bounds));
+		if ($gmap.getBounds().isFullLng()) $gmap.setCenter(new $GLatLng(25, 0));
 	}
 	else
 	{
-		$zoom = 2;
-		$center = new $GLatLng(25, 0);
+		$gmap.setCenter(new $GLatLng(25, 0), 2);
 	}
 
-	$gmap.setCenter($center, $zoom);
 
 	$GEvent.addListener($gmap, 'zoomend', $gmapOnzoomend);
 	$GEvent.addListener($gmap, 'moveend', $gmapOnmoveend);
 	$GEvent.addListener($gmap, 'infowindowopen', $loadPage);
-	$gmapOnzoomend(-1, $zoom);
+	$gmapOnzoomend(-1, 0);
 	$gmapOnmoveend();
 }
 
