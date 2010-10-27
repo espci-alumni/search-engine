@@ -15,7 +15,7 @@ class
 	{
 		?>/*<script>*/
 
-P$sortMotclef = function($string)
+function($string)
 {
 	$string = dUC(str($string));
 	$string = $string.split('_');

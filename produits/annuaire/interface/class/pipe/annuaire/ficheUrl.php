@@ -18,7 +18,6 @@ class
 
 	static function __constructStatic()
 	{
-		self::$pipe = 'P$' . substr(__CLASS__, 5);
 		isset(self::$preRef) || self::$preRef = substr(__CLASS__, 14, -3) . '/';
 		isset(self::$noRef)  || 'photo' === substr(__CLASS__, 14, -3) && self::$noRef = 'img/inconnu.gif';
 	}
@@ -43,7 +42,7 @@ class
 	{
 		?>/*<script>*/
 
-<?php echo self::$pipe ?> = function($ref, $variant)
+function($ref, $variant)
 {
 	$ref = str($ref);
 	$ref = $ref ? <?php echo jsquote(self::$preRef) ?> + $ref + <?php echo jsquote(self::$postRef) ?> : <?php echo jsquote(self::$noRef) ?>;
@@ -59,7 +58,7 @@ class
 	return base($ref, 1);
 }
 
-<?php echo self::$pipe ?>.target = <?php echo jsquote(self::target) ?>;
+window.P$annuaire_ficheUrl_target = <?php echo jsquote(self::target) ?>;
 
 <?php	}
 }

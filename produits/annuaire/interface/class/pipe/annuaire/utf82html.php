@@ -9,6 +9,6 @@ class
 
 	static function js()
 	{
-		echo 'function P$annuaire_utf82html($s) {return str($s);}';
+		echo 'function($s) {return str($s);}';
 	}
 }

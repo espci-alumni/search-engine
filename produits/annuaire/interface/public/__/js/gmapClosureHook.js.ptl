@@ -84,7 +84,7 @@ function $getPaginationHtml($perPage, $nb, $page)
 
 function $getLinkHtml($href, $caption, $extern, $attributes)
 {
-	return '<a href="' + $href + '"' + ($extern ? ' target="' + (P$annuaire_ficheUrl.target || '_parent') + '"' : '') + ($attributes ? ' ' + $attributes : '') + '>' + $caption + '</a>';
+	return '<a href="' + $href + '"' + ($extern ? ' target="' + (window.P$annuaire_ficheUrl_target || '_parent') + '"' : '') + ($attributes ? ' ' + $attributes : '') + '>' + $caption + '</a>';
 }
 
 function $getLoadPageLinkHtml($page, $caption)

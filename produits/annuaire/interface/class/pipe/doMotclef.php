@@ -22,7 +22,7 @@ class
 	{
 		?>/*<script>*/
 
-P$doMotclef = function($in, $prefix)
+function($in, $prefix)
 {
 	$in = '' + $in;
 	$prefix = $prefix || '';
