@@ -8,8 +8,8 @@ class extends agent
 
 	function compose($o)
 	{
-		pipe_annuaire_ficheUrl::js();
-		pipe_annuaire_photoUrl::js();
+		echo 'P$annuaire_ficheUrl='; pipe_annuaire_ficheUrl::js();
+		echo 'P$annuaire_photoUrl='; pipe_annuaire_photoUrl::js();
 
 		return $o;
 	}

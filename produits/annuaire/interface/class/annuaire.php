@@ -95,6 +95,7 @@ class
 		'profession'	=> 'fonction',
 
 		'secteur'	=> 'secteur',
+		'naf'		=> 'secteur',
 		'activite'	=> 'secteur',
 		'sector'        => 'secteur',
 		'activity'	=> 'secteur',

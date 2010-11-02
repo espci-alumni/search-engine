@@ -16,7 +16,7 @@ IF a$tags
 </style><!--
 
 	SET a$queryMask
-		-->{g$__AGENT__}{g$__1__}<!-- IF g$__2__ -->/{g$__2__}<!-- END:IF -->?<!-- IF g$q -->q={g$q}<!-- END:IF -->"<!--
+		-->{g$__AGENT__}{g$__1__}<!-- IF g$__2__ -->/{g$__2__}<!-- END:IF -->?<!-- IF g$q -->q={g$q|urlencode}<!-- END:IF -->"<!--
 	END:SET
 
 	SET a$rel

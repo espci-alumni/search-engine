@@ -102,7 +102,7 @@ class
 			);
 			$sql = array_map(array($db, 'quote'), $sql);
 			$sql = 'INSERT IGNORE INTO city (city_id, city, latitude, longitude, div1, div2, country)
-				VALUES (' . implode(',', $sql) . ')';
+					VALUES (' . implode(',', $sql) . ')';
 			$db->exec($sql);
 		}
 
@@ -128,7 +128,7 @@ class
 			array('groupe'  , $fiche->groupe),
 			array('position', $fiche->position),
 			array('doc'     , $fiche->doc),
-			array('ville'   , !empty($data['city_id']) ? "{$city->city} {$city->div1} {$city->div2} {$city->country}" : ''),
+			array('ville'   , !empty($data['city_id']) ? "{$city->city} {$city->country}" : ''),
 		));
 
 		$fields = array();
@@ -167,8 +167,8 @@ class
 			}
 
 			$sql = "INSERT INTO suggest
-				VALUES " . implode(',', $sql) . "
-				ON DUPLICATE KEY UPDATE counter=counter+1";
+					VALUES " . implode(',', $sql) . "
+					ON DUPLICATE KEY UPDATE counter=counter+1";
 			$db->exec($sql);
 		}
 
