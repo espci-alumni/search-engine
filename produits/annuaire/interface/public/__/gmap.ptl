@@ -3,15 +3,10 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>{"Atlas"}</title>
-<!-- SET $_css --><link rel="stylesheet" type="text/css" href="{a$css|default:'css/style'|base}"><!-- END:SET -->
-<!--[if IE 6]>{$_css|replace:'">':'&ie=6">'}<![endif]-->
-<!--[if IE 7]>{$_css|replace:'">':'&ie=7">'}<![endif]-->
-<!--[if IE 8]>{$_css|replace:'">':'&ie=8">'}<![endif]-->
-<!--[if IE 9]>{$_css|replace:'">':'&ie=9">'}<![endif]-->
-<!--[if !IE]>-->{$_css}<!--<![endif]-->
-<style type="text/css">
+<link rel="stylesheet" type="text/css" href="{a$css|default:'css/style'|base}">
+<style>
 html,body,div#map
 {
 	margin: 0;
@@ -20,18 +15,18 @@ html,body,div#map
 	height:100%;
 }
 </style>
-<script type="text/javascript" src="{~}js/w"></script>
-<script type="text/javascript">/*<![CDATA[*/
+<script src="{~}js/w"></script>
+<script>
 
 onload = function() {parent.gmapInit(window)};
 
-document.write('<script type="text/javascript" src="http://maps.google.com/maps?file=api&v=2&hl={g$__LANG__}&key=' + {
+document.write('<script src="http://maps.google.com/maps?file=api&v=2&hl={g$__LANG__}&key=' + {
 <!-- LOOP $keys -->
 	{$iteratorPosition|test:','}{$KEY|js}:{$VALUE|js}
 <!-- END:LOOP -->
 }[location.hostname] + '"><\/script>');
 
-//]]></script>
+</script>
 </head>
 <body><div id="map"></div></body>
 </html>

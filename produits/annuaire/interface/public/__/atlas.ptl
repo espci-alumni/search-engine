@@ -20,15 +20,15 @@ IF !$nb_resultats && g$q
 ELSE
 
 -->
-<style type="text/css">
+<style>
 html, body
 {
 	height: 100%;
 }
 </style>
-<script type="text/javascript" src="{~}js/liveAgent?src=1"></script>
-<script type="text/javascript" src="{~}js/gmap"></script>
-<script type="text/javascript">/*<![CDATA[*/
+<script src="{~}js/liveAgent?src=1"></script>
+<script src="{~}js/gmap"></script>
+<script>
 
 gmapWindow = {
 	max_lat: {$max_lat|js},
@@ -38,7 +38,7 @@ gmapWindow = {
 	var_lng: {$var_lng|js}
 };
 
-//]]></script>
+</script>
 
 <iframe name="map" id="map" src="{~}gmap" width="100%" height="100%" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0"></iframe>
 

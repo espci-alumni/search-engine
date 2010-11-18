@@ -3,7 +3,7 @@
 SET a$query -->{g$q}{g$tag}<!-- END:SET
 
 SET a$head
-	IF a$ficheList --><script type="text/javascript">/*<![CDATA[*/
+	IF a$ficheList --><script>
 
 		<!-- SET a$a --><!-- AGENT 'js/board' --><!-- END:SET -->
 		{a$a|allowhtml}
@@ -14,7 +14,7 @@ SET a$head
 			'ficheList'     : {a$ficheList|js},
 			'resultsPerPage': {a$results_per_page|js}
 		});
-		//]]></script ><!--
+		</script><!--
 	END:IF
 END:SET
 
