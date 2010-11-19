@@ -58,7 +58,7 @@ function($ref, $variant)
 	return base($ref, 1);
 }
 
-window.P$annuaire_ficheUrl_target = <?php echo jsquote(self::target) ?>;
+window.P$<?php echo substr(__CLASS__, 5) . '_target=' . jsquote(self::target); ?>;
 
 <?php	}
 }
