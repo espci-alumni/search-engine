@@ -27,9 +27,9 @@ IF !a$minimal
 	</ul>
 	<!--
 
-	IF a$q --><!-- AGENT a$q autofocus=a$focus placeholder="rechercher dans l'annuaire" --><!-- ELSE --><!-- AGENT $q autofocus=a$focus placeholder="rechercher dans l'annuaire" --><!-- END:IF
+	IF a$q --><!-- AGENT a$q autofocus=a$focus placeholder="Rechercher dans l'annuaire" id='search-field' --><!-- ELSE --><!-- AGENT $q autofocus=a$focus placeholder="Rechercher dans l'annuaire" id='search-field' --><!-- END:IF
 
-	--><input type="submit" value="{"Rechercher"}" id="searchbutton" onclick="this.form.submit();return false;"><!--
+	--><input type="submit" value="{"rechercher"}" id="search-button" onclick="this.form.submit();return false;"><!--
 
 	IF g$tag --><input type="hidden" name="tag" value="{g$tag}"><!-- END:IF
 

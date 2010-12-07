@@ -1,10 +1,10 @@
 <div class="boutons">
 <!-- IF $doc -->
-<a id="cv" class="navigation" href="{$doc_ref|annuaire_docUrl}"><span>cv</span></a>
+<a class="navigation cv" href="{$doc_ref|annuaire_docUrl}"><span>cv</span></a>
 <!-- ELSE -->
-<span id="cvoff"></span>
+<span class="cvoff navigation"></span>
 <!-- END:IF -->
-<a id="profil" class="navigation" href="{$fiche_ref|annuaire_ficheUrl}"><span>profil</span></a>
+<a class="navigation profil" href="{$fiche_ref|annuaire_ficheUrl}"><span>profil</span></a>
 </div>
 <div class="fiche">
 	<div class="photo"><img src="{$photo_ref|annuaire_photoUrl:64}" height="64"></div>

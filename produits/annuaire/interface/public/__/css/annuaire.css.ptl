@@ -9,7 +9,7 @@ margin:0;
 
 #body-max {
 width:915px;
-height:auto;
+height:100%;
 margin-left:auto;
 margin-right:auto;
 }
@@ -23,10 +23,10 @@ font-size:150%;
 margin:30px;
 }
 
-div.bloc {
+div.items {
 background-color:#FFF;
 border:1px solid gray;
-margin:15px 10px 10px;
+margin:10px 10px 10px;
 -moz-border-radius:5px;
 border-radius:5px;
 padding:10px;
@@ -35,23 +35,19 @@ padding:10px;
 box-shadow: 0px 3px 5px #aaa; 
 }
 
-.ie6 div.bloc,
-.ie7 div.bloc,
-.ie8 div.bloc{
+.ie6 div.items,
+.ie7 div.items,
+.ie8 div.items{
 filter:progid:DXImageTransform.Microsoft.Shadow(color='#aaaaaa', Direction=180, Strength=5); 
   zoom: 1;
 }
 
 div.bloc h2 {
 text-align:left;
-border-bottom:1px solid gray;
 font-size:12px;
 font-weight:700;
+margin-left:10px;
 color:#000;
-margin-top:-10px;
-margin-left:-10px;
-margin-right:-10px;
-padding:3px 5px;
 }
 
 div.boutons {
@@ -65,42 +61,47 @@ display:block;
 width:99px;
 height:64px;
 text-align:center;
-text-decoration:none;
 float:right;
 }
 
-a#profil {
+a.navigation:hover{
+text-decoration:none;
+}
+
+a.profil {
 background:url('{~}img/sprite-annuaire.gif') 0 no-repeat;
 }
 
-a#profil:hover {
+a.profil:hover {
 background:url('{~}img/sprite-annuaire.gif') -99px no-repeat;
 }
 
-a#cv {
+a.cv {
 background:url('{~}img/sprite-annuaire.gif') -198px no-repeat;
 margin-right:20px;
 }
 
-a#cv:hover {
+a.cv:hover {
 background:url('{~}img/sprite-annuaire.gif') -297px no-repeat;
 }
 
-#cvoff {
+.cvoff {
 display:block;
 width:99px;
 height:64px;
+text-align:center;
 float:right;
 background:url('{~}img/sprite-annuaire.gif') -396px no-repeat;
 margin-right:20px;
-text-align:center;
 }
 
 #pagination {
+position:relative;
+float:left;
+width:auto;
 height:40px;
-clear:both;
+margin-left:200px;
 margin-top:10px;
-text-align:center;
 font-weight:700;
 }
 
@@ -361,9 +362,47 @@ margin:5px;
 }
 
 #engine {
-float:right;
-white-space:nowrap;
+float:left;
 margin:10px;
+}
+
+#search-field, #search-button
+{
+height:51px;
+float:left;
+background:url({~}img/spritesearch.png) repeat-x;
+}
+
+#search-field
+{
+line-height:49px;
+width:350px;
+border:1px solid #000;
+border-right:none;
+font-size:18px;
+font-weight:700;
+padding : 0 0 0 10px;
+-moz-border-radius:10px 0 0 10px;
+border-radius:10px 0 0 10px;
+}
+
+#search-button
+{
+width:150px;
+height:53px;
+border:1px solid #000;
+font-size:16px;
+font-variant:small-caps;
+color:#fff;
+background-color:#999;
+-moz-border-radius:0 10px 10px 0;
+border-radius:0 10px 10px 0;
+}
+
+#search-button:hover
+{
+color:#666;
+background-color:#e6e6e6;
 }
 
 #head li {
