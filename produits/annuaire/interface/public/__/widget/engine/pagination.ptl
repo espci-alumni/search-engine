@@ -13,20 +13,18 @@ IF a$nb_pages >= 2
 
 --><div id="pagination">
 
-‹ <!--
+<!--
 
 	IF a$page
-		IF a$page > 1 --><a href="{a$url}&amp;p={a$page}">{"Page précédente"}</a><!--
-		ELSE --><a href="{a$url}">{"Page précédente"}</a><!--
+		IF a$page > 1 --><a class="pagination prev" href="{a$url}&amp;p={a$page}">‹&nbsp;{"Page précédente"}</a><!--
+		ELSE --><a class="pagination prev" href="{a$url}">‹&nbsp;{"Page précédente"}</a><!--
 		END:IF
-	ELSE -->{"Page précédente"}<!--
+	ELSE --><span class="pagination prev">‹&nbsp;{"Page précédente"}</span><!--
 	END:IF
-
---> | <!--
 
 	LOOP a$nb_iter
 
-		IF $iteratorPosition == a$page --> <b>{$iteratorPosition+1}</b> <!--
+		IF $iteratorPosition == a$page --> <strong class="pagination">{$iteratorPosition+1}</strong> <!--
 
 		ELSEIF $iteratorPosition < 3
 			|| $iteratorPosition > a$nb_pages-4
@@ -34,23 +32,27 @@ IF a$nb_pages >= 2
 			|| a$page - $iteratorPosition == 1 --> <!--
 
 			IF $iteratorPosition
-				--><a href="{a$url}&amp;p={$iteratorPosition+1}">{$iteratorPosition+1}</a><!--
+				--><a class="pagination" href="{a$url}&amp;p={$iteratorPosition+1}">{$iteratorPosition+1}</a><!--
 			ELSE
-				--><a href="{a$url}">{$iteratorPosition+1}</a><!--
+				--><a class="pagination" href="{a$url}">{$iteratorPosition+1}</a><!--
 			END:IF --> <!--
-		ELSE --><a href="{a$url}&amp;p={$iteratorPosition+1}">.</a><!--
+		ELSE
+			SET $_c
+				IF $iteratorPosition == 3 || $iteratorPosition - a$page == 2-->first-dot <!-- END:IF
+				IF a$page - $iteratorPosition == 2 || a$nb_pages - $iteratorPosition < 5 || a$nb_iter - $iteratorPosition == 1 -->last-dot <!-- END:IF
+			END:SET
+
+			--><a <!-- IF $_c -->class="{$_c}" <!-- END:IF -->href="{a$url}&amp;p={$iteratorPosition+1}">.</a><!--
 
 		END:IF
 
 	END:LOOP
 
---> | <!--
-
-	IF a$page + 2 < a$nb_pages --><a href="{a$url}&amp;p={a$page+2}">{"Suivante"}</a><!--
-	ELSE -->{"Suivante"}<!--
+	IF a$page + 2 < a$nb_pages --><a class="pagination next" href="{a$url}&amp;p={a$page+2}">{"Suivante"}&nbsp;›</a><!--
+	ELSE --><span class="pagination next">{"Suivante"}&nbsp;›</span><!--
 	END:IF
 
---> › </div><!--
+--></div><!--
 
 END:IF
 

@@ -3,13 +3,15 @@
 INLINE header
 
 
---><a name="top"></a><table width="100%" cellspacing="0" cellpadding="0"><tr><td id="head"><!--
+-->
+<div id="body-max">
+<table width="100%" cellspacing="0" cellpadding="0"><tr><td id="head"><!--
 
 IF !a$minimal
 
 	IF a$form --><!-- AGENT a$form --><!-- ELSE --><!-- AGENT $form --><!-- END:IF -->
 
-	<a href="{~}"><img src="{~}img/logo.gif" id="logo" /></a>
+	<a href="{~}" id="logo"><img src="{~}img/logo.gif"></a>
 
 	<div id="engine">
 	<ul><!--
@@ -23,19 +25,23 @@ IF !a$minimal
 		--></li><!--
 	END:LOOP -->
 	</ul>
-
 	<!--
 
-	IF a$q --><!-- AGENT a$q autofocus=a$focus --><!-- ELSE --><!-- AGENT $q autofocus=a$focus --><!-- END:IF
+	IF a$q --><!-- AGENT a$q autofocus=a$focus placeholder="rechercher dans l'annuaire" --><!-- ELSE --><!-- AGENT $q autofocus=a$focus placeholder="rechercher dans l'annuaire" --><!-- END:IF
 
-	--><input type="image" src="{~}img/go.gif" alt="{"Rechercher"}" title="{"Rechercher"}" onclick="this.form.submit();return false;" style="position:relative;vertical-align:text-bottom;top:3px;_top:0px" /></div><!--
+	--><input type="submit" value="{"Rechercher"}" id="searchbutton" onclick="this.form.submit();return false;"><!--
 
-	IF g$tag --><input type="hidden" name="tag" value="{g$tag}" /><!-- END:IF
+	IF g$tag --><input type="hidden" name="tag" value="{g$tag}"><!-- END:IF
+
+	-->
+	</div>
+	<!--
+
 	IF a$form --><!-- AGENT a$form _mode_='close' --><!-- ELSE --><!-- AGENT $form _mode_='close' --><!-- END:IF
-
 END:IF
 
-	--><div id="title">
+	-->
+	<div id="title">
 		{$title_hook}
 		<!-- IF a$info --><p>{a$info}</p><!-- END:IF -->
 		<h1>{a$title}</h1>

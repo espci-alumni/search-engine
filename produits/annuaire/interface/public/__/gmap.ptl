@@ -9,6 +9,7 @@
 <style>
 html,body,div#map
 {
+	overflow: hidden;
 	margin: 0;
 	padding: 0;
 	width:100%;

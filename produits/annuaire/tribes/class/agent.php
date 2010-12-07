@@ -7,7 +7,7 @@ class extends self
 		if (!s::get('acces'))
 		{
 			s::flash('referer', p::__URI__());
-			p::redirect('/login');
+			p::redirect($CONFIG['tribes.baseUrl'] . 'login');
 		}
 	}
 }

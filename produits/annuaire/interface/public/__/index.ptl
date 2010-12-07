@@ -27,33 +27,15 @@ IF !g$q && !g$tag
 END:IF
 
 IF !$nb_resultats && g$q
-	--><div class="noresult">{"Aucun résultat pour"} «&nbsp;<b>{g$q}</b>&nbsp;»</div><!--
+	--><div class="noresult">{"Aucun résultat pour"} «&nbsp;<strong>{g$q}</strong>&nbsp;»</div><!--
 END:IF
 
 IF $fiches
-
---><table><!--
-LOOP $fiches -->
-<tr>
-	<td style="text-align: center"><img src="{$photo_ref|annuaire_photoUrl:64}" height="64" /></td>
-	<td>
-	{$nom|annuaire_ficheLink:$fiche_ref}
-	<!-- IF $groupe --><a href="{~}?q=promo:{$groupe}" class="group">{$groupe}</a><!-- END:IF --><br />
-	<span style="color:#777">
-	{$extrait|allowhtml}
-	<!-- IF $doc -->
-		<!-- SET $ext -->{$doc_ref|replace:'.+\.(doc|pdf)\b.*':'$1'}<!-- END:SET -->
-		<!-- IF $ext == $doc_ref --><!-- SET $ext -->bin<!-- END:SET --><!-- END:IF -->
-		<br /><a href="{$doc_ref|annuaire_docUrl}" style="white-space:nowrap"><img src="{~}img/{$ext}.gif" /></a>
-		{$doc|allowhtml}
-	<!-- END:IF -->
-	</span>
-	</td>
-</tr>
-<tr><td colspan="2"><hr /></td></tr><!--
-END:LOOP
---></table><!--
-
+	--><div id="fiches"><!--
+	LOOP $fiches
+		INLINE widget/_fiche
+	END:LOOP
+	--></div><!--
 END:IF
 
 IF $nb_resultats > $results_per_page
