@@ -22,8 +22,8 @@ function $getFichesHtml($fiches)
 	{
 		$html.push(
 			'<tr>'
-				+ '<td align="center" width="32">'
-					+ $getFicheLinkHtml($f, '<img src="' + P$annuaire_photoUrl($f.photo_ref, 32) + '" title="' + $f.nom + '" border="0" height="32" />')
+				+ '<td align="center" width="40">'
+					+ $getFicheLinkHtml($f, '<div style="height:32px;width:32px;"><img src="' + P$annuaire_photoUrl($f.photo_ref, 32) + '" title="' + $f.nom + '" border="0" height="32"></div>')
 				+ '</td>'
 				+ '<td>'
 					+ '<div style="width:210px;overflow:hidden;white-space:nowrap">'

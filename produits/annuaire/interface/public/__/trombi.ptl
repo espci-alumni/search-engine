@@ -22,13 +22,13 @@ IF !$nb_resultats && g$q
 	--><div class="noresult">{"Aucun résultat pour"} « <b>{g$q}</b> »</div><!--
 END:IF
 
---><table><tr><td>
+-->
+<div id="trombi">
 <!-- LOOP $fiches -->
 <!-- SET a$a --><span class="trombiPhoto"><img src="{$photo_ref|annuaire_photoUrl}" title="{$nom}" /></span>{$nom}<!-- END:SET -->
 <div class="trombiNom">{a$a|annuaire_ficheLink:$fiche_ref}</a></div>
 <!-- END:LOOP -->
-</td></td></table>
-
+</div>
 <!--
 
 AGENT 'widget/engine/pagination'

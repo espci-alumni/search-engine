@@ -1,49 +1,24 @@
-<!--
-
-INLINE header
-
-
--->
+<!-- INLINE header -->
 <div id="body-max">
-<table width="100%" cellspacing="0" cellpadding="0"><tr><td id="head"><!--
-
-IF !a$minimal
-
-	IF a$form --><!-- AGENT a$form --><!-- ELSE --><!-- AGENT $form --><!-- END:IF -->
-
-	<a href="{~}" id="logo"><img src="{~}img/logo.gif"></a>
-
-	<div id="engine">
-	<ul><!--
-	LOOP $tabs
-		--><li><!--
-			SET $a -->{~}{$url}?(\?|$)<!-- END:SET
-			SET $a -->{g$__URI__|replace:$a:'-'}<!-- END:SET
-			IF g$__URI__ != $a --><b>{$caption}</b><!--
-			ELSE --><a href="{~}{$url}">{$caption}</a><!--
-			END:IF
-		--></li><!--
-	END:LOOP -->
-	</ul>
+<!-- IF !a$minimal -->
+<div id="engine">
 	<!--
-
-	IF a$q --><!-- AGENT a$q autofocus=a$focus placeholder="Rechercher dans l'annuaire" id='search-field' --><!-- ELSE --><!-- AGENT $q autofocus=a$focus placeholder="Rechercher dans l'annuaire" id='search-field' --><!-- END:IF
-
-	--><input type="submit" value="{"rechercher"}" id="search-button" onclick="this.form.submit();return false;"><!--
-
+	IF a$form --><!-- AGENT a$form --><!-- ELSE --><!-- AGENT $form --><!-- END:IF
+	IF a$q
+		AGENT a$q autofocus=a$focus placeholder="Rechercher dans l'annuaire" id='search-field'
+	ELSE
+		AGENT  $q autofocus=a$focus placeholder="Rechercher dans l'annuaire" id='search-field'
+	END:IF
+	--><input type="submit" value="{"rechercher"}" id="search-button"><!--
 	IF g$tag --><input type="hidden" name="tag" value="{g$tag}"><!-- END:IF
-
-	-->
-	</div>
-	<!--
-
 	IF a$form --><!-- AGENT a$form _mode_='close' --><!-- ELSE --><!-- AGENT $form _mode_='close' --><!-- END:IF
-END:IF
-
 	-->
-	<div id="title">
-		{$title_hook}
-		<!-- IF a$info --><p>{a$info}</p><!-- END:IF -->
-		<h1>{a$title}</h1>
-	</div>
-</td></tr></table>
+	<ul>
+		<!-- LOOP $tabs -->
+		<li><a href="{~}{$url}">{$caption}</a></li>
+		<!-- END:LOOP -->
+	</ul>
+	<!--IF a$info --><p>{a$info}</p><!-- END:IF -->
+	<a>Recherche avancée</a>
+</div>
+<!-- END:IF -->

@@ -33,8 +33,6 @@ SET a$info
 			-->{"Aucun résultat"}<!--
 		END:IF
 
-		IF g$q --> {"pour"} «&nbsp;<b>{g$q}</b>&nbsp;»<!-- END:IF
-
 	END:IF
 END:SET
 

@@ -8,10 +8,20 @@ margin:0;
 }
 
 #body-max {
-width:915px;
 height:100%;
-margin-left:auto;
-margin-right:auto;
+padding:10px 0 0 10px;
+}
+
+#engine
+{
+height:75px;
+background:url('{~}img/bg-engine.png') repeat-x;
+z-index:1;
+position:relative;
+margin-left:-10px;
+margin-top:-10px;
+padding-top:10px;
+padding-left:10px;
 }
 
 .highlight {
@@ -25,29 +35,28 @@ margin:30px;
 
 div.items {
 background-color:#FFF;
-border:1px solid gray;
-margin:10px 10px 10px;
+border:1px solid #d5d5d5;
+margin:10px;
+margin-bottom:20px;
 -moz-border-radius:5px;
 border-radius:5px;
 padding:10px;
--moz-box-shadow: 0px 3px 5px #aaa;
--webkit-box-shadow: 0px 3px 5px #aaa;
-box-shadow: 0px 3px 5px #aaa; 
+-moz-box-shadow:0 3px 5px #aaa;
+-webkit-box-shadow:0 3px 5px #aaa;
+box-shadow:0 3px 5px #aaa;
 }
 
-.ie6 div.items,
-.ie7 div.items,
-.ie8 div.items{
-filter:progid:DXImageTransform.Microsoft.Shadow(color='#aaaaaa', Direction=180, Strength=5); 
+.ie6 div.items, .ie7 div.items, .ie8 div.items {
+filter:progid:DXImageTransform.Microsoft.Shadow(color='#aaaaaa', Direction=180, Strength=5);
   zoom: 1;
 }
 
 div.bloc h2 {
-text-align:left;
 font-size:12px;
 font-weight:700;
-margin-left:10px;
-color:#000;
+margin-left:20px;
+margin-bottom:0;
+color:#5d5d5d;
 }
 
 div.boutons {
@@ -64,7 +73,7 @@ text-align:center;
 float:right;
 }
 
-a.navigation:hover{
+a.navigation:hover {
 text-decoration:none;
 }
 
@@ -96,16 +105,16 @@ margin-right:20px;
 }
 
 #pagination {
-position:relative;
-float:left;
-width:auto;
+clear:both;
+width:675px;
 height:40px;
-margin-left:200px;
+margin-left:auto;
+margin-right:auto;
 margin-top:10px;
 font-weight:700;
 }
 
-#pagination a,.pagination {
+#pagination a, .pagination {
 display:block;
 float:left;
 text-decoration:none;
@@ -122,12 +131,12 @@ border-width:1px;
 padding:5px;
 }
 
-#pagination a:hover,strong.pagination {
+#pagination a:hover, strong.pagination {
 background-color:#5b5b5b;
 color:#9f9f9f;
 }
 
-#pagination a.pagination:hover,strong.pagination {
+#pagination a.pagination:hover, strong.pagination {
 border:1px solid #FFF;
 padding:5px;
 }
@@ -142,15 +151,6 @@ padding-right:5px;
 border-right-width:1px;
 }
 
-#body-contenu {
-width:915px;
-height:auto;
-margin-top:60px;
-color:#5c5c5c;
-font-size:12px;
-padding:10px;
-}
-
 div.submit {
 text-align:center;
 margin:10px;
@@ -162,7 +162,7 @@ display:inline;
 
 div.submit input.submit {
 font-size:16px;
-color:#FFF;
+color:#fff;
 border:1px solid #165f00;
 background:url({~}img/spritey.png) #26c900 0 -102px repeat-x;
 font-weight:700;
@@ -201,7 +201,7 @@ position:relative;
 bottom:-80px;
 font-variant:small-caps;
 background-color:#5b5b5b;
-color:#FFF;
+color:#fff;
 margin-right:auto;
 margin-left:auto;
 padding:5px 0;
@@ -209,12 +209,12 @@ padding:5px 0;
 
 #top {
 height:auto;
-float:left;
+width: 33%;
+margin-top:10px;
 }
 
 #top .item {
 font-size:110%;
-width:170px;
 white-space:nowrap;
 overflow:hidden;
 padding-top:4px;
@@ -222,7 +222,7 @@ padding-bottom:4px;
 }
 
 .fiche {
-background:url('{~}img/bgprofil.png') top repeat-x;
+background:url('{~}img/bgprofil.png') #fefefe top repeat-x;
 float:right;
 width:100%;
 }
@@ -232,17 +232,15 @@ font-weight:700;
 font-size:18px;
 }
 
-.photo, .resumes
-{
+.photo, .resumes {
 padding-top:20px;
 float:left;
 }
 
-.photo{width:20%;text-align:center;}
-.resumes{width:80%;}
+.photo {width:20%;text-align:center;}
+.resumes {width:80%;}
 
-.nom, .resumprofil, .resumecv
-{
+.nom, .resumprofil, .resumecv {
 margin:0;
 }
 
@@ -259,12 +257,18 @@ a:hover {
 text-decoration:underline;
 }
 
+#trombi
+{
+clear:both;
+}
+
 .trombiNom {
 width:128px;
 text-align:center;
 float:left;
 height:160px;
 overflow:hidden;
+margin-left:5px;
 }
 
 .trombiPhoto {
@@ -327,6 +331,10 @@ width:350px;
 
 #map {
 font-size:90%;
+z-index:0;
+position:absolute;
+top:35px;
+left:0px;
 }
 
 #map .region {
@@ -349,64 +357,79 @@ text-align:right;
 }
 
 #tag {
+margin-top:10px;
 float:right;
 width:25%;
+}
+
+#tag .items {
 text-align:center;
 }
 
-#logo {
+#engine a {
+display: none; /* désactivé tant qu'il n'y rien derrière */
+margin-left:253px;
+font-size:11px;
+color:#000;
 float:left;
-border:none;
-padding-right:40px;
-margin:5px;
+line-height: 20px;
 }
 
-#engine {
+#engine ul {
 float:left;
-margin:10px;
-}
-
-#search-field, #search-button
-{
-height:51px;
-float:left;
-background:url({~}img/spritesearch.png) repeat-x;
-}
-
-#search-field
-{
-line-height:49px;
-width:350px;
-border:1px solid #000;
-border-right:none;
-font-size:18px;
-font-weight:700;
-padding : 0 0 0 10px;
--moz-border-radius:10px 0 0 10px;
-border-radius:10px 0 0 10px;
-}
-
-#search-button
-{
-width:150px;
-height:53px;
-border:1px solid #000;
 font-size:16px;
-font-variant:small-caps;
-color:#fff;
-background-color:#999;
--moz-border-radius:0 10px 10px 0;
-border-radius:0 10px 10px 0;
+margin:0;
 }
 
-#search-button:hover
+#engine ul a
 {
-color:#666;
-background-color:#e6e6e6;
+display: inline;
+font-size:16px;
+margin: 0;
+font-size:14px;
+color:#677180;
+line-height: 35px;
 }
 
-#head li {
-display:inline;
+#engine p {
+font-size:11px;
+float:left;
+clear:left;
+color:#000;
+line-height: 20px;
+}
+
+#search-field {
+line-height:35px;
+width:400px;
+height:35px;
+border:1px solid #8e939a;
+border-right:none;
+font-size:16px;
+color:#677180;
+padding:0 0 0 10px;
+background-color: white;
+float:left;
+}
+
+#search-button {
+width:40px;
+height:37px;
+text-indent:-999em;
+overflow:hidden;
+background:url('{~}img/sprite-btnsearch.png') 0 0 no-repeat;
+border:none;
+color:#888;
+float:left;
+}
+
+#search-button:hover {
+background-position:0 -37px;
+}
+
+#engine li {
+float:left;
+list-style:none;
 padding-left:20px;
 }
 
@@ -416,37 +439,8 @@ color:#5c5c5c;
 margin-left:240px;
 }
 
-#fiches{
-width:675px;
-}
-
-#title {
-float:left;
-width:100%;
-margin:0;
-padding:10px 0;
-}
-
-#title h1 {
-border-bottom:1px solid #5b5b5b;
-padding-left:10px;
-font-weight:700;
-font-size:24px;
-color:#888;
-margin:0;
-}
-
-#title h1:first-letter {
-font-size:30px;
-color:#5b5b5b;
-}
-
-#title p {
-float:right;
-margin-top:4px;
-margin-right:10px;
-color:#888;
-padding:0;
+#fiches {
+width: 75%;
 }
 
 #checklist a {
@@ -499,21 +493,27 @@ width:100%;
 font-weight:700;
 }
 
-#top p,#map p {
-font-size:80%;
+#top p, #map p {
 margin:0;
 }
 
-#faq,#checklist {
-float:right;
-margin:5px;
+#map td {
+margin:0;
+padding:0;
+padding-top:3px;
 }
 
-#head,#head ul {
+#map .pagination {
+border:none;
 margin:0;
 padding:0;
 }
 
-#faq dl,#faq dd {
+#faq, #checklist {
+float:right;
+margin:5px;
+}
+
+#faq dl, #faq dd {
 padding:20px;
 }
