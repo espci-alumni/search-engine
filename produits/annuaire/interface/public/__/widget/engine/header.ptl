@@ -27,7 +27,7 @@ SET a$info
 			SET a$start --><!-- IF g$p > 0 -->{g$p-1}<!-- ELSE -->0<!-- END:IF --><!-- END:SET
 			SET a$start -->{a$start*a$results_per_page+1}<!-- END:SET
 
-			-->{a$fiches-1|test:"Résultat":"Résultats"} <b>{a$start} - {a$start+a$fiches-1}</b> {"sur"} {a$nb_resultats}<!--
+			-->{a$fiches-1|test:"Résultats":"Résultat"} <b>{a$start} - {a$start+a$fiches-1}</b> {"sur"} {a$nb_resultats}<!--
 		ELSE
 
 			-->{"Aucun résultat"}<!--

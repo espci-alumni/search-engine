@@ -3,25 +3,24 @@ overflow-y:scroll;
 color:#888;
 }
 
-body,table {
+body, table {
 margin:0;
 }
 
 #body-max {
 height:100%;
-padding:10px 0 0 10px;
+padding:10px;
 }
 
 #engine
 {
-height:75px;
+height:65px;
 background:url('{~}img/bg-engine.png') repeat-x;
 z-index:1;
 position:relative;
-margin-left:-10px;
-margin-top:-10px;
-padding-top:10px;
-padding-left:10px;
+margin:-10px;
+margin-bottom:0;
+padding:10px;
 }
 
 .highlight {
@@ -208,9 +207,10 @@ padding:5px 0;
 }
 
 #top {
+float: left;
 height:auto;
-width: 33%;
-margin-top:10px;
+width: 300px;
+margin-left:-10px;
 }
 
 #top .item {
@@ -357,7 +357,7 @@ text-align:right;
 }
 
 #tag {
-margin-top:10px;
+margin-right:-10px;
 float:right;
 width:25%;
 }
@@ -366,50 +366,45 @@ width:25%;
 text-align:center;
 }
 
-#engine a {
-display: none; /* désactivé tant qu'il n'y rien derrière */
-margin-left:253px;
-font-size:11px;
-color:#000;
-float:left;
-line-height: 20px;
-}
-
 #engine ul {
-float:left;
-font-size:16px;
-margin:0;
+position: absolute;
+top: 0;
+left: 500px;
 }
 
-#engine ul a
-{
-display: inline;
-font-size:16px;
-margin: 0;
+#engine ul a {
 font-size:14px;
 color:#677180;
 line-height: 35px;
 }
 
-#engine p {
+#engine form {
+position: relative;
+top: 0;
+width: 500px;
 font-size:11px;
-float:left;
-clear:left;
-color:#000;
+color:#444;
 line-height: 20px;
 }
 
+#engine form a {
+float:right;
+display: none; /* désactivé tant qu'il n'y rien derrière */
+}
+
+#engine form p {
+float:left;
+}
+
 #search-field {
+width:449px;
 line-height:35px;
-width:400px;
 height:35px;
 border:1px solid #8e939a;
-border-right:none;
 font-size:16px;
 color:#677180;
 padding:0 0 0 10px;
-background-color: white;
-float:left;
+background-color:white;
 }
 
 #search-button {
@@ -419,8 +414,8 @@ text-indent:-999em;
 overflow:hidden;
 background:url('{~}img/sprite-btnsearch.png') 0 0 no-repeat;
 border:none;
-color:#888;
-float:left;
+position: absolute;
+right: 0;
 }
 
 #search-button:hover {
@@ -428,8 +423,7 @@ background-position:0 -37px;
 }
 
 #engine li {
-float:left;
-list-style:none;
+display:inline;
 padding-left:20px;
 }
 
