@@ -15,12 +15,13 @@ padding:10px;
 #engine
 {
 height:65px;
-background:url('{~}img/bg-engine.png') repeat-x;
+background:url('{~}img/sprite-annuaire-bgs.png') 0 0 repeat-x;
 z-index:1;
 position:relative;
 margin:-10px;
 margin-bottom:0;
 padding:10px;
+padding-bottom:0;
 }
 
 .highlight {
@@ -222,7 +223,7 @@ padding-bottom:4px;
 }
 
 .fiche {
-background:url('{~}img/bgprofil.png') #fefefe top repeat-x;
+background:url('{~}img/sprite-annuaire-bgs.png') #fefefe 0 -75px repeat-x;
 float:right;
 width:100%;
 }
@@ -412,14 +413,14 @@ width:40px;
 height:37px;
 text-indent:-999em;
 overflow:hidden;
-background:url('{~}img/sprite-btnsearch.png') 0 0 no-repeat;
+background:url('{~}img/sprite-annuaire.png') -483px 0 no-repeat;
 border:none;
 position: absolute;
 right: 0;
 }
 
 #search-button:hover {
-background-position:0 -37px;
+background-position:-523px 0px;
 }
 
 #engine li {
@@ -489,6 +490,7 @@ font-weight:700;
 
 #top p, #map p {
 margin:0;
+font-size: 12px;
 }
 
 #map td {
