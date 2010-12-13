@@ -102,7 +102,7 @@ a.cv:hover {
 	height:       64px;
 	text-align:   center;
 	float:        right;
-	background:   url('{~}img/sprite-annuaire.png') -396px no-repeat;
+	background:   url('{~}img/sprite-annuaire.png') -395px no-repeat;
 	margin-right: 20px;
 }
 
@@ -426,14 +426,14 @@ td.data {
 	height:      37px;
 	text-indent: -999em;
 	overflow:    hidden;
-	background:  url('{~}img/sprite-annuaire.png') -483px 0 no-repeat;
+	background:  url('{~}img/sprite-annuaire.png') -494px 0 no-repeat;
 	border:      none;
 	position:    absolute;
 	right:       0;
 }
 
 #search-button:hover {
-	background-position: -523px 0px;
+	background-position: -534px 0px;
 }
 
 #engine li {
