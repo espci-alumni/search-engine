@@ -37,15 +37,10 @@ class extends agent
 		$form->add('text', 'q');
 
 		// Etapes de composition des résultats
-E('A1');
 		$o = $this->prepareSubset($o);
-E('A2');
 		$o = $this->prepareResults($o);
-E('A3');
 		$o = $this->filterResults($o);
-E('A4');
 		$o = $this->prepareFilter($o);
-E('A5');
 
 		return $o;
 	}
