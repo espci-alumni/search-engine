@@ -41,7 +41,7 @@ class extends agent
 			break;
 		}
 
-		$sql = 'SELECT fiche_ref, nom, groupe, position FROM ' . annuaire::$fiche_table . ' ' . $end;
+		$sql = 'SELECT fiche_ref, nom, groupe, position, photo_ref FROM ' . annuaire::$fiche_table . ' ' . $end;
 		$o->TOP = new loop_sql_fiche($sql, '', 0, self::$limit);
 
 		return $o;
