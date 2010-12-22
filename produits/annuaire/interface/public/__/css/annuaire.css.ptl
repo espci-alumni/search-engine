@@ -112,8 +112,8 @@ a.cv:hover {
 	height:       40px;
 	margin-left:  auto;
 	margin-right: auto;
-	margin-top:   10px;
 	font-weight:  700;
+	padding-top:  20px;
 }
 
 #pagination a,
@@ -250,6 +250,15 @@ a.navigation:hover span {
 	overflow:       hidden;
 }
 
+.item .photo,
+#infoPage .photo {
+	width:          32px;
+}
+
+#trombi .photo {
+	width:          128px;
+}
+
 .resumes {
 	width: 80%;
 }
@@ -258,6 +267,10 @@ a.navigation:hover span {
 .resumprofil,
 .resumecv {
 	margin: 0;
+}
+
+.nom {
+	margin-top: 20px;
 }
 
 a.group {
@@ -457,6 +470,7 @@ h1 {
 #fiches .photo {
 	margin-left: 20px;
 	margin-top:  20px;
+	width:       64px;
 }
 
 #checklist a {
