@@ -11,7 +11,9 @@
 <div class="resumes">
 	<div class="nom">
 	{$nom|annuaire_ficheLink:$fiche_ref}
-	<!-- IF $groupe --><a href="{~}?q=promo:{$groupe}" class="group">{$groupe}</a><!-- END:IF --></div>
+	<!-- IF $groupe --><a href="{~}?q=promo:{$groupe}" class="group">{$groupe}</a><!-- END:IF -->
+	<p class="position">{$position}</p>
+	</div>
 	<div class="resumeprofil">
 	{$extrait|allowhtml}
 	</div>

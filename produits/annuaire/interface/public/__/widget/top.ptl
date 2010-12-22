@@ -1,13 +1,13 @@
 <div class="bloc">
 	<h2>{$TOP} {a$title}</h2>
-
 	<div class="items">
-<!-- LOOP $TOP -->
-	<div class="item">
-	{$nom|annuaire_ficheLink:$fiche_ref}
-	<a href="{~}?q=promo:{$groupe}" class="group">{$groupe}</a>
-	<p>{$position}</p>
-	</div>
-<!-- END:LOOP -->
+	<!-- LOOP $TOP -->
+		<div class="item">
+		<div class="photo"><img src="{$photo_ref|annuaire_photoUrl:32}" height="32"></div>
+		{$nom|annuaire_ficheLink:$fiche_ref}
+		<a href="{~}?q=promo:{$groupe}" class="group">{$groupe}</a>
+		<p>{$position}</p>
+		</div>
+	<!-- END:LOOP -->
 	</div>
 </div>

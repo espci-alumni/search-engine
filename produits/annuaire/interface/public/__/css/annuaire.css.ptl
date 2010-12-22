@@ -223,8 +223,8 @@ a.navigation:hover span {
 	font-size:      110%;
 	white-space:    nowrap;
 	overflow:       hidden;
-	padding-top:    4px;
-	padding-bottom: 4px;
+	padding-top:    6px;
+	padding-bottom: 6px;
 }
 
 .fiche {
@@ -240,14 +240,16 @@ a.navigation:hover span {
 
 .photo,
 .resumes {
-	padding-top: 20px;
 	float:       left;
 }
 
 .photo {
-	width:      20%;
-	text-align: center;
+	padding:        5px;
+	border:         1px solid #165f00;
+	margin-right:   10px;
+	overflow:       hidden;
 }
+
 .resumes {
 	width: 80%;
 }
@@ -261,6 +263,10 @@ a.navigation:hover span {
 a.group {
 	color:     #888;
 	font-size: 11px;
+}
+
+p.position {
+	color: #000;
 }
 
 a {
@@ -277,18 +283,12 @@ a:hover {
 }
 
 .trombiNom {
-	width:       128px;
 	text-align:  center;
 	float:       left;
-	height:      160px;
-	overflow:    hidden;
 	margin-left: 5px;
-}
-
-.trombiPhoto {
-	width:   128px;
-	height:  128px;
-	display: block;
+	width:       140px;
+	height:      190px;
+	overflow:    hidden;
 }
 
 td {
@@ -403,7 +403,10 @@ td.data {
 
 #engine form a {
 	float:   right;
-	display: none; /* désactivé tant qu'il n'y rien derrière */
+	<!-- IF !g$__DEBUG__ -->
+	/* Désactivé tant que le dev n'est pas terminé */
+	display: none;
+	<!-- END:IF -->
 }
 
 #engine form p {
@@ -449,6 +452,11 @@ h1 {
 
 #fiches {
 	width: 75%;
+}
+
+#fiches .photo {
+	margin-left: 20px;
+	margin-top:  20px;
 }
 
 #checklist a {
