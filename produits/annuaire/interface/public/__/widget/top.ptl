@@ -3,10 +3,16 @@
 	<div class="items">
 	<!-- LOOP $TOP -->
 		<div class="item">
-		<div class="photo"><img src="{$photo_ref|annuaire_photoUrl:32}" height="32"></div>
-		{$nom|annuaire_ficheLink:$fiche_ref}
-		<a href="{~}?q=promo:{$groupe}" class="group">{$groupe}</a>
-		<p>{$position}</p>
+		<table>
+		<tr>
+			<td><div class="img-cadre"><div class="crop img-h32"><span><img src="{$photo_ref|annuaire_photoUrl:32}"></span></div></div></td>
+			<td>
+				{$nom|annuaire_ficheLink:$fiche_ref}
+				<a href="{~}?q=promo:{$groupe}" class="group">{$groupe}</a>
+				<p>{$position}</p>
+			</td>
+		</tr>
+		</table>
 		</div>
 	<!-- END:LOOP -->
 	</div>

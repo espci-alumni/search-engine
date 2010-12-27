@@ -7,8 +7,8 @@ function $getInfoWindowHtml($label, $nb)
 		$html.push(
 			'<a href=javascript:zoom() title="Zoom +"><img src="' + $root + 'img/zplus.gif" border="0" height="10" width="10" /></a> '
 			+ '<a href=javascript:zoom(1) title="Zoom -"><img src="' + $root + 'img/zminus.gif" border="0" height="10" width="10" /></a><br />'
-			+ '<div id="infoPage" style="width:300px;height:' + ($nb < 6 ? 180 - 34*(5-$nb) : 210)
-			+ 'px;overflow:auto"></div>'
+			+ '<div id="infoPage" style="width:300px;height:' + ($nb < 6 ? 55*$nb : 300)
+			+ 'px"></div>'
 		);
 
 		return $html.join('');
@@ -22,8 +22,8 @@ function $getFichesHtml($fiches)
 	{
 		$html.push(
 			'<tr>'
-				+ '<td align="center" width="40">'
-					+ $getFicheLinkHtml($f, '<div class="photo"><img src="' + P$annuaire_photoUrl($f.photo_ref, 32) + '" title="' + $f.nom + '" border="0" height="32"></div>')
+				+ '<td>'
+					+ $getFicheLinkHtml($f, '<div class="img-cadre"><div class="crop img-h32"><span><img src="' + P$annuaire_photoUrl($f.photo_ref, 32) + '" title="' + $f.nom + '"></span></div></div>')
 				+ '</td>'
 				+ '<td>'
 					+ '<div style="width:210px;overflow:hidden;white-space:nowrap">'

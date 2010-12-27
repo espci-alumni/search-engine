@@ -7,7 +7,7 @@
 <a class="navigation profil" href="{$fiche_ref|annuaire_ficheUrl}"><span>profil</span></a>
 </div>
 <div class="fiche">
-	<div class="photo"><img src="{$photo_ref|annuaire_photoUrl:64}" height="64"></div>
+	<div class="img-cadre"><div class="crop img-h64"><span><img src="{$photo_ref|annuaire_photoUrl:64}"></span></div></div>
 <div class="resumes">
 	<div class="nom">
 	{$nom|annuaire_ficheLink:$fiche_ref}

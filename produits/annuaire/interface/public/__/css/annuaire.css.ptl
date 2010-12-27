@@ -220,43 +220,78 @@ a.navigation:hover span {
 }
 
 #top .item {
-	font-size:      110%;
-	white-space:    nowrap;
-	overflow:       hidden;
-	padding-top:    6px;
-	padding-bottom: 6px;
+	font-size:   110%;
+	white-space: nowrap;
+	overflow:    hidden;
+	padding:     3px 0;
 }
 
-.fiche {
+#top .item td {
+	vertical-align: middle;
+}
+
+/*------------------------------------------*/
+
+.img-cadre
+{
+       float: left;
+       border: 1px solid silver;
+       padding: 5px;
+       margin: 5px;
+}
+
+#top .img-cadre {
+       margin: 0;
+}
+
+#top td {
+	padding: 0;
+	padding-right: 5px;
+}
+
+#fiches .fiche .img-cadre {
+	margin-top: 25px;
+	margin-right: 10px;
+}
+
+.img-h32 img  {height: 32px;}
+.crop.img-h32 {width:  32px;}
+
+.img-h64 img  {height: 64px;}
+.crop.img-h64 {width:  64px;}
+
+.crop
+{
+       overflow: hidden;
+}
+
+.crop span
+{
+       float: left;
+       margin-left: 50%;
+}
+
+.crop img
+{
+       float: left;
+       margin-left: -50%;
+}
+
+/*--------------------------------*/
+
+#fiches .fiche {
 	background: url('{~}img/sprite-annuaire-bgs.png') #fefefe 0 -75px repeat-x;
 	float:      right;
 	width:      100%;
 }
 
-.fiche a {
+#fiches .fiche a {
 	font-weight: 700;
 	font-size:   18px;
 }
 
-.photo,
 .resumes {
 	float:       left;
-}
-
-.photo {
-	padding:        5px;
-	border:         1px solid #165f00;
-	margin-right:   10px;
-	overflow:       hidden;
-}
-
-.item .photo,
-#infoPage .photo {
-	width:          32px;
-}
-
-#trombi .photo {
-	width:          128px;
 }
 
 .resumes {
@@ -264,9 +299,13 @@ a.navigation:hover span {
 }
 
 .nom,
-.resumprofil,
+.resumeprofil,
 .resumecv {
 	margin: 0;
+}
+
+.resumeprofil {
+	margin-top: -10px;
 }
 
 .nom {
@@ -275,7 +314,7 @@ a.navigation:hover span {
 
 a.group {
 	color:     #888;
-	font-size: 11px;
+	font-size: 11px !important;
 }
 
 p.position {
@@ -295,13 +334,23 @@ a:hover {
 	clear: both;
 }
 
-.trombiNom {
-	text-align:  center;
-	float:       left;
-	margin-left: 5px;
-	width:       140px;
-	height:      190px;
-	overflow:    hidden;
+#trombi .fiche
+{
+	text-align: center;
+	float: left;
+	width: 150px;
+	height: 190px;
+	overflow: hidden;
+}
+
+.img-cadre table, .img-cadre td
+{
+	text-align: center;
+	border-collapse: collapse;
+	width: 128px;
+	height: 128px;
+	margin: 0;
+	padding: 0;
 }
 
 td {
@@ -467,12 +516,6 @@ h1 {
 	width: 75%;
 }
 
-#fiches .photo {
-	margin-left: 20px;
-	margin-top:  20px;
-	width:       64px;
-}
-
 #checklist a {
 	display:       block;
 	color:         #000;
@@ -537,7 +580,6 @@ select {
 #map td {
 	margin:      0;
 	padding:     0;
-	padding-top: 3px;
 }
 
 #map .pagination {

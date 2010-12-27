@@ -25,8 +25,11 @@ END:IF
 -->
 <div id="trombi">
 <!-- LOOP $fiches -->
-<!-- SET a$a --><span class="photo"><img src="{$photo_ref|annuaire_photoUrl}" title="{$nom}" /></span>{$nom}<!-- END:SET -->
-<div class="trombiNom">{a$a|annuaire_ficheLink:$fiche_ref}</a></div>
+<div class="fiche" title="{$nom}">
+	<!-- SET a$a --><img src="{$photo_ref|annuaire_photoUrl}"><!-- END:SET -->
+	<div class="img-cadre"><table><tr><td>{a$a|annuaire_ficheLink:$fiche_ref}</td></tr></table></div>
+	<div class="nom">{$nom|annuaire_ficheLink:$fiche_ref}</div>
+</div>
 <!-- END:LOOP -->
 </div>
 <!--
