@@ -224,6 +224,7 @@ a.navigation:hover span {
 	white-space: nowrap;
 	overflow:    hidden;
 	padding:     3px 0;
+    height:      44px;
 }
 
 #top .item td {
@@ -232,12 +233,23 @@ a.navigation:hover span {
 
 /*------------------------------------------*/
 
+.fiches-nom
+{
+    float : left;
+    overflow:hidden;
+    padding: 0;
+    margin: 0 0 0 5px;
+    width : 199px;
+}
+
 .img-cadre
 {
        float: left;
        border: 1px solid silver;
        padding: 5px;
        margin: 5px;
+       position : relative;
+       overflow: hidden;
 }
 
 #top .img-cadre {
@@ -260,21 +272,25 @@ a.navigation:hover span {
 .img-h64 img  {height: 64px;}
 .crop.img-h64 {width:  64px;}
 
-.crop
+{*.crop
 {
        overflow: hidden;
-}
+       position:absolute;
+       left: 5px;
+}*}
 
 .crop span
 {
-       float: left;
-       margin-left: 50%;
+
+       position:absolute;
+       left: 50%;
 }
 
 .crop img
 {
-       float: left;
-       margin-left: -50%;
+
+       position:relative;
+       left: -50%;
 }
 
 /*--------------------------------*/
