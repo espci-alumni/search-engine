@@ -56,7 +56,7 @@ class extends agent
 			$this->tags = $sql;
 			$sql = array_map(array($this, 'prepareTag'), $sql);
 
-			$sql = 'CREATE TEMPORARY TABLE IF NOT EXISTS subsettmp TYPE=HEAP
+			$sql = 'CREATE TEMPORARY TABLE IF NOT EXISTS subsettmp ENGINE=HEAP
 					SELECT i.fiche_id
 					FROM ' . annuaire::$mot_fiche_table . ', ' . annuaire::$mot_table . '
 					WHERE i.mot_id = m.mot_id

@@ -56,7 +56,7 @@ class extends agent
 			$this->tags = $sql;
 			$sql = array_map(array($this, 'prepareTag'), $sql);
 
-			$sql = 'CREATE TEMPORARY TABLE IF NOT EXISTS subsettmp TYPE=HEAP
+			$sql = 'CREATE TEMPORARY TABLE IF NOT EXISTS subsettmp ENGINE=HEAP
 					SELECT i.fiche_id
 					FROM ' . annuaire::$mot_fiche_table . ', ' . annuaire::$mot_table . '
 					WHERE i.mot_id = m.mot_id
@@ -129,7 +129,7 @@ class extends agent
 			  mot_id INT UNSIGNED NOT NULL,
 			  fiche_id INT UNSIGNED NOT NULL,
 			  PRIMARY KEY (mot_id, fiche_id)
-			) TYPE=HEAP";
+			) ENGINE=HEAP";
 		$db->exec($sql);
 
 		$sql = "REPLACE INTO tagtmp_mot_fiche
@@ -142,7 +142,7 @@ class extends agent
 			  mot_id INT UNSIGNED NOT NULL,
 			  mot VARCHAR(255) NOT NULL,
 			  PRIMARY KEY (mot_id)
-			) TYPE=HEAP DEFAULT CHARSET=utf8";
+			) ENGINE=HEAP DEFAULT CHARSET=utf8";
 		$db->exec($sql);
 
 		$sql = "REPLACE INTO tagtmp_mot
@@ -157,7 +157,7 @@ class extends agent
 			  fiche_used FLOAT NOT NULL,
 			  PRIMARY KEY (fiche_id),
 			  KEY fiche_used (fiche_used)
-			) TYPE=HEAP";
+			) ENGINE=HEAP";
 		$db->exec($sql);
 
 		$sql = "REPLACE INTO tagtmp_fiche SELECT fiche_id, 0 FROM tagtmp_mot_fiche";

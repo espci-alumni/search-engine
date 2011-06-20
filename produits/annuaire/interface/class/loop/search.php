@@ -32,7 +32,7 @@ class extends loop_sql_fiche
 			  order_key INT UNSIGNED NOT NULL auto_increment,
 			  rank DOUBLE,
 			  PRIMARY KEY (order_key)
-			) TYPE=HEAP";
+			) ENGINE=HEAP";
 		$db->exec($sql);
 
 		$query = ' ' . lingua::stripAccents($query) . ' ';
