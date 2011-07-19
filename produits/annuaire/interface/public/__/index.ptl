@@ -1,50 +1,50 @@
 <!--
-INLINE 'index'
+
 AGENT 'widget/engine/header'
 
-	title='Annuaire'
+    title="Annuaire"
 
-	form=$form
-	q=$q
+    form=$form
+    q=$q
 
-	nb_resultats=$nb_resultats
-	results_per_page=$results_per_page
-	ficheList=$ficheList
-	fiches=$fiches
+    nb_resultats=$nb_resultats
+    results_per_page=$results_per_page
+    ficheList=$ficheList
+    fiches=$fiches
 
 
 
 IF !g$q && !g$tag
-	-->
-	<div id="top">
-	<!-- AGENT 'widget/top' type='random' title="fiches au hasard" -->
-	<!-- AGENT 'widget/top' type='mtime' title="dernières modifications" -->
-	</div>
-	<!--
+    -->
+    <div id="top">
+    <!-- AGENT 'widget/top' type='random' title="fiches au hasard" -->
+    <!-- AGENT 'widget/top' type='mtime' title="dernières modifications" -->
+    </div>
+    <!--
 END:IF
 
 IF $tags
-	SET a$a -->{$nb_resultats|test:$nb_resultats:$nb_fiches} parcours en {$tags} mots<!-- END:SET
-	--><div id="tag"><!-- AGENT 'widget/engine/tag' tags=$tags title=a$a --></div><!--
+    SET a$a -->{$nb_resultats|test:$nb_resultats:$nb_fiches} parcours en {$tags} mots<!-- END:SET
+    --><div id="tag"><!-- AGENT 'widget/engine/tag' tags=$tags title=a$a --></div><!--
 END:IF
 
 IF !$nb_resultats && g$q
-	--><div class="noresult">{"Aucun résultat pour"} «&nbsp;<strong>{g$q}</strong>&nbsp;»</div><!--
+    --><div class="noresult">{"Aucun résultat pour"} «&nbsp;<strong>{g$q}</strong>&nbsp;»</div><!--
 END:IF
 
 IF $fiches
-	--><div id="fiches"><!--
-	LOOP $fiches
-		INLINE widget/_fiche
-	END:LOOP
-	--></div><!--
+    --><div id="fiches"><!--
+    LOOP $fiches
+        INLINE widget/_fiche
+    END:LOOP
+    --></div><!--
 END:IF
 
 IF $nb_resultats > $results_per_page
-	AGENT 'widget/engine/pagination'
-		page=g$p
-		nb_resultats=$nb_resultats
-		results_per_page=$results_per_page
+    AGENT 'widget/engine/pagination'
+        page=g$p
+        nb_resultats=$nb_resultats
+        results_per_page=$results_per_page
 END:IF
 
 AGENT 'footer'

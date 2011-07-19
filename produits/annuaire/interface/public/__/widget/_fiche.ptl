@@ -7,24 +7,25 @@
 <a class="navigation profil" href="{$fiche_ref|annuaire_ficheUrl}"><span>profil</span></a>
 </div>
 <div class="fiche">
-	<div class="img-cadre"><div class="crop img-h64"><span><img src="{$photo_ref|annuaire_photoUrl:64}"></span></div>
-    <div style="clear:both;height:64px;width:1px;"></div></div>
+    <div class="img-cadre"><div class="crop img-h64"><span><img src="{$photo_ref|annuaire_photoUrl:64}"></span></div>
+    <div style="clear:both;height:64px;width:1px;"></div>
+</div>
 <div class="resumes">
-	<div class="nom">
-	{$nom|annuaire_ficheLink:$fiche_ref}
-	<!-- IF $groupe --><a href="{~}?q=promo:{$groupe}" class="group">{$groupe}</a><!-- END:IF -->
-	<p class="position">{$position}</p>
-	</div>
-	<div class="resumeprofil">
-	{$extrait|allowhtml}
-	</div>
-	<!-- IF $doc -->
-	<div class="resumecv">
-		<!-- SET $ext -->{$doc_ref|replace:'.+\.(doc|pdf)\b.*':'$1'}<!-- END:SET -->
-		<!-- IF $ext == $doc_ref --><!-- SET $ext -->bin<!-- END:SET --><!-- END:IF -->
-		<a href="{$doc_ref|annuaire_docUrl}" style="white-space:nowrap"><img src="{~}img/{$ext}.gif"></a>
-		{$doc|allowhtml}
-	</div>
-	<!-- END:IF -->
+    <div class="nom">
+    {$nom|annuaire_ficheLink:$fiche_ref}
+    <!-- IF $groupe --><a href="{~}?q=promo:{$groupe}" class="group">{$groupe}</a><!-- END:IF -->
+    <p class="position">{$position}</p>
+    </div>
+    <div class="resumeprofil">
+    {$extrait|allowhtml}
+    </div>
+    <!-- IF $doc -->
+    <div class="resumecv">
+        <!-- SET $ext -->{$doc_ref|replace:'.+\.(doc|pdf)\b.*':'$1'}<!-- END:SET -->
+        <!-- IF $ext == $doc_ref --><!-- SET $ext -->bin<!-- END:SET --><!-- END:IF -->
+        <a href="{$doc_ref|annuaire_docUrl}" style="white-space:nowrap"><img src="{~}img/{$ext}.gif"></a>
+        {$doc|allowhtml}
+    </div>
+    <!-- END:IF -->
 </div>
 </div>

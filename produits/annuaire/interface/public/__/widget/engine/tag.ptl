@@ -2,47 +2,47 @@
 
 IF a$tags
 
-	--><div class="bloc"><h2>{a$title}</h2>
+    --><div class="bloc"><h2>{a$title}</h2>
 
-	<div class="items">
+    <div class="items">
 
-<style type="text/css">
+<style>
 .tag10 {font-size:80%; color:rgb(144,144,144);}
 .tag10 b.highlight {font-size:150%;}
-<!-- LOOP 10
-	SET $gray -->{8*(9-$iteratorPosition)+80}<!-- END:SET -->
-	.tag{$iteratorPosition} {font-size:{100+11*$iteratorPosition}%; color:rgb({$gray},{$gray},{$gray});}
+<!-- LOOP 10 -->
+    <!-- SET $gray -->{8*(9-$iteratorPosition)+80}<!-- END:SET -->
+    .tag{$iteratorPosition} {font-size:{100+11*$iteratorPosition}%; color:rgb({$gray},{$gray},{$gray});}
 <!-- END:LOOP -->
 </style><!--
 
-	SET a$queryMask
-		-->{g$__AGENT__}{g$__1__}<!-- IF g$__2__ -->/{g$__2__}<!-- END:IF -->?<!-- IF g$q -->q={g$q|urlencode}<!-- END:IF -->"<!--
-	END:SET
+    SET a$queryMask
+        -->{g$__AGENT__}{g$__1__}<!-- IF g$__2__ -->/{g$__2__}<!-- END:IF -->?<!-- IF g$q -->q={g$q|urlencode}<!-- END:IF -->"<!--
+    END:SET
 
-	SET a$rel
-		IF g$tag -->rel="nofollow"<!-- END:IF
-	END:SET
+    SET a$rel
+        IF g$tag -->rel="nofollow"<!-- END:IF
+    END:SET
 
-	LOOP a$tags
+    LOOP a$tags
 
-		SET $keyRx -->_{$text}([_&]|$)<!-- END:SET
-		SET $tag -->{g$tag|replace:$keyRx:'$1':1}<!-- END:SET
+        SET $keyRx -->_{$text}([_&]|$)<!-- END:SET
+        SET $tag -->{g$tag|replace:$keyRx:'$1':1}<!-- END:SET
 
-		IF g$tag && $tag != g$tag
-			SET $query --><!-- IF $tag -->&amp;tag={$tag}<!-- END:IF --><!-- END:SET
-			SET $text --><b class="highlight">{$text}</b><!-- END:SET
+        IF g$tag && $tag != g$tag
+            SET $query --><!-- IF $tag -->&amp;tag={$tag}<!-- END:IF --><!-- END:SET
+            SET $text --><b class="highlight">{$text}</b><!-- END:SET
 
-		ELSE
-			SET $query --><!-- IF !a$monotag -->{$tag}<!-- END:IF -->_{$text}<!-- END:SET
-			SET $query -->&amp;tag={$query|sortMotclef}<!-- END:SET
+        ELSE
+            SET $query --><!-- IF !a$monotag -->{$tag}<!-- END:IF -->_{$text}<!-- END:SET
+            SET $query -->&amp;tag={$query|sortMotclef}<!-- END:SET
 
-		END:IF
+        END:IF
 
-		--><a href="{~}{a$queryMask|replace:'"':$query|replace:'\?$':''}" class="tag{$niveau}" title="{$nb} fiche{$nb-1|test:'s'}" {a$rel}>{$text}</a> <!--
+        --><a href="{~}{a$queryMask|replace:'"':$query|replace:'\?$':''}" class="tag{$niveau}" title="{$nb} fiche{$nb-1|test:'s'}" {a$rel}>{$text}</a> <!--
 
-	END:LOOP
+    END:LOOP
 
-	--></div></div><!--
+    --></div></div><!--
 
 END:IF
 
