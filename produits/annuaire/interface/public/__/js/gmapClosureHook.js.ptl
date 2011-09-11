@@ -23,7 +23,7 @@ function $getFichesHtml($fiches)
 		$html.push(
 			'<tr>'
 				+ '<td>'
-					+ $getFicheLinkHtml($f, '<div class="img-cadre" style="margin:2px;padding:2px"><div class="crop img-h32"><span><img src="' + P$annuaire_photoUrl($f.photo_ref, 32) + '" title="' + $f.nom + '"></span></div></div>')
+					+ $getFicheLinkHtml($f, '<div class="img-cadre" style="margin:2px;padding:2px"><div style="clear:both;height:32px;width:1px;float:left;"></div><div class="crop img-h32"><span><img src="' + P$annuaire_photoUrl($f.photo_ref, 32) + '" title="' + $f.nom + '"></span></div></div>')
 				+ '</td>'
 				+ '<td>'
 					+ '<div style="width:210px;overflow:hidden;white-space:nowrap">'

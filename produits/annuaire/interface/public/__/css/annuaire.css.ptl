@@ -612,7 +612,7 @@ h1
 
 #fiches
 {
-	width: 75%;
+	width: 70%;
 }
 
 #checklist a

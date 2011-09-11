@@ -23,14 +23,16 @@ IF !g$q && !g$tag
     <!--
 END:IF
 
+IF !$nb_resultats && g$q
+    --><div class="noresult">{"Aucun résultat pour"} «&nbsp;<strong>{g$q}</strong>&nbsp;»</div><!--
+END:IF
+
+
 IF $tags
     SET a$a -->{$nb_resultats|test:$nb_resultats:$nb_fiches} parcours en {$tags} mots<!-- END:SET
     --><div id="tag"><!-- AGENT 'widget/engine/tag' tags=$tags title=a$a --></div><!--
 END:IF
 
-IF !$nb_resultats && g$q
-    --><div class="noresult">{"Aucun résultat pour"} «&nbsp;<strong>{g$q}</strong>&nbsp;»</div><!--
-END:IF
 
 IF $fiches
     --><div id="fiches"><!--
