@@ -3,50 +3,50 @@
 SET a$query -->{g$q}{g$tag}<!-- END:SET
 
 SET a$head
-	IF a$ficheList --><script>
+    IF a$ficheList --><script>
 
-		<!-- SET a$a --><!-- AGENT 'js/board' --><!-- END:SET -->
-		{a$a|allowhtml}
-		<!-- SET a$a -->{g$__BASE__|length}<!-- END:SET -->
+        <!-- SET a$a --><!-- AGENT 'js/board' --><!-- END:SET -->
+        {a$a|allowhtml}
+        <!-- SET a$a -->{g$__BASE__|length}<!-- END:SET -->
 
-		setboard({
-			'lastSearch'    : {g$__URI__|substr:a$a|replace:'&amp;p=[^&]+':''|js},
-			'ficheList'     : {a$ficheList|js},
-			'resultsPerPage': {a$results_per_page|js}
-		});
-		</script><!--
-	END:IF
+        setboard({
+            'lastSearch'    : {g$__URI__|substr:a$a|replace:'&amp;p=[^&]+':''|js},
+            'ficheList'     : {a$ficheList|js},
+            'resultsPerPage': {a$results_per_page|js}
+        });
+        </script><!--
+    END:IF
 END:SET
 
 SET a$focus --><!-- IF !a$query && !a$nofocus -->1<!-- END:IF --><!-- END:SET
 
 SET a$info
-	IF a$query
+    IF a$query
 
-		IF a$nb_resultats
-			SET a$start --><!-- IF g$p > 0 -->{g$p-1}<!-- ELSE -->0<!-- END:IF --><!-- END:SET
-			SET a$start -->{a$start*a$results_per_page+1}<!-- END:SET
+        IF a$nb_resultats
+            SET a$start --><!-- IF g$p > 0 -->{g$p-1}<!-- ELSE -->0<!-- END:IF --><!-- END:SET
+            SET a$start -->{a$start*a$results_per_page+1}<!-- END:SET
 
-			-->{a$fiches-1|test:"Résultats":"Résultat"} <b>{a$start} - {a$start+a$fiches-1}</b> {"sur"} {a$nb_resultats}<!--
-		ELSE
+            -->{a$fiches-1|test:"Résultats":"Résultat"} <b>{a$start} - {a$start+a$fiches-1}</b> {"sur"} {a$nb_resultats}<!--
+        ELSE
 
-			-->{"Aucun résultat"}<!--
-		END:IF
+            -->{"Aucun résultat"}<!--
+        END:IF
 
-	END:IF
+    END:IF
 END:SET
 
 
 AGENT 'header'
 
-	title = a$title
-	head = a$head
+    title = a$title
+    head = a$head
 
-	form = a$form
-	q = a$q
-	ficheList = a$ficheList
+    form = a$form
+    q = a$q
+    ficheList = a$ficheList
 
-	focus = a$focus
-	info = a$info
+    focus = a$focus
+    info = a$info
 
 -->

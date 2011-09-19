@@ -2,15 +2,15 @@
 
 class extends agent
 {
-	const contentType = 'text/javascript';
+    const contentType = 'text/javascript';
 
-	function control() {}
+    function control() {}
 
-	function compose($o)
-	{
-		echo 'P$annuaire_ficheUrl='; pipe_annuaire_ficheUrl::js();
-		echo 'P$annuaire_photoUrl='; pipe_annuaire_photoUrl::js();
+    function compose($o)
+    {
+        echo 'P$annuaire_ficheUrl='; pipe_annuaire_ficheUrl::js();
+        echo 'P$annuaire_photoUrl='; pipe_annuaire_photoUrl::js();
 
-		return $o;
-	}
+        return $o;
+    }
 }

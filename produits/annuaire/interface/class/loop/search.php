@@ -28,11 +28,11 @@ class extends loop_sql_fiche
 
         $db = DB();
         $sql = "CREATE TEMPORARY TABLE IF NOT EXISTS searchtmp (
-              fiche_id INT UNSIGNED NOT NULL,
-              order_key INT UNSIGNED NOT NULL auto_increment,
-              rank DOUBLE,
-              PRIMARY KEY (order_key)
-            ) ENGINE=HEAP";
+                  fiche_id INT UNSIGNED NOT NULL,
+                  order_key INT UNSIGNED NOT NULL auto_increment,
+                  rank DOUBLE,
+                  PRIMARY KEY (order_key)
+                ) ENGINE=HEAP";
         $db->exec($sql);
 
         $query = ' ' . lingua::stripAccents($query) . ' ';
@@ -47,7 +47,7 @@ class extends loop_sql_fiche
         array_walk($q, array($this, 'buildQueryComponents'));
 
         $this->selectWMatched .= 'NULL' . $this->selectWMatchedEnd;
-        $this->selectFMatched .= "''"   . $this->selectFMatchedEnd;
+        $this->selectFMatched .= "''" . $this->selectFMatchedEnd;
 
         $sql = "i.mot_id=m.mot_id";
 
@@ -68,18 +68,18 @@ class extends loop_sql_fiche
             $db = DB();
 
             $sql = "INSERT INTO searchtmp
-                SELECT i.fiche_id, 0, "
-                    . ($this->addCount
-                        ? "{$this->selectWMatched}/{$this->addCount}
-                            * SUM(({$this->selectRank})/({$this->selectRankNorm}))"
-                        : '1'
-                    ) . " AS rank
-                FROM " . annuaire::$mot_fiche_table . ', '
-                    . annuaire::$mot_table . ', '
-                    . annuaire::$fiche_table
-                    . ($subset ? ', subsettmp s' : '') . "
-                WHERE f.fiche_id=i.fiche_id AND {$this->addWhere}
-                GROUP BY i.fiche_id";
+                    SELECT i.fiche_id, 0, "
+                        . ($this->addCount
+                            ? "{$this->selectWMatched}/{$this->addCount}
+                                * SUM(({$this->selectRank})/({$this->selectRankNorm}))"
+                            : '1'
+                        ) . " AS rank
+                    FROM " . annuaire::$mot_fiche_table . ', '
+                        . annuaire::$mot_table . ', '
+                        . annuaire::$fiche_table
+                        . ($subset ? ', subsettmp s' : '') . "
+                    WHERE f.fiche_id=i.fiche_id AND {$this->addWhere}
+                    GROUP BY i.fiche_id";
             if ($this->addCount) $sql .= " HAVING rank>.65 AND {$this->selectFMatched}={$this->selectFCount}";
             $sql .= " ORDER BY {$order_key}";
 
@@ -87,9 +87,9 @@ class extends loop_sql_fiche
         }
 
         $sql = "SELECT {$this->select}
-            FROM " . annuaire::$fiche_table . ", searchtmp s
-            WHERE f.fiche_id=s.fiche_id
-            ORDER BY s.order_key";
+                FROM " . annuaire::$fiche_table . ", searchtmp s
+                WHERE f.fiche_id=s.fiche_id
+                ORDER BY s.order_key";
 
         parent::__construct($sql, array($this, 'filterSearch'), $this->resultsPerPage * ($page - 1), $this->resultsPerPage, $this->highlight);
     }
@@ -111,7 +111,7 @@ class extends loop_sql_fiche
             $highlight =& $this->highlight[$field];
 
             $this->selectFCount += 1;
-            $this->selectFMatched    .= "IF(i.champ='{$field}','{$field}',";
+            $this->selectFMatched .= "IF(i.champ='{$field}','{$field}',";
             $this->selectFMatchedEnd .= ')';
 
             foreach (array_keys($q['']) as $k)

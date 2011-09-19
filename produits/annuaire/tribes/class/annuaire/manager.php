@@ -58,7 +58,7 @@ class extends self
 
         $sql->nom = 'CONCAT_WS(" ",
             IF(prenom_usuel!="", prenom_usuel, prenom_civil),
-            IF(   nom_usuel!="",    nom_usuel,    nom_civil),
+            IF( nom_usuel!="", nom_usuel, nom_civil),
             IF(nom_etudiant!="" AND nom_etudiant!=IF(nom_usuel!="",nom_usuel,nom_civil), CONCAT("(",nom_etudiant,")"), NULL)
         )';
 
@@ -103,13 +103,13 @@ class extends self
             $row->cv_token = isset($extra[1]) ? $extra[0] . '/' . $row->login . '.' . $extra[1] : false;
 
             $fiche = (object) array(
-                'nom'       => $row->nom,
-                'groupe'    => $row->promo,
-                'position'  => '',
-                'doc'       => $row->cv_text,
+                'nom' => $row->nom,
+                'groupe' => $row->promo,
+                'position' => '',
+                'doc' => $row->cv_text,
                 'photo_ref' => $row->login && $row->photo_token ? $row->photo_token : '',
-                'doc_ref'   => $row->login && $row->cv_token    ? $row->cv_token    : '',
-                'mtime'     => $row->contact_modified,
+                'doc_ref' => $row->login && $row->cv_token ? $row->cv_token : '',
+                'mtime' => $row->contact_modified,
             );
 
             unset($city);
@@ -168,8 +168,8 @@ class extends self
         $sql = "SELECT
                     ({$sql}) AS organisation,
                     service,
-                    IF (titre   !='',titre   ,fonction) AS titre,
-                    IF (fonction!='',fonction,titre   ) AS fonction,
+                    IF (titre !='',titre ,fonction) AS titre,
+                    IF (fonction!='',fonction,titre) AS fonction,
                     secteur,
                     date_debut,
                     date_fin,
@@ -193,7 +193,7 @@ class extends self
                     AND ac.is_obsolete<=0
                 ORDER BY
                     IF(ac.date_fin, ac.date_debut, '9999-12-31') DESC,
-                    IF(ac.date_fin, ac.date_fin,  ac.date_debut) DESC,
+                    IF(ac.date_fin, ac.date_fin, ac.date_debut) DESC,
                     ac.activite_id DESC";
 
         $sql = self::$db->query($sql);
@@ -262,14 +262,14 @@ class extends self
     protected static function geolocalize($row)
     {
         $city = (object) array(
-            'city_id'   => $row->city_id,
-            'city'      => $row->ville,
-            'latitude'  => 0,
+            'city_id' => $row->city_id,
+            'city' => $row->ville,
+            'latitude' => 0,
             'longitude' => 0,
-            'div1'      => '',
-            'div2'      => '',
-            'country'   => $row->pays,
-            'extra'     => '',
+            'div1' => '',
+            'div2' => '',
+            'country' => $row->pays,
+            'extra' => '',
         );
 
         if ($city->city_id)
@@ -287,12 +287,12 @@ class extends self
 
             if ($row = $sql->fetch())
             {
-                $city->city      = $row['city'];
-                $city->latitude  = $row['latitude'];
+                $city->city = $row['city'];
+                $city->latitude = $row['latitude'];
                 $city->longitude = $row['longitude'];
-                $city->div1      = $row['div1'];
-                $city->div2      = $row['div2'];
-                $city->country   = $row['country'];
+                $city->div1 = $row['div1'];
+                $city->div2 = $row['div2'];
+                $city->country = $row['country'];
 
                 while ($row = $sql->fetch())
                 {

@@ -2,12 +2,12 @@
 
 class extends self
 {
-	function control()
-	{
-		if (!s::get('acces'))
-		{
-			s::flash('referer', p::__URI__());
-			p::redirect($CONFIG['tribes.baseUrl'] . 'login');
-		}
-	}
+    function control()
+    {
+        if (!s::get('acces'))
+        {
+            s::flash('referer', p::__URI__());
+            p::redirect($CONFIG['tribes.baseUrl'] . 'login');
+        }
+    }
 }

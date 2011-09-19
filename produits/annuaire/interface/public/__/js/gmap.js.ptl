@@ -3,105 +3,105 @@
 (function (){
 
 var $gmap,
-	$mark = [],
-	$openedMarker,
+    $mark = [],
+    $openedMarker,
 
-	$fiche = [],
-	$ficheLength = 0,
+    $fiche = [],
+    $ficheLength = 0,
 
-	$GEvent,
-	$GMarker,
-	$GLatLng,
-	$GPoint,
-	$GSize,
-	$GIcon,
+    $GEvent,
+    $GMarker,
+    $GLatLng,
+    $GPoint,
+    $GSize,
+    $GIcon,
 
-	$iconR10,
-	$iconR25,
-	$iconR50,
-	$iconR100,
-	$liveMarks = new liveAgent('atlas/marks', 0, 1, 0, 1),
-	$livePopup = new liveAgent('atlas/popup', 0, 1, 0, 1),
-	$root = {~|js};
+    $iconR10,
+    $iconR25,
+    $iconR50,
+    $iconR100,
+    $liveMarks = new liveAgent('atlas/marks', 0, 1, 0, 1),
+    $livePopup = new liveAgent('atlas/popup', 0, 1, 0, 1),
+    $root = {~|js};
 
 window.gmapInit = function($win, $showControls)
 {
-	if (!$win.GBrowserIsCompatible())
-	{
-		return $win.document.write(
-			'Cette page utilise le service <a href="http://maps.google.com/" rel="nofollow">Google Maps</a>, qui n\'est pas compatible avec votre navigateur Internet.<br />\n'
-			+ 'Nous vous recommandons d\'utiliser <a href="http://www.mozilla.com/firefox/" rel="nofollow">Firefox</a>, ou au pire Internet Explorer 5.5 ou plus.'
-		);
-	}
+    if (!$win.GBrowserIsCompatible())
+    {
+        return $win.document.write(
+            'Cette page utilise le service <a href="http://maps.google.com/" rel="nofollow">Google Maps</a>, qui n\'est pas compatible avec votre navigateur Internet.<br />\n'
+            + 'Nous vous recommandons d\'utiliser <a href="http://www.mozilla.com/firefox/" rel="nofollow">Firefox</a>, ou au pire Internet Explorer 5.5 ou plus.'
+        );
+    }
 
-	$win.onunload = $win.GUnload;
+    $win.onunload = $win.GUnload;
 
-	$win.zoom = $gmapZoom;
-	$win.loadPage = $loadPage;
+    $win.zoom = $gmapZoom;
+    $win.loadPage = $loadPage;
 
-	var $minLat = window.gmapWindow.min_lat/1,
-		$maxLat = window.gmapWindow.max_lat/1,
-		$minLng = window.gmapWindow.min_lng/1,
-		$maxLng = window.gmapWindow.max_lng/1,
-		$varLng = window.gmapWindow.var_lng/1,
-		$bounds = $win.document.getElementById('map');
+    var $minLat = window.gmapWindow.min_lat/1,
+        $maxLat = window.gmapWindow.max_lat/1,
+        $minLng = window.gmapWindow.min_lng/1,
+        $maxLng = window.gmapWindow.max_lng/1,
+        $varLng = window.gmapWindow.var_lng/1,
+        $bounds = $win.document.getElementById('map');
 
-	$bounds.style.display = '';
+    $bounds.style.display = '';
 
-	$GEvent  = $win.GEvent;
-	$GMarker = $win.GMarker;
-	$GLatLng = $win.GLatLng;
-	$GPoint  = $win.GPoint;
-	$GSize   = $win.GSize;
-	$GIcon   = $win.GIcon;
+    $GEvent  = $win.GEvent;
+    $GMarker = $win.GMarker;
+    $GLatLng = $win.GLatLng;
+    $GPoint  = $win.GPoint;
+    $GSize   = $win.GSize;
+    $GIcon   = $win.GIcon;
 
-	$iconR10  = $giconFactory('r10' , 12, 20, 22, 20,  6, 19);
-	$iconR25  = $giconFactory('r25' , 16, 27, 30, 27,  8, 26);
-	$iconR50  = $giconFactory('r50' , 20, 34, 37, 34, 10, 33);
-	$iconR100 = $giconFactory('r100', 24, 41, 44, 41, 12, 40);
+    $iconR10  = $giconFactory('r10', 12, 20, 22, 20,  6, 19);
+    $iconR25  = $giconFactory('r25', 16, 27, 30, 27,  8, 26);
+    $iconR50  = $giconFactory('r50', 20, 34, 37, 34, 10, 33);
+    $iconR100 = $giconFactory('r100', 24, 41, 44, 41, 12, 40);
 
-	$gmap = new $win.GMap2($bounds, {mapTypes:[$win.G_PHYSICAL_MAP, $win.G_SATELLITE_MAP, $win.G_NORMAL_MAP]});
-	if ($gmap.enableContinuousZoom) $gmap.enableDoubleClickZoom(), $gmap.enableContinuousZoom();
+    $gmap = new $win.GMap2($bounds, {mapTypes:[$win.G_PHYSICAL_MAP, $win.G_SATELLITE_MAP, $win.G_NORMAL_MAP]});
+    if ($gmap.enableContinuousZoom) $gmap.enableDoubleClickZoom(), $gmap.enableContinuousZoom();
 
-	if ($showControls > 1 || (!$showControls && $bounds.offsetWidth > 400 && $bounds.offsetHeight > 400))
-	{
-		$gmap.addControl(new $win.GLargeMapControl());
-		$gmap.addControl(new $win.GMapTypeControl());
-		$gmap.addControl(new $win.GScaleControl());
-		$gmap.addControl(new $win.GOverviewMapControl());
-	}
+    if ($showControls > 1 || (!$showControls && $bounds.offsetWidth > 400 && $bounds.offsetHeight > 400))
+    {
+        $gmap.addControl(new $win.GLargeMapControl());
+        $gmap.addControl(new $win.GMapTypeControl());
+        $gmap.addControl(new $win.GScaleControl());
+        $gmap.addControl(new $win.GOverviewMapControl());
+    }
 
-	if ($maxLat)
-	{
-		if ($varLng <= ($maxLng - $minLng) * ($maxLng - $minLng) / 4)
-		{
-			$bounds = new $win.GLatLngBounds(
-				new $GLatLng($minLat, $minLng),
-				new $GLatLng($maxLat, $maxLng)
-			);
-		}
-		else
-		{
-			$bounds = new $win.GLatLngBounds(
-				new $GLatLng($minLat, $maxLng),
-				new $GLatLng($maxLat, $minLng)
-			);
-		}
+    if ($maxLat)
+    {
+        if ($varLng <= ($maxLng - $minLng) * ($maxLng - $minLng) / 4)
+        {
+            $bounds = new $win.GLatLngBounds(
+                new $GLatLng($minLat, $minLng),
+                new $GLatLng($maxLat, $maxLng)
+            );
+        }
+        else
+        {
+            $bounds = new $win.GLatLngBounds(
+                new $GLatLng($minLat, $maxLng),
+                new $GLatLng($maxLat, $minLng)
+            );
+        }
 
-		$gmap.setCenter($bounds.getCenter(), $gmap.getBoundsZoomLevel($bounds));
-		if ($gmap.getBounds().isFullLng()) $gmap.setCenter(new $GLatLng(25, 0));
-	}
-	else
-	{
-		$gmap.setCenter(new $GLatLng(25, 0), 2);
-	}
+        $gmap.setCenter($bounds.getCenter(), $gmap.getBoundsZoomLevel($bounds));
+        if ($gmap.getBounds().isFullLng()) $gmap.setCenter(new $GLatLng(25, 0));
+    }
+    else
+    {
+        $gmap.setCenter(new $GLatLng(25, 0), 2);
+    }
 
 
-	$GEvent.addListener($gmap, 'zoomend', $gmapOnzoomend);
-	$GEvent.addListener($gmap, 'moveend', $gmapOnmoveend);
-	$GEvent.addListener($gmap, 'infowindowopen', $loadPage);
-	$gmapOnzoomend(-1, 0);
-	$gmapOnmoveend();
+    $GEvent.addListener($gmap, 'zoomend', $gmapOnzoomend);
+    $GEvent.addListener($gmap, 'moveend', $gmapOnmoveend);
+    $GEvent.addListener($gmap, 'infowindowopen', $loadPage);
+    $gmapOnzoomend(-1, 0);
+    $gmapOnmoveend();
 }
 
 function $max($a, $b) {return $a > $b ? $a : $b}
@@ -109,188 +109,188 @@ function $min($a, $b) {return $a < $b ? $a : $b}
 
 function $gmapOnmoveend()
 {
-	var $z = [1,1,1,1,2,2,3,3,4,4],
-		$ne = $gmap.getBounds(),
-		$sw = $ne.getSouthWest();
-		$ne = $ne.getNorthEast();
+    var $z = [1,1,1,1,2,2,3,3,4,4],
+        $ne = $gmap.getBounds(),
+        $sw = $ne.getSouthWest();
+        $ne = $ne.getNorthEast();
 
-	$z = {
-		zoom: $z[$gmap.getZoom()] || 5,
-		mnLt: $sw.lat(),
-		mxLt: $ne.lat(),
-		mnLg: $sw.lng(),
-		mxLg: $ne.lng()
-	};
+    $z = {
+        zoom: $z[$gmap.getZoom()] || 5,
+        mnLt: $sw.lat(),
+        mxLt: $ne.lat(),
+        mnLg: $sw.lng(),
+        mxLg: $ne.lng()
+    };
 
-	$liveMarks.replace($z, $gmapDisplayMarks);
+    $liveMarks.replace($z, $gmapDisplayMarks);
 }
 
 
 function $gmapDisplayMarks($marks)
 {
-	if ($marks && $marks.marks)
-	{
-		var $i, $m = [], $h = [], $hMin = 10000000000, $hMax = 0, $hC = [], $dynamic;
+    if ($marks && $marks.marks)
+    {
+        var $i, $m = [], $h = [], $hMin = 10000000000, $hMax = 0, $hC = [], $dynamic;
 
-		$marks = $marks.marks;
+        $marks = $marks.marks;
 
-		while ($i = $marks())
-		{
-			++$h[$i.nb] || ($h[$i.nb] = 1);
+        while ($i = $marks())
+        {
+            ++$h[$i.nb] || ($h[$i.nb] = 1);
 
-			$hMin = $min($hMin, $i.nb);
-			$hMax = $max($hMax, $i.nb);
+            $hMin = $min($hMin, $i.nb);
+            $hMax = $max($hMax, $i.nb);
 
-			$i.lat = $i.lat/1000 -  90;
-			$i.lng = $i.lng/1000 - 180;
+            $i.lat = $i.lat/1000 -  90;
+            $i.lng = $i.lng/1000 - 180;
 
-			$m.push($i);
-		}
+            $m.push($i);
+        }
 
-		$hC[$hMin - 1] = 0;
-		$dynamic = $hMax - $hMin;
+        $hC[$hMin - 1] = 0;
+        $dynamic = $hMax - $hMin;
 
-		if ($dynamic > 0)
-		{
-			$h[$hMin] = 0;
+        if ($dynamic > 0)
+        {
+            $h[$hMin] = 0;
 
-			do $hC[$hMin] = $hC[$hMin - 1] + ($h[$hMin] || 0);
-			while (++$hMin <= $hMax);
+            do $hC[$hMin] = $hC[$hMin - 1] + ($h[$hMin] || 0);
+            while (++$hMin <= $hMax);
 
-			$dynamic = 1 / ($hC[$hMax - 1] + $hC[$hMax] + 1);
-		}
-		else $dynamic = 0;
+            $dynamic = 1 / ($hC[$hMax - 1] + $hC[$hMax] + 1);
+        }
+        else $dynamic = 0;
 
-		$marks = $m.length;
+        $marks = $m.length;
 
-		for ($i = 0; $i < $marks; ++$i)
-		{
-			$mark[$m[$i].label] || $gmap.addOverlay($gmarkerFactory($m[$i], [$dynamic, $hC]));
-		}
-	}
+        for ($i = 0; $i < $marks; ++$i)
+        {
+            $mark[$m[$i].label] || $gmap.addOverlay($gmarkerFactory($m[$i], [$dynamic, $hC]));
+        }
+    }
 }
 
 function $gmapOnzoomend($lastzoom, $zoom)
 {
-	if ($lastzoom >= 0 && (
-		$max($lastzoom, $zoom) <= 3
-		|| (4 <= $min($lastzoom, $zoom) && $max($lastzoom, $zoom) <= 5)
-		|| (6 <= $min($lastzoom, $zoom) && $max($lastzoom, $zoom) <= 7)
-		|| 8 <= $min($lastzoom, $zoom)
-	)) return;
+    if ($lastzoom >= 0 && (
+        $max($lastzoom, $zoom) <= 3
+        || (4 <= $min($lastzoom, $zoom) && $max($lastzoom, $zoom) <= 5)
+        || (6 <= $min($lastzoom, $zoom) && $max($lastzoom, $zoom) <= 7)
+        || 8 <= $min($lastzoom, $zoom)
+    )) return;
 
-	if ($zoom < $lastzoom) $gmap.closeInfoWindow();
+    if ($zoom < $lastzoom) $gmap.closeInfoWindow();
 
-	$gmapClearMark();
+    $gmapClearMark();
 }
 
 function $gmapClearMark()
 {
-	for (var $i in $mark)
-	{
-		$GEvent.clearListeners($mark[$i], 'click');
-		$gmap.removeOverlay($mark[$i]);
-	}
+    for (var $i in $mark)
+    {
+        $GEvent.clearListeners($mark[$i], 'click');
+        $gmap.removeOverlay($mark[$i]);
+    }
 
-	$mark = [];
+    $mark = [];
 }
 
 function $gmarkerFactory($data, $histo)
 {
-	var $icon, $marker,
-		$nb = $data.nb,
-		$id = $data.id;
+    var $icon, $marker,
+        $nb = $data.nb,
+        $id = $data.id;
 
-	$marker = $histo[0];
-	$histo = $histo[1];
+    $marker = $histo[0];
+    $histo = $histo[1];
 
-	$marker = $marker ? parseInt(4 * $marker * ($histo[$nb - 1] + $histo[$nb])) : 0;
+    $marker = $marker ? parseInt(4 * $marker * ($histo[$nb - 1] + $histo[$nb])) : 0;
 
-	switch ($marker)
-	{
-		case 0: $icon = $iconR10 ; break;
-		case 1: $icon = $iconR25 ; break;
-		case 2: $icon = $iconR50 ; break;
-		case 3: $icon = $iconR100;
-	}
+    switch ($marker)
+    {
+        case 0: $icon = $iconR10 ; break;
+        case 1: $icon = $iconR25 ; break;
+        case 2: $icon = $iconR50 ; break;
+        case 3: $icon = $iconR100;
+    }
 
-	$marker = new $GMarker(new $GLatLng($data.lat, $data.lng), $icon);
-	$marker.$data = $data;
+    $marker = new $GMarker(new $GLatLng($data.lat, $data.lng), $icon);
+    $marker.$data = $data;
 
-	$GEvent.addListener($marker, 'click', $gmapOnclick);
+    $GEvent.addListener($marker, 'click', $gmapOnclick);
 
-	$mark[$data.label] = $marker;
+    $mark[$data.label] = $marker;
 
-	return $marker;
+    return $marker;
 }
 
 function $gmapOnclick()
 {
-	var $marker = this,
-		$data = $marker.$data,
-		$nb   = $data.nb,
-		$html = $marker.$html;
+    var $marker = this,
+        $data = $marker.$data,
+        $nb   = $data.nb,
+        $html = $marker.$html;
 
-	if (!$html)
-	{
-		$marker.$html = $html = $getInfoWindowHtml($data.label, $nb);
-	}
+    if (!$html)
+    {
+        $marker.$html = $html = $getInfoWindowHtml($data.label, $nb);
+    }
 
-	$openedMarker = $data;
-	$marker.openInfoWindowHtml($html);
+    $openedMarker = $data;
+    $marker.openInfoWindowHtml($html);
 }
 
 function $loadPage($page)
 {
-	$page = $page > 0 ? $page : 1;
-	$openedMarker.page = $page;
-	$livePopup.push({zoom:$openedMarker.zoom,id:$openedMarker.id,p:$page}, $drawInfoPage);
+    $page = $page > 0 ? $page : 1;
+    $openedMarker.page = $page;
+    $livePopup.push({zoom:$openedMarker.zoom,id:$openedMarker.id,p:$page}, $drawInfoPage);
 }
 
 function $drawInfoPage($fiches)
 {
-	$fiches = $fiches && $fiches.fiches;
+    $fiches = $fiches && $fiches.fiches;
 
-	if (!$fiches) return;
+    if (!$fiches) return;
 
-	try
-	{
-		var $infoPage = frames['map'].document.getElementById('infoPage');
+    try
+    {
+        var $infoPage = frames['map'].document.getElementById('infoPage');
 
-		$fiches = [
-			$getFichesHtml($fiches),
-			$getPaginationHtml(5, $openedMarker.nb, $openedMarker.page)
-		];
+        $fiches = [
+            $getFichesHtml($fiches),
+            $getPaginationHtml(5, $openedMarker.nb, $openedMarker.page)
+        ];
 
-		$infoPage.innerHTML = $fiches.join('');
-		$infoPage.scrollTop = 0;
-	}
-	catch ($fiches)
-	{
-		<!-- IF g$__DEBUG__ -->
-		E($fiches);
-		<!-- END:IF -->
-	}
+        $infoPage.innerHTML = $fiches.join('');
+        $infoPage.scrollTop = 0;
+    }
+    catch ($fiches)
+    {
+        <!-- IF g$__DEBUG__ -->
+        E($fiches);
+        <!-- END:IF -->
+    }
 }
 
 function $gmapZoom($zoomOut)
 {
-	$zoomOut ? $gmap.zoomOut() : $gmap.zoomIn();
+    $zoomOut ? $gmap.zoomOut() : $gmap.zoomIn();
 }
 
 function $giconFactory($name, $iW, $iH, $sW, $H, $aX, $aY)
 {
-	var $img = {base:'img/':1|js},
-		$icon = new $GIcon();
+    var $img = {base:'img/':1|js},
+        $icon = new $GIcon();
 
-	$icon.image = $img + $name + '.png';
-	$icon.shadow = $img + $name.replace(/^./, 's') + '.png';
-	$icon.iconSize = new $GSize($iW, $iH);
-	$icon.shadowSize = new $GSize($sW, $H);
-	$icon.iconAnchor = new $GPoint($aX, $aY);
-	$icon.infoWindowAnchor = new $GPoint($aX, 1);
+    $icon.image = $img + $name + '.png';
+    $icon.shadow = $img + $name.replace(/^./, 's') + '.png';
+    $icon.iconSize = new $GSize($iW, $iH);
+    $icon.shadowSize = new $GSize($sW, $H);
+    $icon.iconAnchor = new $GPoint($aX, $aY);
+    $icon.infoWindowAnchor = new $GPoint($aX, 1);
 
-	return $icon;
+    return $icon;
 }
 
 <!-- AGENT 'js/gmapClosureHook' -->

@@ -9,11 +9,11 @@
 <style>
 html,body,div#map
 {
-	overflow: hidden;
-	margin: 0;
-	padding: 0;
-	width:100%;
-	height:100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    width:100%;
+    height:100%;
 }
 </style>
 <script src="{~}js/w"></script>
@@ -23,7 +23,7 @@ onload = function() {parent.gmapInit(window)};
 
 document.write('<script src="http://maps.google.com/maps?file=api&v=2&hl={g$__LANG__}&key=' + {
 <!-- LOOP $keys -->
-	{$iteratorPosition|test:','}{$KEY|js}:{$VALUE|js}
+    {$iteratorPosition|test:','}{$KEY|js}:{$VALUE|js}
 <!-- END:LOOP -->
 }[location.hostname] + '"><\/script>');
 

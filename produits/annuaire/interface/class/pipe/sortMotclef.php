@@ -2,27 +2,27 @@
 
 class
 {
-	static function php($string)
-	{
-		$string = urldecode(p::string($string));
-		$string = explode('_', $string);
-		sort($string);
+    static function php($string)
+    {
+        $string = urldecode(p::string($string));
+        $string = explode('_', $string);
+        sort($string);
 
-		return implode('_', $string);
-	}
+        return implode('_', $string);
+    }
 
-	static function js()
-	{
-		?>/*<script>*/
+    static function js()
+    {
+        ?>/*<script>*/
 
 function($string)
 {
-	$string = dUC(str($string));
-	$string = $string.split('_');
-	$string.sort();
+    $string = dUC(str($string));
+    $string = $string.split('_');
+    $string.sort();
 
-	return $string.join('_');
+    return $string.join('_');
 }
 
-<?php	}
+<?php    }
 }

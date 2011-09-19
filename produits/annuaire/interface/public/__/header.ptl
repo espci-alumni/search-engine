@@ -2,23 +2,23 @@
 <div id="body-max">
 <!-- IF !a$minimal -->
 <div id="engine">
-	<ul>
-		<!-- LOOP $tabs -->
-		<li><a href="{~}{$url}">{$caption}</a></li>
-		<!-- END:LOOP -->
-	</ul>
-	<!--
-	IF a$form --><!-- AGENT a$form --><!-- ELSE --><!-- AGENT $form --><!-- END:IF
-	IF a$q
-		AGENT a$q autofocus=a$focus placeholder="Rechercher dans l'annuaire" id='search-field'
-	ELSE
-		AGENT  $q autofocus=a$focus placeholder="Rechercher dans l'annuaire" id='search-field'
-	END:IF
-	--><input type="submit" value="{"rechercher"}" id="search-button"><!--
-	IF g$tag --><input type="hidden" name="tag" value="{g$tag}"><!-- END:IF
-	--><a>Recherche avancée</a><!--
-	IF a$info --><p>{a$info}</p><!-- END:IF
-	IF a$form --><!-- AGENT a$form _mode_='close' --><!-- ELSE --><!-- AGENT $form _mode_='close' --><!-- END:IF
-	-->
+    <ul>
+        <!-- LOOP $tabs -->
+        <li><a href="{~}{$url}">{$caption}</a></li>
+        <!-- END:LOOP -->
+    </ul>
+    <!--
+    IF a$form --><!-- AGENT a$form --><!-- ELSE --><!-- AGENT $form --><!-- END:IF
+    IF a$q
+        AGENT a$q autofocus=a$focus placeholder="Rechercher dans l'annuaire" id='search-field'
+    ELSE
+        AGENT  $q autofocus=a$focus placeholder="Rechercher dans l'annuaire" id='search-field'
+    END:IF
+    --><input type="submit" value="{"rechercher"}" id="search-button"><!--
+    IF g$tag --><input type="hidden" name="tag" value="{g$tag}"><!-- END:IF
+    --><a>Recherche avancée</a><!--
+    IF a$info --><p>{a$info}</p><!-- END:IF
+    IF a$form --><!-- AGENT a$form _mode_='close' --><!-- ELSE --><!-- AGENT $form _mode_='close' --><!-- END:IF
+    -->
 </div>
 <!-- END:IF -->

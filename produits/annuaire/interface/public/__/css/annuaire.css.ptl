@@ -1,268 +1,268 @@
 html
 {
-	overflow-y: scroll;
-	color: #888;
+    overflow-y: scroll;
+    color: #888;
 }
 
 body, table
 {
-	margin: 0;
+    margin: 0;
 }
 
 #body-max
 {
-	height: 100%;
-	padding: 10px;
+    height: 100%;
+    padding: 10px;
 }
 
 #engine
 {
-	height: 65px;
-	background: url('{~}img/sprite-annuaire-bgs.png') 0 0 repeat-x;
-	z-index: 1;
-	position: relative;
-	margin: -10px;
-	margin-bottom: 0;
-	padding: 10px;
-	padding-bottom: 0;
+    height: 65px;
+    background: url('{~}img/sprite-annuaire-bgs.png') 0 0 repeat-x;
+    z-index: 1;
+    position: relative;
+    margin: -10px;
+    margin-bottom: 0;
+    padding: 10px;
+    padding-bottom: 0;
 }
 
 .highlight
 {
-	color: #000;
+    color: #000;
 }
 
 .noresult
 {
-	font-size: 150%;
-	margin: 30px;
+    font-size: 150%;
+    margin: 30px;
 }
 
 div.items
 {
-	background-color: #fff;
-	border: 1px solid #d5d5d5;
-	margin: 10px;
-	margin-bottom: 20px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	padding: 10px;
-	-moz-box-shadow: 0 3px 5px #aaa;
-	-webkit-box-shadow: 0 3px 5px #aaa;
-	box-shadow: 0 3px 5px #aaa;
+    background-color: #fff;
+    border: 1px solid #d5d5d5;
+    margin: 10px;
+    margin-bottom: 20px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 10px;
+    -moz-box-shadow: 0 3px 5px #aaa;
+    -webkit-box-shadow: 0 3px 5px #aaa;
+    box-shadow: 0 3px 5px #aaa;
 }
 
 .ie6 div.items,
 .ie7 div.items,
 .ie8 div.items
 {
-	filter: progid:DXImageTransform.Microsoft.Shadow(color='#aaaaaa', Direction=180, Strength=5);
-	zoom: 1;
+    filter: progid:DXImageTransform.Microsoft.Shadow(color='#aaaaaa', Direction=180, Strength=5);
+    zoom: 1;
 }
 
 div.bloc h2
 {
-	font-size: 12px;
-	font-weight: 700;
-	margin-left: 20px;
-	margin-bottom: 0;
-	color: #5d5d5d;
+    font-size: 12px;
+    font-weight: 700;
+    margin-left: 20px;
+    margin-bottom: 0;
+    color: #5d5d5d;
 }
 
 div.boutons
 {
-	width: 308px;
-	height: 64px;
-	float: right;
+    width: 308px;
+    height: 64px;
+    float: right;
 }
 
 a.navigation
 {
-	display: block;
-	width: 99px;
-	height: 64px;
-	text-align: center;
-	float: right;
+    display: block;
+    width: 99px;
+    height: 64px;
+    text-align: center;
+    float: right;
 }
 
 a.navigation:hover
 {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 a.profil
 {
-	background: url('{~}img/sprite-annuaire.png') 0 no-repeat;
+    background: url('{~}img/sprite-annuaire.png') 0 no-repeat;
 }
 
 a.profil:hover
 {
-	background: url('{~}img/sprite-annuaire.png') -99px no-repeat;
+    background: url('{~}img/sprite-annuaire.png') -99px no-repeat;
 }
 
 a.cv
 {
-	background: url('{~}img/sprite-annuaire.png') -198px no-repeat;
-	margin-right: 20px;
+    background: url('{~}img/sprite-annuaire.png') -198px no-repeat;
+    margin-right: 20px;
 }
 
 a.cv:hover
 {
-	background: url('{~}img/sprite-annuaire.png') -297px no-repeat;
+    background: url('{~}img/sprite-annuaire.png') -297px no-repeat;
 }
 
 .cvoff
 {
-	display: block;
-	width: 99px;
-	height: 64px;
-	text-align: center;
-	float: right;
-	background: url('{~}img/sprite-annuaire.png') -395px no-repeat;
-	margin-right: 20px;
+    display: block;
+    width: 99px;
+    height: 64px;
+    text-align: center;
+    float: right;
+    background: url('{~}img/sprite-annuaire.png') -395px no-repeat;
+    margin-right: 20px;
 }
 
 #pagination
 {
-	clear: both;
-	width: 675px;
-	height: 40px;
-	margin-left: auto;
-	margin-right: auto;
-	font-weight: 700;
-	padding-top: 20px;
+    clear: both;
+    width: 675px;
+    height: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 700;
+    padding-top: 20px;
 }
 
 #pagination a,
 .pagination
 {
-	display: block;
-	float: left;
-	text-decoration: none;
-	border: 1px solid #5b5b5b;
-	color: #444;
-	border-width: 1px 0;
-	padding: 5px 0;
+    display: block;
+    float: left;
+    text-decoration: none;
+    border: 1px solid #5b5b5b;
+    color: #444;
+    border-width: 1px 0;
+    padding: 5px 0;
 }
 
 #pagination .pagination
 {
-	margin-right: 2px;
-	margin-left: 3px;
-	border-width: 1px;
-	padding: 5px;
+    margin-right: 2px;
+    margin-left: 3px;
+    border-width: 1px;
+    padding: 5px;
 }
 
 #pagination a:hover,
 strong.pagination
 {
-	background-color: #5b5b5b;
-	color: #9f9f9f;
+    background-color: #5b5b5b;
+    color: #9f9f9f;
 }
 
 #pagination a.pagination:hover,
 strong.pagination
 {
-	border: 1px solid #fff;
-	padding: 5px;
+    border: 1px solid #fff;
+    padding: 5px;
 }
 
 #pagination .first-dot
 {
-	padding-left: 5px;
-	border-left-width: 1px;
+    padding-left: 5px;
+    border-left-width: 1px;
 }
 
 #pagination .last-dot
 {
-	padding-right: 5px;
-	border-right-width: 1px;
+    padding-right: 5px;
+    border-right-width: 1px;
 }
 
 div.submit
 {
-	text-align: center;
-	margin: 10px;
+    text-align: center;
+    margin: 10px;
 }
 
 .submit table
 {
-	display: inline;
+    display: inline;
 }
 
 div.submit input.submit
 {
-	font-size: 16px;
-	color: #fff;
-	border: 1px solid #165f00;
-	background: url({~}img/spritey.png) #26c900 0 -102px repeat-x;
-	font-weight: 700;
-	padding: 6px 20px;
+    font-size: 16px;
+    color: #fff;
+    border: 1px solid #165f00;
+    background: url({~}img/spritey.png) #26c900 0 -102px repeat-x;
+    font-weight: 700;
+    padding: 6px 20px;
 }
 
 div.submit input.submit:hover
 {
-	background: url({~}img/spritey.png) #26c900 0 -120px repeat-x;
+    background: url({~}img/spritey.png) #26c900 0 -120px repeat-x;
 }
 
 #footer
 {
-	width: 895px;
-	height: 27px;
-	padding-top: 20px;
-	background: url({~}img/spritey.png) 0 0 repeat-x;
-	margin-left: 20px;
-	margin-top: 30px;
-	margin-bottom: 20px;
-	text-align: center;
-	float: left;
-	font-size: 10px;
+    width: 895px;
+    height: 27px;
+    padding-top: 20px;
+    background: url({~}img/spritey.png) 0 0 repeat-x;
+    margin-left: 20px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+    float: left;
+    font-size: 10px;
 }
 
 #footer a
 {
-	color: #5c5c5c;
+    color: #5c5c5c;
 }
 
 a.navigation span
 {
-	display: none;
+    display: none;
 }
 
 a.navigation:hover span
 {
-	display: block;
-	width: 60px;
-	position: relative;
-	bottom: -80px;
-	font-variant: small-caps;
-	background-color: #5b5b5b;
-	color: #fff;
-	margin-right: auto;
-	margin-left: auto;
-	padding: 5px 0;
+    display: block;
+    width: 60px;
+    position: relative;
+    bottom: -80px;
+    font-variant: small-caps;
+    background-color: #5b5b5b;
+    color: #fff;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 5px 0;
 }
 
 #top
 {
-	float: left;
-	height: auto;
-	width: 300px;
-	margin-left: -10px;
+    float: left;
+    height: auto;
+    width: 300px;
+    margin-left: -10px;
 }
 
 #top .item
 {
-	font-size: 110%;
-	white-space: nowrap;
-	overflow: hidden;
-	padding: 3px 0;
+    font-size: 110%;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 3px 0;
     height: 44px;
 }
 
 #top .item td
 {
-	vertical-align: middle;
+    vertical-align: middle;
 }
 
 /*------------------------------------------*/
@@ -293,14 +293,14 @@ a.navigation:hover span
 
 #top td
 {
-	padding: 0;
-	padding-right: 5px;
+    padding: 0;
+    padding-right: 5px;
 }
 
 #fiches .fiche .img-cadre
 {
-	margin-top: 25px;
-	margin-right: 10px;
+    margin-top: 25px;
+    margin-right: 10px;
 }
 
 .img-h32 img
@@ -341,328 +341,328 @@ a.navigation:hover span
 
 #fiches .fiche
 {
-	background: url('{~}img/sprite-annuaire-bgs.png') #fefefe 0 -75px repeat-x;
-	float: right;
-	width: 100%;
+    background: url('{~}img/sprite-annuaire-bgs.png') #fefefe 0 -75px repeat-x;
+    float: right;
+    width: 100%;
 }
 
 #fiches .fiche a
 {
-	font-weight: 700;
-	font-size: 18px;
+    font-weight: 700;
+    font-size: 18px;
 }
 
 .resumes
 {
-	float: left;
+    float: left;
 }
 
 .resumes
 {
-	width: 80%;
+    width: 80%;
 }
 
 .nom,
 .resumeprofil,
 .resumecv
 {
-	margin: 0;
+    margin: 0;
 }
 
 .resumeprofil
 {
-	margin-top: -10px;
+    margin-top: -10px;
 }
 
 .nom
 {
-	margin-top: 20px;
+    margin-top: 20px;
 }
 
 a.group
 {
-	color: #888;
-	font-size: 11px !important;
+    color: #888;
+    font-size: 11px !important;
 }
 
 p.position
 {
-	color: #000;
+    color: #000;
 }
 
 a
 {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 a:hover
 {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 #trombi
 {
-	clear: both;
+    clear: both;
 }
 
 #trombi .fiche
 {
-	text-align: center;
-	float: left;
-	width: 150px;
-	height: 190px;
-	overflow: hidden;
+    text-align: center;
+    float: left;
+    width: 150px;
+    height: 190px;
+    overflow: hidden;
 }
 
 .img-cadre table,
 .img-cadre td
 {
-	text-align: center;
-	border-collapse: collapse;
-	width: 128px;
-	height: 128px;
-	margin: 0;
-	padding: 0;
+    text-align: center;
+    border-collapse: collapse;
+    width: 128px;
+    height: 128px;
+    margin: 0;
+    padding: 0;
 }
 
 td
 {
-	border-bottom: 1px solid #fff;
-	padding-left: 5px;
-	padding-right: 5px;
+    border-bottom: 1px solid #fff;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 optgroup
 {
-	font-weight: 700;
-	font-style: italic;
+    font-weight: 700;
+    font-style: italic;
 }
 
 .custom
 {
-	width: 100px;
+    width: 100px;
 }
 
 textarea
 {
-	height: 15px;
+    height: 15px;
 }
 
 .additem
 {
-	color: blue;
-	font-size: 80%;
-	text-decoration: underline;
-	background-color: #fff;
-	border: 0 solid;
-	cursor: pointer;
-	margin: 0;
-	padding: 0;
+    color: blue;
+    font-size: 80%;
+    text-decoration: underline;
+    background-color: #fff;
+    border: 0 solid;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
 }
 
 hr
 {
-	border: 0;
-	color: silver;
-	background-color: silver;
-	height: 1px;
-	margin: 20px;
+    border: 0;
+    color: silver;
+    background-color: silver;
+    height: 1px;
+    margin: 20px;
 }
 
 .detail
 {
-	font-size: 80%;
-	font-style: italic;
+    font-size: 80%;
+    font-style: italic;
 }
 
 td.label
 {
-	text-align: right;
-	width: 150px;
+    text-align: right;
+    width: 150px;
 }
 
 td.data
 {
-	width: 350px;
+    width: 350px;
 }
 
 #map
 {
-	font-size: 90%;
-	z-index: 0;
-	position: absolute;
-	top: 35px;
-	left: 0px;
+    font-size: 90%;
+    z-index: 0;
+    position: absolute;
+    top: 35px;
+    left: 0px;
 }
 
 #map .region
 {
-	font-size: 110%;
+    font-size: 110%;
 }
 
 #map a
 {
-	font-size: 90%;
-	font-weight: 700;
+    font-size: 90%;
+    font-weight: 700;
 }
 
 #map .pagination td
 {
-	font-weight: 400;
-	font-size: 90%;
-	white-space: nowrap;
+    font-weight: 400;
+    font-size: 90%;
+    white-space: nowrap;
 }
 
 .adddel
 {
-	text-align: right;
+    text-align: right;
 }
 
 #tag
 {
-	margin-right: -10px;
-	float: right;
-	width: 25%;
+    margin-right: -10px;
+    float: right;
+    width: 25%;
 }
 
 #tag .items
 {
-	text-align: center;
+    text-align: center;
 }
 
 #engine ul
 {
-	position: absolute;
-	top: 0;
-	left: 500px;
+    position: absolute;
+    top: 0;
+    left: 500px;
 }
 
 #engine ul a
 {
-	font-size: 14px;
-	color: #677180;
-	line-height: 35px;
+    font-size: 14px;
+    color: #677180;
+    line-height: 35px;
 }
 
 #engine form
 {
-	position: relative;
-	top: 0;
-	width: 500px;
-	font-size: 11px;
-	color: #444;
-	line-height: 20px;
+    position: relative;
+    top: 0;
+    width: 500px;
+    font-size: 11px;
+    color: #444;
+    line-height: 20px;
 }
 
 #engine form a
 {
-	float: right;
-	<!-- IF !g$__DEBUG__ -->
-	/* Désactivé tant que le dev n'est pas terminé */
-	display: none;
-	<!-- END:IF -->
+    float: right;
+    <!-- IF !g$__DEBUG__ -->
+    /* Désactivé tant que le dev n'est pas terminé */
+    display: none;
+    <!-- END:IF -->
 }
 
 #engine form p
 {
-	float: left;
+    float: left;
 }
 
 #search-field
 {
-	width: 449px;
-	line-height: 35px;
-	height: 35px;
-	border: 1px solid #8e939a;
-	font-size: 16px;
-	color: #677180;
-	padding: 0 0 0 10px;
-	background-color: white;
+    width: 449px;
+    line-height: 35px;
+    height: 35px;
+    border: 1px solid #8e939a;
+    font-size: 16px;
+    color: #677180;
+    padding: 0 0 0 10px;
+    background-color: white;
 }
 
 #search-button
 {
-	width: 40px;
-	height: 37px;
-	text-indent: -999em;
-	overflow: hidden;
-	background: url('{~}img/sprite-annuaire.png') -494px 0 no-repeat;
-	border: none;
-	position: absolute;
-	right: 0;
+    width: 40px;
+    height: 37px;
+    text-indent: -999em;
+    overflow: hidden;
+    background: url('{~}img/sprite-annuaire.png') -494px 0 no-repeat;
+    border: none;
+    position: absolute;
+    right: 0;
 }
 
 #search-button:hover
 {
-	background-position: -534px 0px;
+    background-position: -534px 0px;
 }
 
 #engine li
 {
-	display: inline;
-	padding-left: 20px;
+    display: inline;
+    padding-left: 20px;
 }
 
 h1
 {
-	font-size: 20px;
-	color: #5c5c5c;
-	margin-left: 240px;
+    font-size: 20px;
+    color: #5c5c5c;
+    margin-left: 240px;
 }
 
 #fiches
 {
-	width: 70%;
+    width: 70%;
 }
 
 #checklist a
 {
-	display: block;
-	color: #000;
-	padding-left: 20px;
-	padding-right: 20px;
-	background: url({~}img/green.gif) no-repeat left;
+    display: block;
+    color: #000;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: url({~}img/green.gif) no-repeat left;
 }
 
 #checklist a.queued
 {
-	background-image: url({~}img/blue.gif);
+    background-image: url({~}img/blue.gif);
 }
 
 #checklist a.red
 {
-	font-weight: 700;
-	color: blue;
-	background-image: url({~}img/red.gif);
+    font-weight: 700;
+    color: blue;
+    background-image: url({~}img/red.gif);
 }
 
 #intro
 {
-	padding: 10px;
+    padding: 10px;
 }
 
 #intro h3
 {
-	font-weight: 700;
-	font-size: 120%;
-	margin: 0;
-	padding: 10px 0;
+    font-weight: 700;
+    font-size: 120%;
+    margin: 0;
+    padding: 10px 0;
 }
 
 #intro li
 {
-	padding: 3px;
+    padding: 3px;
 }
 
 #faq li
 {
-	padding: 5px;
+    padding: 5px;
 }
 
 #faq dt a
 {
-	margin-top: 20px;
-	margin-bottom: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 input.text,
@@ -671,44 +671,44 @@ input.QSelect,
 input.password,
 select
 {
-	width: 100%;
+    width: 100%;
 }
 
 #top a,
 #faq a
 {
-	font-weight: 700;
+    font-weight: 700;
 }
 
 #top p,
 #map p
 {
-	margin: 0;
-	font-size: 12px;
+    margin: 0;
+    font-size: 12px;
 }
 
 #map td
 {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 #map .pagination
 {
-	border: none;
-	margin: 0;
-	padding: 0;
+    border: none;
+    margin: 0;
+    padding: 0;
 }
 
 #faq,
 #checklist
 {
-	float: right;
-	margin: 5px;
+    float: right;
+    margin: 5px;
 }
 
 #faq dl,
 #faq dd
 {
-	padding: 20px;
+    padding: 20px;
 }

@@ -122,7 +122,7 @@ class extends agent
 
         $subset = '';
         if ($o->fiches->hasQuery) $subset = 'searchtmp';
-        else if ($this->subset  ) $subset = 'subsettmp';
+        else if ($this->subset) $subset = 'subsettmp';
 
         // Nombre de fiches à lier aux tags
         $nb = isset($o->nb_resultats) ? $o->nb_resultats : 0;

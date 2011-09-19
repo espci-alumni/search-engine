@@ -2,20 +2,20 @@
 
 AGENT 'widget/engine/header'
 
-	title = 'Atlas'
+    title = 'Atlas'
 
-	form = $form
-	q = $q
+    form = $form
+    q = $q
 
-	nb_resultats = $nb_resultats
-	results_per_page = $results_per_page
-	ficheList = $ficheList
-	fiches = $fiches
+    nb_resultats = $nb_resultats
+    results_per_page = $results_per_page
+    ficheList = $ficheList
+    fiches = $fiches
 
-	nofocus = 1
+    nofocus = 1
 
 IF !$nb_resultats && g$q
-	--><div class="noresult">{"Aucun résultat pour"} « <b>{g$q}</b> »</div><!--
+    --><div class="noresult">{"Aucun résultat pour"} « <b>{g$q}</b> »</div><!--
 
 ELSE
 
@@ -23,7 +23,7 @@ ELSE
 <style>
 html, body
 {
-	height: 100%;
+    height: 100%;
 }
 </style>
 <script src="{~}js/liveAgent?src=1"></script>
@@ -31,11 +31,11 @@ html, body
 <script>
 
 gmapWindow = {
-	max_lat: {$max_lat|js},
-	min_lat: {$min_lat|js},
-	max_lng: {$max_lng|js},
-	min_lng: {$min_lng|js},
-	var_lng: {$var_lng|js}
+    max_lat: {$max_lat|js},
+    min_lat: {$min_lat|js},
+    max_lng: {$max_lng|js},
+    min_lng: {$min_lng|js},
+    var_lng: {$var_lng|js}
 };
 
 </script>

@@ -2,7 +2,7 @@ fiche = location.pathname.replace(/.*\//, '');
 
 function navigationOutputFilter($a, $lastSearch, $fichePrev, $ficheNext, $fichePos, $ficheCount)
 {
-	return $a.replace($lastSearch, '/annuaire/' + $lastSearch);
+    return $a.replace($lastSearch, '/annuaire/' + $lastSearch);
 }
 
 <!-- INLINE js/navigation.js -->

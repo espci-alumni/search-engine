@@ -2,15 +2,15 @@
 
 AGENT 'widget/engine/header'
 
-	title = "Trombinoscope"
+    title = "Trombinoscope"
 
-	form = $form
-	q = $q
+    form = $form
+    q = $q
 
-	nb_resultats = $nb_resultats
-	results_per_page = $results_per_page
-	ficheList = $ficheList
-	fiches = $fiches
+    nb_resultats = $nb_resultats
+    results_per_page = $results_per_page
+    ficheList = $ficheList
+    fiches = $fiches
 
 -->
 
@@ -19,25 +19,25 @@ AGENT 'widget/engine/header'
 </div><!--
 
 IF !$nb_resultats && g$q
-	--><div class="noresult">{"Aucun résultat pour"} « <b>{g$q}</b> »</div><!--
+    --><div class="noresult">{"Aucun résultat pour"} « <b>{g$q}</b> »</div><!--
 END:IF
 
 -->
 <div id="trombi">
 <!-- LOOP $fiches -->
 <div class="fiche" title="{$nom}">
-	<!-- SET a$a --><img src="{$photo_ref|annuaire_photoUrl}"><!-- END:SET -->
-	<div class="img-cadre"><table><tr><td>{a$a|annuaire_ficheLink:$fiche_ref}</td></tr></table></div>
-	<div class="nom">{$nom|annuaire_ficheLink:$fiche_ref}</div>
+    <!-- SET a$a --><img src="{$photo_ref|annuaire_photoUrl}"><!-- END:SET -->
+    <div class="img-cadre"><table><tr><td>{a$a|annuaire_ficheLink:$fiche_ref}</td></tr></table></div>
+    <div class="nom">{$nom|annuaire_ficheLink:$fiche_ref}</div>
 </div>
 <!-- END:LOOP -->
 </div>
 <!--
 
 AGENT 'widget/engine/pagination'
-	page=g$p
-	nb_resultats=$nb_resultats
-	results_per_page=$results_per_page
+    page=g$p
+    nb_resultats=$nb_resultats
+    results_per_page=$results_per_page
 
 AGENT 'footer'
 

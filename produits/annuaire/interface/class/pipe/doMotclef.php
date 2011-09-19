@@ -2,47 +2,47 @@
 
 class
 {
-	protected static $prefix;
+    protected static $prefix;
 
-	static function php($in, $prefix = '')
-	{
-		$in = p::string($in);
+    static function php($in, $prefix = '')
+    {
+        $in = p::string($in);
 
-		self::$prefix = '<a href="' . p::base($prefix, true) . '?&amp;tag=_';
+        self::$prefix = '<a href="' . p::base($prefix, true) . '?&amp;tag=_';
 
-		return preg_replace_callback("/[^-',\. \(\)]{3,}/u", array(__CLASS__, 'anchor_callback'), $in);
-	}
+        return preg_replace_callback("/[^-',\. \(\)]{3,}/u", array(__CLASS__, 'anchor_callback'), $in);
+    }
 
-	protected static function anchor_callback($m)
-	{
-		return self::$prefix . "{$m[0]}\">{$m[0]}</a>";
-	}
+    protected static function anchor_callback($m)
+    {
+        return self::$prefix . "{$m[0]}\">{$m[0]}</a>";
+    }
 
-	static function js()
-	{
-		?>/*<script>*/
+    static function js()
+    {
+        ?>/*<script>*/
 
 function($in, $prefix)
 {
-	$in = '' + $in;
-	$prefix = $prefix || '';
+    $in = '' + $in;
+    $prefix = $prefix || '';
 
-	var $kw = $in.match(/[^-',\. \(\)]{3,}/g),
-		$out = '', $i = 0, $idx;
+    var $kw = $in.match(/[^-',\. \(\)]{3,}/g),
+        $out = '', $i = 0, $idx;
 
-	if ($kw) for (; $i < $kw.length; ++$i)
-	{
-		$idx = $in.indexOf($kw[$i]);
+    if ($kw) for (; $i < $kw.length; ++$i)
+    {
+        $idx = $in.indexOf($kw[$i]);
 
-		$out += $in.substr(0, $idx) + '<a href="' + base($prefix, 1) + '?&amp;tag=_' + $kw[$i] + '">' + $kw[$i] + '</a>';
+        $out += $in.substr(0, $idx) + '<a href="' + base($prefix, 1) + '?&amp;tag=_' + $kw[$i] + '">' + $kw[$i] + '</a>';
 
-		$in = $in.substr($idx + $kw[$i].length);
-	}
+        $in = $in.substr($idx + $kw[$i].length);
+    }
 
-	$out += $in;
+    $out += $in;
 
-	return $out;
+    return $out;
 }
 
-<?php	}
+<?php    }
 }
