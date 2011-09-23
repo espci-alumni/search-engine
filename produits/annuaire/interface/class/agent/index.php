@@ -1,6 +1,6 @@
 <?php
 
-class extends agent
+class agent_index extends agent
 {
     public $get = array(
         'q', // requete pour le moteur de recherche

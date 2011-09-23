@@ -1,6 +1,6 @@
 <?php
 
-class
+class pipe_doMotclef
 {
     protected static $prefix;
 

@@ -1,6 +1,6 @@
 <?php
 
-class
+class pipe_sortMotclef
 {
     static function php($string)
     {

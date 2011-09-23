@@ -1,6 +1,6 @@
 <?php
 
-class extends loop_sql
+class loop_sql_fiche extends loop_sql
 {
     public
 

@@ -1,6 +1,6 @@
 <?php
 
-class extends loop_search_index
+class loop_search_trombi extends loop_search_index
 {
     public $resultsPerPage = 80;
 }

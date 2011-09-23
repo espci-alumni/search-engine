@@ -1,6 +1,6 @@
 <?php
 
-class extends loop_search
+class loop_search_index extends loop_search
 {
     public $resultsPerPage = 10;
     protected $select = 'f.fiche_ref,f.photo_ref,f.nom,f.groupe,f.position,f.extrait,f.doc,f.doc_ref';

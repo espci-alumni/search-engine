@@ -1,6 +1,6 @@
 <?php
 
-class
+class pipe_annuaire_utf82html
 {
     static function php($s)
     {

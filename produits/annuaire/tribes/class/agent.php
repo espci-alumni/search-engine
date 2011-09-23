@@ -1,6 +1,6 @@
 <?php
 
-class extends self
+class agent extends self
 {
     function control()
     {

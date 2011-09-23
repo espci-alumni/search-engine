@@ -1,6 +1,6 @@
 <?php
 
-class extends agent
+class agent_widget_top extends agent
 {
     public $get = array('type:c:random|mtime' => 'mtime');
 

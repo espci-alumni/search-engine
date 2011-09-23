@@ -1,6 +1,6 @@
 <?php
 
-class extends agent
+class agent_header extends agent
 {
     protected $maxage = -1;
 

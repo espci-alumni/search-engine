@@ -1,6 +1,6 @@
 <?php
 
-class
+class pipe_annuaire_ficheLink
 {
     static function php($a, $ref, $attr = '')
     {

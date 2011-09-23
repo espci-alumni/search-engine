@@ -1,6 +1,6 @@
 <?php
 
-class
+class highlighter
 {
     static function highlight($extrait, $highlight, $maxlen)
     {

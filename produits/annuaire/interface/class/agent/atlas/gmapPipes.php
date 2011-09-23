@@ -1,6 +1,6 @@
 <?php
 
-class extends agent
+class agent_atlas_gmapPipes extends agent
 {
     const contentType = 'text/javascript';
 

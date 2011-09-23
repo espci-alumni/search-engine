@@ -1,6 +1,6 @@
 <?php
 
-class extends agent
+class agent_gmap extends agent
 {
     const contentType = '';
     protected $maxage = -1;

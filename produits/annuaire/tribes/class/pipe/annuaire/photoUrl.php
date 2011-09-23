@@ -1,6 +1,6 @@
 <?php
 
-class extends self
+class pipe_annuaire_photoUrl extends self
 {
     static function __constructStatic()
     {

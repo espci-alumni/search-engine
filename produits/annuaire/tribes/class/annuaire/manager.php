@@ -1,6 +1,6 @@
 <?php
 
-class extends self
+class annuaire_manager extends self
 {
     protected static $db, $whereUpdated;
 

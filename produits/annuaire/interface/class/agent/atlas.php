@@ -1,6 +1,6 @@
 <?php
 
-class extends agent_index
+class agent_atlas extends agent_index
 {
     protected $loopFiche = 'loop_search_atlas';
     protected $displayAll = false;

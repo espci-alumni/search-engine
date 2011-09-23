@@ -1,6 +1,6 @@
 <?php
 
-class extends loop_sql_fiche
+class loop_search extends loop_sql_fiche
 {
     protected
 

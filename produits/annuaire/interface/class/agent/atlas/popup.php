@@ -1,6 +1,6 @@
 <?php
 
-class extends agent
+class agent_atlas_popup extends agent
 {
     public $get = array(
         'zoom:i:1:5' => 1,

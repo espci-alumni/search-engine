@@ -1,6 +1,6 @@
 <?php
 
-class extends agent
+class agent_synchronize extends agent
 {
     public $get = array('deleted_ref:c:[-_a-zA-Z0-9]+');
 

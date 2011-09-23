@@ -1,6 +1,6 @@
 <?php
 
-class
+class annuaire_manager
 {
     protected static
 
