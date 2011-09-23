@@ -24,10 +24,10 @@ class pipe_annuaire_docUrl
 
     static function php($ref, $variant = '')
     {
-        $ref = p::string($ref);
+        $ref = patchwork::string($ref);
         $ref = $ref ? self::$preRef . $ref . self::$postRef : self::$noRef;
 
-        if ($variant = p::string($variant))
+        if ($variant = patchwork::string($variant))
         {
             $variant = self::$preVariant . $variant . self::$postVariant;
         }
@@ -35,7 +35,7 @@ class pipe_annuaire_docUrl
 
         $ref = str_replace('%variant%', $variant, $ref);
 
-        return p::base($ref, true);
+        return patchwork::base($ref, true);
     }
 
     static function js()

@@ -31,7 +31,7 @@ class agent_atlas_marks extends agent
 
     protected function buildGeoQuery($zoom, $label, $groupBy)
     {
-        $sql = s::get('atlasResults');
+        $sql = SESSION::get('atlasResults');
         $sql = !$sql || true === $sql ? 'f.city_id!=0' : "f.fiche_id IN ({$sql})";
 
         $sql = "SELECT

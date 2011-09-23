@@ -4,7 +4,7 @@ class pipe_annuaire_utf82html
 {
     static function php($s)
     {
-        return htmlspecialchars_decode(htmlentities(p::string($s), ENT_NOQUOTES, 'UTF-8'), ENT_NOQUOTES);
+        return htmlspecialchars_decode(htmlentities(patchwork::string($s), ENT_NOQUOTES, 'UTF-8'), ENT_NOQUOTES);
     }
 
     static function js()

@@ -4,10 +4,10 @@ class agent extends self
 {
     function control()
     {
-        if (!s::get('acces'))
+        if (!SESSION::get('acces'))
         {
-            s::flash('referer', p::__URI__());
-            p::redirect($CONFIG['tribes.baseUrl'] . 'login');
+            SESSION::flash('referer', patchwork::__URI__());
+            patchwork::redirect($CONFIG['tribes.baseUrl'] . 'login');
         }
     }
 }

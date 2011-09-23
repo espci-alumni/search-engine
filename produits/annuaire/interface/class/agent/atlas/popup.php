@@ -28,7 +28,7 @@ class agent_atlas_popup extends agent
                     JOIN ' . annuaire::$city_table . '1 ON c1.city_id=f.city_id
                     JOIN ' . annuaire::$city_table . '2 ON ' . $a;
 
-        $a = s::get('atlasResults');
+        $a = SESSION::get('atlasResults');
         $sql .= $a && true !== $a ? " WHERE f.fiche_id IN ({$a}) ORDER BY FIELD(f.fiche_id,{$a})" : ' ORDER BY f.mtime DESC';
 
         $o->fiches = new loop_sql($sql, '', ($this->get->p - 1) * self::$perPage, self::$perPage);

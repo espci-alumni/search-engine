@@ -5,7 +5,7 @@ class pipe_annuaire_ficheLink
     static function php($a, $ref, $attr = '')
     {
         pipe_annuaire_ficheUrl::target && $attr .= ' target="' . pipe_annuaire_ficheUrl::target . '"';
-        return '<a href="' . pipe_annuaire_ficheUrl::php($ref) . '" ' . $attr . '>' . p::string($a) . '</a>';
+        return '<a href="' . pipe_annuaire_ficheUrl::php($ref) . '" ' . $attr . '>' . patchwork::string($a) . '</a>';
     }
 
     static function js()
