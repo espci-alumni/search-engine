@@ -1,6 +1,6 @@
 <?php
 
-class pipe_annuaire_docUrl
+class pipe_annuaire_ficheUrl
 {
     const target = '';
 
