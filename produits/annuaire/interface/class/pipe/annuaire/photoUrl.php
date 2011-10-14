@@ -24,10 +24,10 @@ class pipe_annuaire_photoUrl
 
     static function php($ref, $variant = '')
     {
-        $ref = patchwork::string($ref);
+        $ref = (string) $ref;
         $ref = $ref ? self::$preRef . $ref . self::$postRef : self::$noRef;
 
-        if ($variant = patchwork::string($variant))
+        if ($variant = (string) $variant)
         {
             $variant = self::$preVariant . $variant . self::$postVariant;
         }

@@ -46,12 +46,12 @@ class annuaire_manager
 
     protected static function removeDeleted()
     {
-        W('Abstract method, implement me!');
+        user_error('Abstract method, implement me!');
     }
 
     protected static function updateModified()
     {
-        W('Abstract method, implement me!');
+        user_error('Abstract method, implement me!');
     }
 
     protected static function updateFiche($fiche_ref, $fiche, $extrait, $city, $extra)

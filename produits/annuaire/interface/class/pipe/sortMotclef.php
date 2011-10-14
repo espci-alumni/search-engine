@@ -4,7 +4,7 @@ class pipe_sortMotclef
 {
     static function php($string)
     {
-        $string = urldecode(patchwork::string($string));
+        $string = urldecode($string);
         $string = explode('_', $string);
         sort($string);
 
