@@ -2,9 +2,9 @@
 
 class pipe_annuaire_ficheUrl extends self
 {
-    static function __constructStatic()
+    static function __init()
     {
-        parent::__constructStatic();
+        parent::__init();
 
         self::$preRef = $CONFIG['tribes.baseUrl'] . 'user/';
     }

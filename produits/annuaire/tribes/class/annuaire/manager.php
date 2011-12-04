@@ -5,9 +5,9 @@ class annuaire_manager extends self
     protected static $db, $whereUpdated;
 
 
-    static function __constructStatic()
+    static function __init()
     {
-        parent::__constructStatic();
+        parent::__init();
 
         self::$db = DB($CONFIG['annuaire_manager.DSN']);
 

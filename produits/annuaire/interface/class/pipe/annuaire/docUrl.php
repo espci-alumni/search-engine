@@ -16,7 +16,7 @@ class pipe_annuaire_docUrl
     $noRef;
 
 
-    static function __constructStatic()
+    static function __init()
     {
         isset(self::$preRef) || self::$preRef = substr(__CLASS__, 14, -3) . '/';
         isset(self::$noRef) || 'photo' === substr(__CLASS__, 14, -3) && self::$noRef = 'img/inconnu.gif';

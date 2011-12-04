@@ -11,7 +11,7 @@ class annuaire_manager
     $lastRef = false;
 
 
-    static function __constructStatic()
+    static function __init()
     {
         $db = DB();
 
@@ -288,7 +288,7 @@ class annuaire_manager
         }
     }
 
-    static function __destructStatic()
+    static function __free()
     {
         self::optimizeDb();
     }
