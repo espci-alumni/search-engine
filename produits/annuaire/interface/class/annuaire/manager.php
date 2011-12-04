@@ -30,7 +30,7 @@ class annuaire_manager
 
     static function synchronize()
     {
-        if ($h = patchwork::fopenX(PATCHWORK_PROJECT_PATH . 'manager.lock'))
+        if ($h = Patchwork::fopenX(PATCHWORK_PROJECT_PATH . 'manager.lock'))
         {
             fclose($h);
             register_shutdown_function('unlink', PATCHWORK_PROJECT_PATH . 'manager.lock');
@@ -210,8 +210,8 @@ class annuaire_manager
         }
 
         // Purge le cache
-        $is_update && patchwork::touch('annuaire/fiche/' . $fiche_id);
-        patchwork::touch('annuaire/fiche/0');
+        $is_update && Patchwork::touch('annuaire/fiche/' . $fiche_id);
+        Patchwork::touch('annuaire/fiche/0');
     }
 
     static function deleteFiche($fiche_ref)
@@ -232,8 +232,8 @@ class annuaire_manager
             $db->exec($sql);
 
 
-            patchwork::touch('annuaire/fiche/0');
-            patchwork::touch('annuaire/fiche/' . $fiche_id);
+            Patchwork::touch('annuaire/fiche/0');
+            Patchwork::touch('annuaire/fiche/' . $fiche_id);
         }
     }
 

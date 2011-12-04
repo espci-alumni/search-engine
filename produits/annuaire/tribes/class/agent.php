@@ -6,8 +6,8 @@ class agent extends self
     {
         if (!SESSION::get('acces'))
         {
-            SESSION::flash('referer', patchwork::__URI__());
-            patchwork::redirect($CONFIG['tribes.baseUrl'] . 'login');
+            SESSION::flash('referer', Patchwork::__URI__());
+            Patchwork::redirect($CONFIG['tribes.baseUrl'] . 'login');
         }
     }
 }

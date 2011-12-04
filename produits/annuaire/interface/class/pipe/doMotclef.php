@@ -6,7 +6,7 @@ class pipe_doMotclef
 
     static function php($in, $prefix = '')
     {
-        self::$prefix = '<a href="' . patchwork::base($prefix, true) . '?&amp;tag=_';
+        self::$prefix = '<a href="' . Patchwork::base($prefix, true) . '?&amp;tag=_';
 
         return preg_replace_callback("/[^-',\. \(\)]{3,}/u", array(__CLASS__, 'anchor_callback'), $in);
     }

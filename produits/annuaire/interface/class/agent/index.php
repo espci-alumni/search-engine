@@ -24,7 +24,7 @@ class agent_index extends agent
 
     function compose($o)
     {
-        if ('' !== (string) $this->get->q || $this->get->p) patchwork::setGroup('private');
+        if ('' !== (string) $this->get->q || $this->get->p) Patchwork::setGroup('private');
         else $this->watch[] = 'fiche/0';
 
         // Calcule le nombre total de fiches accessibles

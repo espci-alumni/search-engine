@@ -35,7 +35,7 @@ class pipe_annuaire_docUrl
 
         $ref = str_replace('%variant%', $variant, $ref);
 
-        return patchwork::base($ref, true);
+        return Patchwork::base($ref, true);
     }
 
     static function js()

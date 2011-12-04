@@ -11,7 +11,7 @@ class agent_header extends agent
         $form = new pForm($o, '', false);
 
         $form->setPrefix('');
-        $form->action = patchwork::__BASE__();
+        $form->action = Patchwork::__BASE__();
 
         $form->add('text', 'q');
 
