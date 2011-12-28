@@ -1,4 +1,4 @@
-fiche = location.pathname.replace(/.*\//, '');
+var fiche = location.pathname.replace(/.*\//, '');
 
 function navigationOutputFilter($a, $lastSearch, $fichePrev, $ficheNext, $fichePos, $ficheCount)
 {

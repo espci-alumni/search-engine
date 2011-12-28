@@ -48,9 +48,9 @@ function parseurl($param, $delim, $rx, $array)
 
 <!-- AGENT 'js/board' -->
 
-ficheList = '' + BOARD.ficheList;
+var ficheList = '' + BOARD.ficheList;
 
-navigationOutput = window.navigationOutput || function($lastSearch, $fichePrev, $ficheNext, $fichePos, $ficheCount)
+var navigationOutput = window.navigationOutput || function($lastSearch, $fichePrev, $ficheNext, $fichePos, $ficheCount)
 {
         <!-- SET a$a -->
         '<div id="navigation_resultats"><div style="float:right"><b>‹ '
@@ -62,20 +62,20 @@ navigationOutput = window.navigationOutput || function($lastSearch, $fichePrev, 
         return navigationOutputFilter({a$a|annuaire_utf82html}, $lastSearch, $fichePrev, $ficheNext, $fichePos, $ficheCount);
 }
 
-navigationOutputFilter = window.navigationOutputFilter || function ($a) {return $a;}
+var navigationOutputFilter = window.navigationOutputFilter || function ($a) {return $a;}
 
 if (/^,([0-9]+,)+$/.test(ficheList) && -1 != ficheList.indexOf(',' + fiche + ','))
 {
-    lastSearch = BOARD.lastSearch;
-    perPage = BOARD.resultsPerPage-0;
+    var lastSearch = BOARD.lastSearch;
+    var perPage = BOARD.resultsPerPage-0;
 
-    ficheList = ficheList.split(',' + fiche + ',');
+    var ficheList = ficheList.split(',' + fiche + ',');
 
-    fichePrev = ficheList[0].split(',');
-    ficheNext = ficheList[1].split(',');
+    var fichePrev = ficheList[0].split(',');
+    var ficheNext = ficheList[1].split(',');
 
-    fichePos   = fichePrev.length;
-    ficheCount = fichePos + ficheNext.length - 1;
+    var fichePos   = fichePrev.length;
+    var ficheCount = fichePos + ficheNext.length - 1;
 
     fichePrev = fichePrev[ fichePos - 1 ];
     ficheNext = ficheNext[0];
