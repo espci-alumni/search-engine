@@ -16,7 +16,6 @@
     END:IF
     --><input type="submit" value="{"rechercher"}" id="search-button"><!--
     IF g$tag --><input type="hidden" name="tag" value="{g$tag}"><!-- END:IF
-    --><a>Recherche avancée</a><!--
     IF a$info --><p>{a$info}</p><!-- END:IF
     IF a$form --><!-- AGENT a$form _mode_='close' --><!-- ELSE --><!-- AGENT $form _mode_='close' --><!-- END:IF
     -->
