@@ -147,14 +147,15 @@ class annuaire_manager extends self
                     AND admin_confirmed
                     AND is_shared
                     AND is_obsolete<=0
-                    AND description!=''
                 ORDER BY sort_key";
 
         $sql = self::$db->query($sql);
 
         while ($a = $sql->fetchRow())
         {
-            self::buildExtraitAdresse($a, $extrait, $city);
+            $city || $city = self::geolocalize($a);
+            $city->city_id || $city = false;
+            self::buildExtraitAdresse($a, $extrait);
         }
 
         // Activités
@@ -175,26 +176,18 @@ class annuaire_manager extends self
                     date_fin,
                     site_web,
                     keyword,
-                    ad.adresse_id,
-                    tel_portable,
-                    tel_fixe,
-                    adresse,
                     city_id,
-                    ville_avant,
                     ville,
-                    ville_apres,
                     pays
                 FROM contact_activite ac
-                    LEFT JOIN contact_adresse ad
-                        ON ad.adresse_id=ac.adresse_id AND ad.is_shared
-                WHERE ac.contact_id={$row->contact_id}
-                    AND ac.admin_confirmed
-                    AND ac.is_shared
-                    AND ac.is_obsolete<=0
+                WHERE contact_id={$row->contact_id}
+                    AND admin_confirmed
+                    AND is_shared
+                    AND is_obsolete<=0
                 ORDER BY
-                    IF(ac.date_fin, ac.date_debut, '9999-12-31') DESC,
-                    IF(ac.date_fin, ac.date_fin, ac.date_debut) DESC,
-                    ac.activite_id DESC";
+                    IF(date_fin, date_debut, '9999-12-31') DESC,
+                    IF(date_fin, date_fin, date_debut) DESC,
+                    activite_id DESC";
 
         $sql = self::$db->query($sql);
 
@@ -204,12 +197,9 @@ class annuaire_manager extends self
             $fiche->position = ($a->titre ? $a->titre . ' - ' : '') . array_shift($fiche->position);
 
             do {
-                self::buildExtraitActivite($a, $extrait, $city);
-
-                if ($a->adresse_id)
-                {
-                    self::buildExtraitAdresse($a, $extrait, $city);
-                }
+                $city || $city = self::geolocalize($a);
+                $city->city_id || $city = false;
+                self::buildExtraitActivite($a, $extrait);
             }
             while ($a = $sql->fetchRow());
         }
@@ -217,14 +207,8 @@ class annuaire_manager extends self
         return $extrait;
     }
 
-    protected static function buildExtraitAdresse($a, &$extrait, &$city)
+    protected static function buildExtraitAdresse($a, &$extrait)
     {
-        if (!$city)
-        {
-            $city = self::geolocalize($a);
-            $city->city_id || $city = false;
-        }
-
         $extrait[] = ' - ';
         $extrait[] = array('telephone', $a->tel_portable, $a->tel_fixe);
         $extrait[] = array('adresse', $a->adresse);
@@ -234,7 +218,7 @@ class annuaire_manager extends self
         $extrait[] = array('ville', $a->pays);
     }
 
-    protected static function buildExtraitActivite($a, &$extrait, &$city)
+    protected static function buildExtraitActivite($a, &$extrait)
     {
         $extrait[] = ' - ';
 
@@ -245,6 +229,12 @@ class annuaire_manager extends self
         }
 
         $extrait[] = array('entite', $a->service, $a->organisation);
+
+        if ($a->ville)
+        {
+            $extrait[] = ', ';
+            $extrait[] = array('ville', $a->ville . ($a->pays ? ', '  . $a->pays : ''));
+        }
 
         if ($a->secteur)
         {
@@ -280,9 +270,9 @@ class annuaire_manager extends self
                         country,
                         div1,
                         div2
-                FROM city c JOIN region r
-                    ON r.region_id=c.region_id
-                WHERE city_id={$city->city_id}";
+                    FROM city c JOIN region r
+                        ON r.region_id=c.region_id
+                    WHERE city_id={$city->city_id}";
             $sql = geodb::$db->unbufferedQuery($sql, SQLITE_ASSOC);
 
             if ($row = $sql->fetch())
