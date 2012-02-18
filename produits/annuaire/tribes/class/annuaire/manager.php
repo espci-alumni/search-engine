@@ -148,10 +148,9 @@ class annuaire_manager extends self
                     AND is_obsolete<=0
                 ORDER BY sort_key";
 
-        $sql = self::$db->query($sql);
-
-        while ($a = $sql->fetchRow())
+        foreach (self::$db->query($sql) as $a)
         {
+            $a = (object) $a;
             $city || $city = self::geolocalize($a);
             $city->city_id || $city = false;
             self::buildExtraitAdresse($a, $extrait);
@@ -190,17 +189,18 @@ class annuaire_manager extends self
 
         $sql = self::$db->query($sql);
 
-        if ($a = $sql->fetchRow())
+        if ($a = $sql->fetch())
         {
-            $fiche->position = explode(' / ', $a->organisation, 2);
-            $fiche->position = ($a->titre ? $a->titre . ' - ' : '') . array_shift($fiche->position);
+            $fiche->position = explode(' / ', $a['organisation'], 2);
+            $fiche->position = ($a['titre'] ? $a['titre'] . ' - ' : '') . array_shift($fiche->position);
 
             do {
+                $a = (object) $a;
                 $city || $city = self::geolocalize($a);
                 $city->city_id || $city = false;
                 self::buildExtraitActivite($a, $extrait);
             }
-            while ($a = $sql->fetchRow());
+            while ($a = $sql->fetch());
         }
 
         return $extrait;
