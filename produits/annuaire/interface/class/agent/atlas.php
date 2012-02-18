@@ -33,7 +33,7 @@ class agent_atlas extends agent_index
             $db->exec($sql);
 
             $sql = "SELECT GROUP_CONCAT(fiche_id ORDER BY order_key SEPARATOR ',') FROM searchtmp GROUP BY ''";
-            $sql = $db->queryOne($sql);
+            $sql = $db->fetchColumn($sql);
             SESSION::set('atlasResults', $sql ? $sql : '0');
 
             $sql = 'f.fiche_id IN (SELECT fiche_id FROM searchtmp)';
@@ -44,7 +44,7 @@ class agent_atlas extends agent_index
         $sql = 'SELECT MAX(latitude) AS max_lat, MIN(latitude) AS min_lat, MAX(longitude) AS max_lng, MIN(longitude) AS min_lng, VARIANCE(longitude) AS var_lng
                 FROM ' . annuaire::$city_table . ' JOIN ' . annuaire::$fiche_table . ' ON f.city_id=c.city_id
                 WHERE ' . $sql;
-        foreach ($db->queryRow($sql) as $k => $v) $o->$k = $v;
+        foreach ($db->fetchAssoc($sql) as $k => $v) $o->$k = $v;
 
         return $o;
     }

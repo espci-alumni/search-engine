@@ -29,7 +29,7 @@ class agent_index extends agent
 
         // Calcule le nombre total de fiches accessibles
         $sql = 'SELECT COUNT(*) FROM ' . annuaire::$fiche_table;
-        $o->nb_fiches = DB()->queryOne($sql);
+        $o->nb_fiches = DB()->fetchColumn($sql);
 
         // Crée le formulaire
         $form = new pForm($o, '', false);
@@ -102,14 +102,14 @@ class agent_index extends agent
     {
         $db = DB();
 
-        $o->nb_resultats = $db->queryOne('SELECT COUNT(*) FROM searchtmp');
+        $o->nb_resultats = $db->fetchColumn('SELECT COUNT(*) FROM searchtmp');
 
         $sql = "SELECT GROUP_CONCAT(f.fiche_ref ORDER BY s.order_key SEPARATOR ',')
-            FROM " . annuaire::$fiche_table . ", searchtmp s
-            WHERE f.fiche_id=s.fiche_id
-            GROUP BY ''";
+                FROM " . annuaire::$fiche_table . ", searchtmp s
+                WHERE f.fiche_id=s.fiche_id
+                GROUP BY ''";
 
-        if ($ficheList = $db->queryOne($sql)) $o->ficheList = ',' . $ficheList . ',';
+        if ($ficheList = $db->fetchColumn($sql)) $o->ficheList = ',' . $ficheList . ',';
 
         return $o;
     }
@@ -129,7 +129,7 @@ class agent_index extends agent
         if ($subset)
         {
             $sql = "SELECT COUNT(*) FROM {$subset}";
-            $nb = $db->queryOne($sql);
+            $nb = $db->fetchColumn($sql);
         }
         else $nb = 0;
 
@@ -145,21 +145,20 @@ class agent_index extends agent
 
 
         $sql = 'SELECT COALESCE(m.tag, m.mot) AS mot, COUNT(*) AS nb
-            FROM ' . annuaire::$mot_table . ', ' . annuaire::$mot_fiche_table . ($subset ? ", {$subset} s" : '') . '
-            WHERE m.mot_id=i.mot_id AND i.tag=1' . ($subset ? ' AND i.fiche_id=s.fiche_id' : '') . '
-            GROUP BY i.mot_id' . ($subset ? " HAVING nb < {$nb}" : '') . '
-            ORDER BY nb DESC';
-        $db->setLimit(annuaire::$tagMaxNb);
-        $result = $db->query($sql);
+                FROM ' . annuaire::$mot_table . ', ' . annuaire::$mot_fiche_table . ($subset ? ", {$subset} s" : '') . '
+                WHERE m.mot_id=i.mot_id AND i.tag=1' . ($subset ? ' AND i.fiche_id=s.fiche_id' : '') . '
+                GROUP BY i.mot_id' . ($subset ? " HAVING nb < {$nb}" : '') . '
+                ORDER BY nb DESC';
+        $sql = $db->getDatabasePlatform()->modifyLimitQuery($sql, annuaire::$tagMaxNb);
 
-        while ($row = $result->fetchRow())
+        foreach ($db->query($sql) as $row)
         {
-            $tags[ $row->mot ] = $row->nb;
+            $tags[ $row['mot'] ] = $row['nb'];
 
-            isset($histo[$row->nb]) || $histo[$row->nb] = 0;
-            ++$histo[$row->nb];
-            $row->nb < $niveauMin && $niveauMin = $row->nb;
-            $row->nb > $niveauMax && $niveauMax = $row->nb;
+            isset($histo[$row['nb']]) || $histo[$row['nb']] = 0;
+            ++$histo[$row['nb']];
+            $row['nb'] < $niveauMin && $niveauMin = $row['nb'];
+            $row['nb'] > $niveauMax && $niveauMax = $row['nb'];
         }
 
         if ($tags)

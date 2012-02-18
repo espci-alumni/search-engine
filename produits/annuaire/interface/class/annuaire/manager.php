@@ -16,10 +16,10 @@ class annuaire_manager
         $db = DB();
 
         $sql = 'SELECT mtime, fiche_ref FROM fiche ORDER BY mtime DESC LIMIT 1';
-        if ($sql = $db->queryRow($sql))
+        if ($sql = $db->fetchAssoc($sql))
         {
-            self::$lastUpdate = $sql->mtime;
-            self::$lastRef = $sql->fiche_ref;
+            self::$lastUpdate = $sql['mtime'];
+            self::$lastRef = $sql['fiche_ref'];
         }
         else
         {
@@ -62,7 +62,7 @@ class annuaire_manager
 
         // Récupère l'identifiant interne de la fiche si elle existe
         $sql = 'SELECT fiche_id FROM fiche WHERE fiche_ref=' . $db->quote($fiche_ref);
-        $fiche_id = $db->queryOne($sql);
+        $fiche_id = $db->fetchColumn($sql);
 
         $fiche = (object) $fiche;
         $extrait = self::normalizeExtrait((array) $extrait);
@@ -111,13 +111,13 @@ class annuaire_manager
         {
             $is_update = true;
             self::purgeIndex($fiche_id);
-            $db->autoExecute('fiche', $data, MDB2_AUTOQUERY_UPDATE, 'fiche_id=' . $fiche_id);
+            $db->update('fiche', $data, array('fiche_id' => $fiche_id));
         }
         else
         {
             $is_update = false;
-            $db->autoExecute('fiche', $data);
-            $fiche_id = $db->lastInsertID();
+            $db->insert('fiche', $data);
+            $fiche_id = $db->lastInsertId();
         }
 
 
@@ -221,12 +221,11 @@ class annuaire_manager
         $db = DB();
 
         $sql = 'SELECT fiche_id FROM fiche WHERE fiche_ref=' . $db->quote($fiche_ref);
-        if ($fiche_id = $db->queryOne($sql))
+        if ($fiche_id = $db->fetchColumn($sql))
         {
             self::purgeIndex($fiche_id);
 
-            $sql = "DELETE FROM fiche WHERE fiche_id={$fiche_id}";
-            $db->exec($sql);
+            $db->delete('fiche', array('fiche_id' => $fiche_id));
 
             $sql = 'DELETE FROM city WHERE city_id NOT IN (SELECT city_id FROM fiche)';
             $db->exec($sql);
@@ -298,7 +297,7 @@ class annuaire_manager
         $db = DB();
 
         $sql = "SELECT extrait FROM fiche WHERE fiche_id={$fiche_id}";
-        if (!empty(annuaire::$suggestFields) && $extrait = $db->queryOne($sql))
+        if (!empty(annuaire::$suggestFields) && $extrait = $db->fetchColumn($sql))
         {
             $extrait = unserialize($extrait);
 
@@ -318,8 +317,7 @@ class annuaire_manager
             }
         }
 
-        $sql = "DELETE FROM mot_fiche WHERE fiche_id={$fiche_id}";
-        $db->exec($sql);
+        $db->delete('mot_fiche', array('fiche_id' => $fiche_id));
     }
 
     protected static function getKeywords($mots)
@@ -340,7 +338,7 @@ class annuaire_manager
             if ($len > 3)
             {
                 $sql = "SELECT mot_id FROM mot WHERE mot='" . substr($mot, 0, -1) . "'";
-                if ($mot_id = $db->queryOne($sql))
+                if ($mot_id = $db->fetchColumn($sql))
                 {
                     $sql = "UPDATE mot SET tag=mot, mot='{$mot}' WHERE mot_id={$mot_id}";
                     $db->exec($sql);
@@ -350,7 +348,7 @@ class annuaire_manager
         else if ($len >= 3)
         {
             $sql = "SELECT mot_id FROM mot WHERE mot='{$mot}s'";
-            if ($mot_id = $db->queryOne($sql))
+            if ($mot_id = $db->fetchColumn($sql))
             {
                 $sql = "UPDATE mot SET tag='{$mot}' WHERE mot_id={$mot_id}";
                 $db->exec($sql);
@@ -360,12 +358,12 @@ class annuaire_manager
         if (!$mot_id)
         {
             $sql = "SELECT mot_id FROM mot WHERE mot='{$mot}'";
-            $mot_id = $db->queryOne($sql);
+            $mot_id = $db->fetchColumn($sql);
             if (!$mot_id)
             {
                 $sql = "INSERT INTO mot (mot) VALUES ('{$mot}')";
                 $db->exec($sql);
-                $mot_id = $db->lastInsertID();
+                $mot_id = $db->lastInsertId();
             }
         }
 

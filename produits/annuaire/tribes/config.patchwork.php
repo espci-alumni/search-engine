@@ -3,7 +3,7 @@
 #patchwork ../interface
 
 $CONFIG += array(
-    'annuaire_manager.DSN' => '',
+//    'annuaire_manager.dsn' => array(...),
     'tribes.emailDomain' => '',
     'tribes.baseUrl' => '/',
     'tribes.diplome' => '',

@@ -29,7 +29,7 @@ class extends agent
 
         // Calcule le nombre total de fiches accessibles
         $sql = 'SELECT COUNT(*) FROM ' . annuaire::$fiche_table;
-        $o->nb_fiches = DB()->queryOne($sql);
+        $o->nb_fiches = DB()->fetchColumn($sql);
 
         // Crée le formulaire
         $form = new pForm($o, '', false);
@@ -102,14 +102,14 @@ class extends agent
     {
         $db = DB();
 
-        $o->nb_resultats = $db->queryOne('SELECT COUNT(*) FROM searchtmp');
+        $o->nb_resultats = $db->fetchColumn('SELECT COUNT(*) FROM searchtmp');
 
         $sql = "SELECT GROUP_CONCAT(f.fiche_ref ORDER BY s.order_key SEPARATOR ',')
             FROM " . annuaire::$fiche_table . ", searchtmp s
             WHERE f.fiche_id=s.fiche_id
             GROUP BY ''";
 
-        if ($ficheList = $db->queryOne($sql)) $o->ficheList = ',' . $ficheList . ',';
+        if ($ficheList = $db->fetchColumn($sql)) $o->ficheList = ',' . $ficheList . ',';
 
         return $o;
     }
@@ -165,14 +165,13 @@ class extends agent
 
         // Nombre de fiches à lier aux tags
         $sql = "SELECT COUNT(*) FROM tagtmp_fiche";
-        $nb = $db->queryOne($sql);
+        $nb = $db->fetchColumn($sql);
 
         $sql = "SELECT mot_id FROM tagtmp_mot_fiche GROUP BY mot_id HAVING COUNT(*)>={$nb}";
         $result = $db->query($sql);
         while ($mot_id = $result->fetchOne())
         {
-            $sql = "DELETE FROM tagtmp_mot WHERE mot_id=" . $mot_id;
-            $db->exec($sql);
+            $db->delete('tagtmp_mot', array('mot_id' => $mot_id));
         }
 
         // Initialise les tags avec les mots filtrants sélectionnés
@@ -197,65 +196,29 @@ class extends agent
 
         $delete = 'DELETE FROM tagtmp_mot_fiche WHERE mot_id=?';
 
-        if ('mysqli' == $db->phptype) // Use directly MySQLi for speed
+        $select = $db->getDatabasePlatform()->modifyLimitQuery($select, 1);
+        $select = $db->prepare($select);
+        $update = $db->prepare($update);
+        $delete = $db->prepare($delete);
+
+        while (1)
         {
-            $db = $db->connection;
+            $result = $select->execute();
+            $row = $result->fetch();
+            $result->closeCursor();
 
-            $select = $db->prepare($select . ' LIMIT 1');
-            $update = $db->prepare($update);
-            $delete = $db->prepare($delete);
-
-            $select->bind_result($r_mot, $r_mot_id, $r_fiche_used, $r_nb);
-            $update->bind_param('is', $r_nb, $r_mot_id);
-            $delete->bind_param('i', $r_mot_id);
-
-            while (1)
+            if ($row && (++$nb_tags <= annuaire::$tagMinNb || $nb_tags <= annuaire::$tagMaxNb && !$row['fiche_used']))
             {
-                $select->execute();
-                $fetched = $select->fetch();
-                $select->free_result();
+                $update->execute(array($row['nb'], $row['mot_id']));
+                $nb = $delete->execute(array($row['mot_id']));
 
-                if ($fetched && (++$nb_tags <= annuaire::$tagMinNb || $nb_tags <= annuaire::$tagMaxNb && !$r_fiche_used))
-                {
-                    $update->execute();
-                    $delete->execute();
+                $tags[ $row['mot'] ] = $nb;
 
-                    $nb = $delete->affected_rows;
-                    $tags[ $r_mot ] = $nb;
-
-                    @++$histo[$nb];
-                    $niveauMin = min($niveauMin, $nb);
-                    $niveauMax = max($niveauMax, $nb);
-                }
-                else break;
+                @++$histo[$nb];
+                $niveauMin = min($niveauMin, $nb);
+                $niveauMax = max($niveauMax, $nb);
             }
-        }
-        else
-        {
-            $db->setLimit(1);
-            $select = $db->prepare($select);
-            $update = $db->prepare($update, array('integer', 'integer'), MDB2_PREPARE_MANIP);
-            $delete = $db->prepare($delete, 'integer', MDB2_PREPARE_MANIP);
-
-            while (1)
-            {
-                $result = $select->execute();
-                $row = $result->fetchRow();
-                $result->free();
-
-                if ($row && (++$nb_tags <= annuaire::$tagMinNb || $nb_tags <= annuaire::$tagMaxNb && !$row->fiche_used))
-                {
-                    $update->execute(array($row->nb, $row->mot_id));
-                    $nb = $delete->execute($row->mot_id);
-
-                    $tags[ $row->mot ] = $nb;
-
-                    @++$histo[$nb];
-                    $niveauMin = min($niveauMin, $nb);
-                    $niveauMax = max($niveauMax, $nb);
-                }
-                else break;
-            }
+            else break;
         }
 
         if ($tags)

@@ -17,15 +17,15 @@ class agent_widget_top extends agent
             $this->maxage = 300;
 
             $sql = 'SELECT COUNT(*) AS nb, MAX(fiche_id) AS max_id FROM ' . annuaire::$fiche_table;
-            $bound = DB()->queryRow($sql);
+            $bound = DB()->fetchAssoc($sql);
 
-            $bound->nb && $bound->nb = (int) (self::$limit * (10 * ($bound->max_id / $bound->nb - 1) + 1));
-            $bound->nb > $bound->max_id && $bound->nb = $bound->max_id;
+            $bound['nb'] && $bound['nb'] = (int) (self::$limit * (10 * ($bound['max_id'] / $bound['nb'] - 1) + 1));
+            $bound['nb'] > $bound['max_id'] && $bound['nb'] = $bound['max_id'];
 
             $end = array();
 
-            do $end[rand(1, $bound->max_id)] = 1;
-            while ($bound->nb > count($end));
+            do $end[rand(1, $bound['max_id'])] = 1;
+            while ($bound['nb'] > count($end));
 
             $end = implode(',', array_keys($end));
             $end = "WHERE fiche_id IN ({$end}) ORDER BY FIELD(fiche_id,{$end})";

@@ -9,7 +9,7 @@ class annuaire_manager extends self
     {
         parent::__init();
 
-        self::$db = DB($CONFIG['annuaire_manager.DSN']);
+        self::$db = DB($CONFIG['annuaire_manager.dsn']);
 
 
         self::$whereUpdated = 'admin_confirmed' . (self::$fullUpdate ? '<=' : '>=') . self::$db->quote(self::$lastUpdate);
@@ -32,7 +32,7 @@ class annuaire_manager extends self
         $sql = "SELECT is_active
                 FROM contact_contact
                 WHERE contact_id={$fiche_ref}";
-        $sql = self::$db->queryOne($sql);
+        $sql = self::$db->fetchColumn($sql);
 
         switch (true)
         {
@@ -48,8 +48,7 @@ class annuaire_manager extends self
                 FROM contact_contact
                 WHERE NOT is_active AND ' . self::$whereUpdated;
 
-        $result = self::$db->query($sql);
-        while ($row = $result->fetchRow()) parent::deleteFiche($row->contact_id);
+        foreach (self::$db->query($sql) as $row) parent::deleteFiche($row['contact_id']);
     }
 
     protected static function updateModified()
@@ -90,10 +89,10 @@ class annuaire_manager extends self
                 FROM contact_contact
                 WHERE {$sql->whereUpdated} AND is_active AND is_obsolete<=0 AND admin_confirmed";
 
-        $result = self::$db->query($sql);
-
-        while ($row = $result->fetchRow())
+        foreach (self::$db->query($sql) as $row)
         {
+            $row = (object) $row;
+
             $fiche_ref = $row->contact_id;
 
             $extra = explode('.', $row->photo_token);
