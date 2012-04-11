@@ -34,7 +34,7 @@ class agent_atlas extends agent_index
 
             $sql = "SELECT GROUP_CONCAT(fiche_id ORDER BY order_key SEPARATOR ',') FROM searchtmp GROUP BY ''";
             $sql = $db->fetchColumn($sql);
-            SESSION::set('atlasResults', $sql ? $sql : '0');
+            SESSION::set('atlasResults', $sql ? trim($sql, ',') : '0');
 
             $sql = 'f.fiche_id IN (SELECT fiche_id FROM searchtmp)';
 
