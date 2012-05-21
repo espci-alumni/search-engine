@@ -272,9 +272,9 @@ class annuaire_manager extends self
                     FROM city c JOIN region r
                         ON r.region_id=c.region_id
                     WHERE city_id={$city->city_id}";
-            $sql = geodb::$db->unbufferedQuery($sql, SQLITE_ASSOC);
+            $sql = geodb::$db->query($sql);
 
-            if ($row = $sql->fetch())
+            if ($row = $sql->fetch(PDO::FETCH_ASSOC))
             {
                 $city->city = $row['city'];
                 $city->latitude = $row['latitude'];
@@ -283,7 +283,7 @@ class annuaire_manager extends self
                 $city->div2 = $row['div2'];
                 $city->country = $row['country'];
 
-                while ($row = $sql->fetch())
+                while ($row = $sql->fetch(PDO::FETCH_ASSOC))
                 {
                     $city->extra .= "{$row['city']} {$row['div1']} {$row['div2']} {$row['country']} ";
                 }
