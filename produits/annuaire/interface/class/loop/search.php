@@ -65,8 +65,6 @@ class loop_search extends loop_sql_fiche
             $this->addWhere .= ($this->delCount ? " AND i.fiche_id NOT IN (SELECT fiche_id FROM " . annuaire::$mot_fiche_table . ', ' . annuaire::$mot_table . " WHERE {$this->delWhere})" : '')
                 . ($subset ? ' AND i.fiche_id=s.fiche_id' : '');
 
-            $db = DB();
-
             $sql = "INSERT INTO searchtmp
                     SELECT i.fiche_id, 0, "
                         . ($this->addCount
