@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>{"Atlas"}</title>
-<link rel="stylesheet" type="text/css" href="{a$css|default:'css/style'|base}">
+<link rel="stylesheet" href="{a$css|default:'css/style'|base}">
 <style>
 html,body,div#map
 {
