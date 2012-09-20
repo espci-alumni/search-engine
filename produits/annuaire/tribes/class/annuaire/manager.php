@@ -2,7 +2,7 @@
 
 class annuaire_manager extends self
 {
-    protected static $db, $whereUpdated;
+    protected static $db, $whereUpdated = '1';
 
 
     static function __init()
@@ -11,15 +11,13 @@ class annuaire_manager extends self
 
         self::$db = DB($CONFIG['annuaire_manager.dsn']);
 
-
-        self::$whereUpdated = 'admin_confirmed' . (self::$fullUpdate ? '<=' : '>=') . self::$db->quote(self::$lastUpdate);
-
         if (!self::$fullUpdate && self::$lastRef)
         {
-            self::$whereUpdated .= ' AND (contact_id!=' . self::$db->quote(self::$lastRef)
-                . ' OR admin_confirmed >' . self::$db->quote(self::$lastUpdate)
-                . ' OR contact_modified>' . self::$db->quote(self::$lastUpdate)
-                . ')';
+            self::$whereUpdated .= ' AND ('
+                . ' contact_modified>' . self::$db->quote(self::$lastUpdate)
+                . ' OR (admin_confirmed>' . self::$db->quote(self::$lastUpdate)
+                    . ' AND contact_id!=' . self::$db->quote(self::$lastRef)
+                . '))';
         }
 
         self::$whereUpdated = '(' . self::$whereUpdated . ')';
