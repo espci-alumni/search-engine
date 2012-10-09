@@ -8,5 +8,5 @@ $CONFIG += array(
     'tribes.baseUrl' => '/',
     'tribes.diplome' => '',
     'promoSql' => '',
-    'email' => "IF(login,CONCAT(login,\"{$CONFIG['tribes.emailDomain']}\"),'')",
+    'emailSql' => !empty($CONFIG['tribes.emailDomain']) ? "IF(login,CONCAT(login,\"{$CONFIG['tribes.emailDomain']}\"),'')" : '',
 );
