@@ -1,6 +1,6 @@
 var fiche = location.pathname.replace(/.*\//, '');
 
-function navigationOutputFilter($a, $lastSearch, $fichePrev, $ficheNext, $fichePos, $ficheCount)
+var navigationOutputFilter = window.navigationOutputFilter || function($a, $lastSearch, $fichePrev, $ficheNext, $fichePos, $ficheCount)
 {
     return $a.replace($lastSearch, '/annuaire/' + $lastSearch);
 }

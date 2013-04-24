@@ -35,7 +35,9 @@ class pipe_annuaire_ficheUrl
 
         $ref = str_replace('%variant%', $variant, $ref);
 
-        return Patchwork::base($ref, true);
+        $ref = Patchwork::base($ref, true);
+
+        return self::target ? $ref . '" target="' . self::target : $ref;
     }
 
     static function js()
@@ -55,7 +57,7 @@ function($ref, $variant)
 
     $ref = $ref.replace(/%variant%/g, $variant);
 
-    return base($ref, 1);
+    return <?= self::target ? 'base($ref, 1)+\'" target="' . self::target . '\'' : 'base($ref, 1)'; ?>
 }
 
 window.P$<?php echo substr(__CLASS__, 5) . '_target=' . jsquote(self::target); ?>;

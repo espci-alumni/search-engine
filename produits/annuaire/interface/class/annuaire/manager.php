@@ -30,17 +30,20 @@ class annuaire_manager
 
     static function synchronize()
     {
-        if ($h = Patchwork::fopenX(PATCHWORK_PROJECT_PATH . 'manager.lock'))
+        if ( ($h = fopen(PATCHWORK_PROJECT_PATH . 'manager.lock', 'wb'))
+          && flock($h, LOCK_EX | LOCK_NB, $wb)
+          && !$wb
+        )
         {
-            fclose($h);
-            register_shutdown_function('unlink', PATCHWORK_PROJECT_PATH . 'manager.lock');
-
             set_time_limit(0);
             sleep(1);
 
             self::removeDeleted();
             self::updateModified();
             self::optimizeDb();
+
+            flock($h, LOCK_UN);
+            fclose($h);
         }
     }
 
@@ -311,7 +314,7 @@ class annuaire_manager
                     $data = $db->quote($data);
 
                     $sql = "UPDATE suggest SET counter=counter-1
-                        WHERE champ={$field} AND suggest=SUBSTRING({$data},1,255)";
+                        WHERE champ={$field} AND suggest=SUBSTRING({$data},1,255) AND counter>0";
                     $db->exec($sql);
                 }
             }

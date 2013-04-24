@@ -53,12 +53,7 @@ class annuaire_manager extends self
     {
         $sql = (object) array();
 
-        $sql->nom = 'CONCAT_WS(" ",
-            IF(prenom_usuel!="", prenom_usuel, prenom_civil),
-            IF( nom_usuel!="", nom_usuel, nom_civil),
-            IF(nom_etudiant!="" AND nom_etudiant!=IF(nom_usuel!="",nom_usuel,nom_civil), CONCAT("(",nom_etudiant,")"), NULL)
-        )';
-
+        $sql->nom = empty($CONFIG['nomSql']) ? "''" : $CONFIG['nomSql'];
         $sql->promo = empty($CONFIG['promoSql']) ? "''" : $CONFIG['promoSql'];
         $sql->email = empty($CONFIG['emailSql']) ? "''" : $CONFIG['emailSql'];
 
@@ -219,7 +214,7 @@ class annuaire_manager extends self
     {
         $extrait[] = ' - ';
 
-        if ($a->titre)
+        if (!empty($a->titre))
         {
             $extrait[] = array('fonction', $a->titre . ($a->fonction != $a->titre ? " ({$a->fonction})" : ''));
             $extrait[] = ', ';
@@ -227,19 +222,19 @@ class annuaire_manager extends self
 
         $extrait[] = array('entite', $a->service, $a->organisation);
 
-        if ($a->ville)
+        if (!empty($a->ville))
         {
             $extrait[] = ', ';
             $extrait[] = array('ville', $a->ville . ($a->pays ? ', '  . $a->pays : ''));
         }
 
-        if ($a->secteur)
+        if (!empty($a->secteur))
         {
             $extrait[] = ', ';
             $extrait[] = array('secteur', $a->secteur);
         }
 
-        if ($a->keyword)
+        if (!empty($a->keyword))
         {
             $extrait[] = ', ';
             $extrait[] = array('tag', $a->keyword);

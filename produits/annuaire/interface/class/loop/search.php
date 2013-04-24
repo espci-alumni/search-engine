@@ -78,7 +78,8 @@ class loop_search extends loop_sql_fiche
                         . ($subset ? ', subsettmp s' : '') . "
                     WHERE f.fiche_id=i.fiche_id AND {$this->addWhere}
                     GROUP BY i.fiche_id";
-            if ($this->addCount) $sql .= " HAVING rank>.65 AND {$this->selectFMatched}={$this->selectFCount}";
+            if ($this->addCount) $sql .= " HAVING {$this->selectFMatched}={$this->selectFCount}";
+            if ($this->addCount > 2) $sql .= " AND rank>.65";
             $sql .= " ORDER BY {$order_key}";
 
             $db->exec($sql);
@@ -112,20 +113,33 @@ class loop_search extends loop_sql_fiche
             $this->selectFMatched .= "IF(i.champ='{$field}','{$field}',";
             $this->selectFMatchedEnd .= ')';
 
+            $starts_with = count($q['']) < 2;
+
             foreach (array_keys($q['']) as $k)
             {
-                if (strlen($k) <= 1) continue;
+                if (!$starts_with && strlen($k) <= 1) continue;
 
                 $highlight .= '|' . lingua::getRxQuoteInsensitive($k, '/');
 
-                if (strlen($k) <= 2) $highlight .= '$';
+                if (!$starts_with && strlen($k) <= 2) $highlight .= '$';
 
                 $this->addCount += 1;
 
-                $if = "m.mot LIKE '{$k}" . (strlen($k) <= 2 ? '' : '%') . "'" . ($field ? " AND i.champ='{$field}'" : '');
+                $if = "m.mot LIKE '{$k}" . (!$starts_with && strlen($k) <= 2 ? '' : '%') . "'" . ($field ? " AND i.champ='{$field}'" : '');
 
-                $selectRank .= "+IF({$if}," . strlen($k) . '*i.poids,0)';
-                $selectRankNorm .= '+LENGTH(m.mot)*i.poids';
+                if ($starts_with && strlen($k) <= 2)
+                {
+                    if ('nom' === $field) $if .= " AND f.nom LIKE '{$k}%'";
+
+                    $selectRank .= "+IF({$if},i.poids,0)";
+                    $selectRankNorm .= '+i.poids';
+                }
+                else
+                {
+                    $selectRank .= "+IF({$if}," . strlen($k) . '*i.poids,0)';
+                    $selectRankNorm .= '+LENGTH(m.mot)*i.poids';
+                }
+
                 $selectWMatched .= "IF({$if},'{$field}:{$k}',";
                 $selectWMatchedEnd .= ')';
 
